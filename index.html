@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>La opción que compra tiempo — Chooser Option</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<!-- KaTeX for math -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"/>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<!-- Chart.js for interactive case -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   DESIGN TOKENS  (aligned with ashanti-goldfields palette)
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  --serif  : "DM Serif Display", Georgia, serif;
+  --sans   : "DM Sans", system-ui, sans-serif;
+  --mono   : "JetBrains Mono", monospace;
+
+  /* Brand colors */
+  --teal   : #2d8b8b;  --teal-s : rgba(45,139,139,.13);  --teal-d : rgba(45,139,139,.07);
+  --blue   : #4a9ebb;  --blue-s : rgba(74,158,187,.13);  --blue-d : rgba(74,158,187,.07);
+  --amber  : #c99b45;  --amber-s: rgba(201,155,69,.13);  --amber-d: rgba(201,155,69,.07);
+  --green  : #4caf7d;
+  --red    : #e05c5c;
+  --violet : #7c6fcd;
+
+  /* Ink & surface */
+  --ink    : rgba(241,250,238,.92);
+  --ink2   : rgba(241,250,238,.62);
+  --ink3   : rgba(241,250,238,.32);
+  --bg     : #0a0f1a;
+  --sur    : rgba(255,255,255,.04);
+  --sur2   : rgba(255,255,255,.07);
+  --brd    : rgba(255,255,255,.08);
+  --div    : rgba(255,255,255,.05);
+
+  /* Motion */
+  --ease   : cubic-bezier(.16,1,.3,1);
+  --ease-b : cubic-bezier(.34,1.56,.64,1);
+
+  /* Spacing */
+  --r      : 12px;
+  --rx     : 18px;
+
+  /* Javeriana accent */
+  --jav    : #003366;
+  --jav-g  : #c8a84b;
+}
+
+/* ── RESET ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body { background: var(--bg); color: var(--ink); }
+h1, h2, h3 { font-family: var(--serif); line-height: 1.1; }
+button { cursor: pointer; font: inherit; border: 0; background: none; color: inherit; }
+.mono { font-family: var(--mono); }
+
+/* ── TOPBAR ──────────────────────────────────────────────────────── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 52px;
+  display: flex; align-items: center; gap: 1rem; padding: 0 1.25rem;
+  background: rgba(8,12,20,.88); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+#progress-bar {
+  position: absolute; bottom: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--teal), var(--blue), var(--amber));
+  transition: width .55s var(--ease);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgba(45,139,139,.5);
+}
+.tb-brand {
+  font-family: var(--serif); font-size: .85rem; color: var(--ink3);
+  display: flex; align-items: center; gap: .5rem; flex-shrink: 0;
+}
+.tb-line { width: 14px; height: 2px; background: var(--teal); border-radius: 2px; }
+#tb-phases {
+  display: flex; align-items: center; gap: 2px; flex: 1; justify-content: center; overflow: hidden;
+}
+.tb-phase {
+  padding: .2rem .5rem; border-radius: 99px;
+  font-family: var(--mono); font-size: .52rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--ink3); border: 1px solid transparent;
+  transition: color .3s, background .3s, border-color .3s;
+  white-space: nowrap; cursor: pointer;
+}
+.tb-phase.act { color: var(--teal); background: var(--teal-d); border-color: rgba(45,139,139,.3); }
+.tb-counter { font-family: var(--mono); font-size: .68rem; color: var(--ink3); flex-shrink: 0; }
+
+/* ── LOGO PUJ (top-right corner) ───────────────────────────────── */
+#logo-puj {
+  position: fixed; top: 10px; right: 1.25rem; z-index: 600;
+  display: flex; align-items: center; gap: 6px;
+  opacity: .8; transition: opacity .3s;
+}
+#logo-puj:hover { opacity: 1; }
+/* SVG logo es reemplazable — ver sección Logo en JS */
+#logo-puj svg { height: 32px; width: auto; }
+
+/* ── HOURGLASS TIMER ────────────────────────────────────────────── */
+#timer-wrap {
+  position: fixed; bottom: 1.4rem; right: 1.4rem; z-index: 600;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+#timer-svg { width: 38px; height: 56px; transition: all .6s var(--ease); }
+#timer-label {
+  font-family: var(--mono); font-size: .48rem;
+  color: var(--ink3); text-align: center; letter-spacing: .06em;
+  text-transform: uppercase; max-width: 60px; line-height: 1.3;
+}
+
+/* ── NAV ARROWS ─────────────────────────────────────────────────── */
+.nav-arrow {
+  position: fixed; top: 50%; z-index: 400; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(10,15,26,.8); backdrop-filter: blur(12px);
+  border: 1px solid rgba(168,218,220,.15); color: var(--ink2);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s; opacity: 1;
+}
+.nav-arrow:hover { background: var(--teal); color: #fff; border-color: var(--teal); transform: translateY(-50%) scale(1.1); box-shadow: 0 8px 28px rgba(45,139,139,.4); }
+.nav-arrow.off { opacity: 0; pointer-events: none; }
+#nav-prev { left: 1rem; }
+#nav-next { right: 1rem; }
+
+/* ── KEYHINT ─────────────────────────────────────────────────────── */
+#keyhint {
+  position: fixed; bottom: 1.4rem; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: .4rem;
+  font-family: var(--mono); font-size: .56rem; color: var(--ink3);
+  z-index: 400; animation: fadeOut 1s 4s ease forwards;
+}
+.keybadge {
+  padding: .18rem .35rem; background: var(--sur); border: 1px solid var(--brd);
+  border-radius: 4px; font-size: .62rem;
+}
+@keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+/* ── DECK & SLIDES ──────────────────────────────────────────────── */
+#deck { position: fixed; inset: 0; overflow: hidden; }
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5.5rem 6vw 4.5rem;
+  overflow-y: auto;
+  opacity: 0; pointer-events: none; z-index: 1;
+  transition: opacity .45s var(--ease), filter .45s var(--ease);
+  filter: blur(6px) brightness(.8);
+}
+.slide.active { opacity: 1; pointer-events: all; z-index: 10; filter: none; }
+
+/* Slide themes */
+.th-dark { background: linear-gradient(135deg, #0a0f1a 0%, #111827 100%); }
+.th-alt  { background: linear-gradient(135deg, #0d1520 0%, #162030 100%); }
+.th-warm { background: linear-gradient(135deg, #0f1210 0%, #1a1f10 100%); }
+
+/* Noise texture overlay */
+.th-dark::before, .th-alt::before, .th-warm::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px;
+}
+
+/* ── SLIDE INNER ─────────────────────────────────────────────────── */
+.inner { position: relative; z-index: 1; max-width: 1080px; width: 100%; margin: 0 auto; }
+
+/* Typography scale */
+.t-xl  { font-size: clamp(2.6rem, 5.5vw, 4.8rem); color: var(--ink); font-family: var(--serif); }
+.t-h   { font-size: clamp(1.6rem, 2.8vw, 2.4rem); color: var(--ink); font-family: var(--serif); }
+.t-sub { font-size: clamp(.9rem, 1.2vw, 1.1rem); color: var(--ink2); line-height: 1.65; }
+.t-body{ font-size: clamp(.85rem, 1.05vw, .98rem); color: var(--ink2); line-height: 1.6; }
+
+/* Labels */
+.lbl {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-family: var(--mono); font-size: .58rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .09em;
+  margin-bottom: .75rem; opacity: .85;
+}
+.lbl::before { content: ''; width: 12px; height: 2px; border-radius: 2px; background: currentColor; }
+.lbl-teal  { color: var(--teal);  }
+.lbl-blue  { color: var(--blue);  }
+.lbl-amber { color: var(--amber); }
+.lbl-green { color: var(--green); }
+
+/* Utility spacing */
+.mt4 { margin-top: 1rem;   }
+.mt5 { margin-top: 1.25rem;}
+.mt6 { margin-top: 1.5rem; }
+
+/* Grids */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; }
+@media (max-width: 720px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+/* Content cards */
+.co {
+  border-radius: var(--r); padding: .9rem 1rem;
+  background: var(--sur); border: 1px solid var(--brd);
+  margin-bottom: .6rem; position: relative; overflow: hidden;
+  display: flex; gap: .75rem;
+}
+.co::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+.co-teal  { border-color: rgba(45,139,139,.25);  } .co-teal::before  { background: var(--teal);  }
+.co-blue  { border-color: rgba(74,158,187,.25);  } .co-blue::before  { background: var(--blue);  }
+.co-amber { border-color: rgba(201,155,69,.25);  } .co-amber::before { background: var(--amber); }
+.co-red   { border-color: rgba(224,92,92,.25);   } .co-red::before   { background: var(--red);   }
+.co-green { border-color: rgba(76,175,125,.25);  } .co-green::before { background: var(--green); }
+.co-mark { font-family: var(--mono); font-size: .55rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; flex-shrink: 0; padding-top: .15rem; }
+.cm-teal  { color: var(--teal);  }
+.cm-blue  { color: var(--blue);  }
+.cm-amber { color: var(--amber); }
+.cm-red   { color: var(--red);   }
+.cm-green { color: var(--green); }
+.co-text  { font-size: .88rem; color: var(--ink2); line-height: 1.55; flex: 1; }
+
+/* Stats row */
+.stats { display: flex; gap: .7rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.stat  { background: var(--sur); border: 1px solid var(--brd); border-radius: var(--r); padding: .6rem 1rem; flex: 1; min-width: 80px; }
+.stat-n { font-family: var(--mono); font-size: 1.4rem; font-weight: 700; line-height: 1; }
+.stat-l { font-size: .6rem; color: var(--ink3); margin-top: .25rem; text-transform: uppercase; letter-spacing: .06em; }
+.nt { color: var(--teal);  }
+.nb { color: var(--blue);  }
+.na { color: var(--amber); }
+.ng { color: var(--green); }
+
+/* Formula highlight box */
+.formula-box {
+  background: var(--sur); border: 1px solid var(--brd);
+  border-radius: var(--rx); padding: 1.2rem 1.5rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+.formula-box.hl-teal  { border-color: rgba(45,139,139,.4);  box-shadow: inset 0 0 40px rgba(45,139,139,.06),  0 0 30px rgba(45,139,139,.08);  }
+.formula-box.hl-blue  { border-color: rgba(74,158,187,.4);  box-shadow: inset 0 0 40px rgba(74,158,187,.06),  0 0 30px rgba(74,158,187,.08);  }
+.formula-box.hl-amber { border-color: rgba(201,155,69,.4);  box-shadow: inset 0 0 40px rgba(201,155,69,.06),  0 0 30px rgba(201,155,69,.08);  }
+
+/* KaTeX sizing */
+.katex-display { overflow-x: auto; margin: .3em 0; }
+.katex { font-size: .92em !important; }
+.katex-lg .katex { font-size: 1.1em !important; }
+
+/* Timeline */
+.timeline { display: flex; gap: 0; margin: 1.5rem 0; position: relative; }
+.timeline::before { content: ''; position: absolute; top: 22px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--teal), var(--blue), var(--amber)); z-index: 0; }
+.tl-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .5rem; position: relative; z-index: 1; }
+.tl-dot { width: 44px; height: 44px; border-radius: 50%; background: var(--bg); border: 2px solid; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: .8rem; font-weight: 700; }
+.tl-dot.d-teal  { border-color: var(--teal);  color: var(--teal);  }
+.tl-dot.d-blue  { border-color: var(--blue);  color: var(--blue);  }
+.tl-dot.d-amber { border-color: var(--amber); color: var(--amber); }
+.tl-title { font-size: .72rem; font-weight: 700; text-align: center; color: var(--ink2); }
+.tl-desc  { font-size: .65rem; text-align: center; color: var(--ink3); max-width: 100px; line-height: 1.4; }
+
+/* Choice buttons (slide 14) */
+.choice-row { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1.5rem; }
+.choice-btn {
+  flex: 1; max-width: 280px; padding: 1.5rem; border-radius: var(--rx);
+  border: 2px solid transparent; background: var(--sur);
+  text-align: center; cursor: pointer;
+  transition: all .3s var(--ease-b);
+  display: flex; flex-direction: column; align-items: center; gap: .6rem;
+}
+.choice-btn:hover { transform: translateY(-6px); }
+.choice-call { border-color: rgba(76,175,125,.4); }
+.choice-call:hover { background: rgba(76,175,125,.12); border-color: var(--green); box-shadow: 0 16px 40px rgba(76,175,125,.25); }
+.choice-put  { border-color: rgba(224,92,92,.4);   }
+.choice-put:hover  { background: rgba(224,92,92,.12);  border-color: var(--red);   box-shadow: 0 16px 40px rgba(224,92,92,.25); }
+.choice-icon { font-size: 2.5rem; }
+.choice-label { font-family: var(--serif); font-size: 1.6rem; }
+.choice-desc  { font-size: .82rem; color: var(--ink3); }
+
+/* Outcome panel */
+.outcome { display: none; }
+.outcome.show { display: block; animation: slideUp .5s var(--ease) forwards; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Table */
+.tbl-wrap { background: var(--sur); border: 1px solid var(--brd); border-radius: var(--rx); overflow: hidden; }
+.tbl { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.tbl th { text-align: left; padding: .5rem .85rem; font-family: var(--mono); font-size: .56rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink3); border-bottom: 2px solid var(--brd); }
+.tbl td { padding: .55rem .85rem; border-bottom: 1px solid var(--div); color: var(--ink2); line-height: 1.5; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl tr:hover td { background: var(--sur2); }
+
+/* Card grid (slide 11) */
+.card { background: var(--sur); border: 1px solid var(--brd); border-radius: var(--r); padding: 1rem; position: relative; overflow: hidden; transition: background .2s, transform .2s var(--ease-b); }
+.card:hover { background: var(--sur2); transform: translateY(-3px); }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.card-teal::before  { background: var(--teal);  }
+.card-blue::before  { background: var(--blue);  }
+.card-amber::before { background: var(--amber); }
+.card-red::before   { background: var(--red);   }
+.card-title { font-family: var(--serif); font-size: .95rem; color: var(--ink); margin-bottom: .4rem; }
+.card-body  { font-size: .82rem; color: var(--ink2); line-height: 1.55; }
+
+/* Payoff diagram */
+.payoff-diagram { position: relative; background: var(--sur); border: 1px solid var(--brd); border-radius: var(--rx); overflow: hidden; }
+.payoff-canvas-wrap { padding: 1rem; }
+
+/* Cover decoration */
+.cover-ghost { position: absolute; right: 4vw; bottom: 3rem; font-family: var(--serif); font-size: clamp(7rem, 16vw, 14rem); color: rgba(255,255,255,.012); line-height: 1; pointer-events: none; user-select: none; }
+.cover-meta { display: flex; gap: 1.8rem; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.07); padding-top: 1.2rem; margin-top: 1.6rem; }
+.cover-meta-item .ml { font-size: .56rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink3); margin-bottom: .2rem; }
+.cover-meta-item .mv { font-family: var(--mono); font-size: .8rem; color: var(--ink2); }
+.cover-authors { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: .9rem; padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.06); }
+.cover-author  { display: flex; align-items: center; gap: .5rem; }
+.ca-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; animation: pulse 2.4s ease-in-out infinite; }
+.ca-dot:nth-child(1) { animation-delay: .8s; }
+.ca-name { font-size: .8rem; color: var(--ink2); font-weight: 500; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(45,139,139,.5);} 50%{box-shadow:0 0 0 6px rgba(45,139,139,0);} }
+
+/* Formula component highlight (slides 4-7) */
+.formula-part {
+  display: inline-block; padding: .15em .4em; border-radius: 5px;
+  transition: background .4s, box-shadow .4s;
+}
+.fp-teal  { background: rgba(45,139,139,.18);  box-shadow: 0 0 0 1px rgba(45,139,139,.4);  }
+.fp-blue  { background: rgba(74,158,187,.18);  box-shadow: 0 0 0 1px rgba(74,158,187,.4);  }
+.fp-amber { background: rgba(201,155,69,.18);  box-shadow: 0 0 0 1px rgba(201,155,69,.4);  }
+.fp-dim   { opacity: .35; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TOPBAR
+     ══════════════════════════════════════════════════════════════ -->
+<div id="topbar">
+  <div id="progress-bar" style="width:0%"></div>
+  <div class="tb-brand"><div class="tb-line"></div>Chooser Option&nbsp;·&nbsp;Derivados</div>
+  <div id="tb-phases">
+    <!-- injected by JS -->
+  </div>
+  <div class="tb-counter" id="tb-cnt">01 / 16</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     LOGO PONTIFICIA UNIVERSIDAD JAVERIANA
+     ══════════════════════════════════════════════════════════════ -->
+<div id="logo-puj" title="Pontificia Universidad Javeriana">
+  <!-- Inline SVG placeholder — reemplazar por logo oficial si se dispone -->
+  <svg viewBox="0 0 120 36" xmlns="http://www.w3.org/2000/svg" aria-label="Pontificia Universidad Javeriana">
+    <rect width="120" height="36" rx="4" fill="rgba(0,51,102,.55)" stroke="rgba(200,168,75,.35)" stroke-width="1"/>
+    <text x="8" y="14" font-family="Georgia,serif" font-size="7" fill="rgba(200,168,75,.9)" font-weight="bold">PONTIFICIA</text>
+    <text x="8" y="23" font-family="Georgia,serif" font-size="7" fill="rgba(200,168,75,.9)" font-weight="bold">UNIVERSIDAD</text>
+    <text x="8" y="32" font-family="Georgia,serif" font-size="7" fill="rgba(200,168,75,.9)" font-weight="bold">JAVERIANA</text>
+    <text x="96" y="26" font-family="Georgia,serif" font-size="16" fill="rgba(200,168,75,.6)" font-weight="bold">†</text>
+  </svg>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HOURGLASS TIMER  (symbolic — not a real clock)
+     ══════════════════════════════════════════════════════════════ -->
+<div id="timer-wrap">
+  <svg id="timer-svg" viewBox="0 0 38 56" xmlns="http://www.w3.org/2000/svg">
+    <!-- outer frame -->
+    <path d="M6 2 h26 v6 l-13 16 13 16 v6 H6 v-6 l13-16 L6 8 Z"
+          fill="none" stroke="rgba(45,139,139,.4)" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- top caps -->
+    <line x1="4" y1="2"  x2="34" y2="2"  stroke="rgba(45,139,139,.6)" stroke-width="2" stroke-linecap="round"/>
+    <line x1="4" y1="54" x2="34" y2="54" stroke="rgba(45,139,139,.6)" stroke-width="2" stroke-linecap="round"/>
+    <!-- sand top (dynamic) -->
+    <clipPath id="clip-top">
+      <rect id="sand-top-clip" x="6" y="8" width="26" height="16"/>
+    </clipPath>
+    <path d="M6 8 l13 16 l13-16 Z" fill="rgba(45,139,139,.35)" clip-path="url(#clip-top)" id="sand-top"/>
+    <!-- sand bottom (dynamic) -->
+    <clipPath id="clip-bot">
+      <rect id="sand-bot-clip" x="6" y="32" width="26" height="16"/>
+    </clipPath>
+    <path d="M6 48 l13-16 l13 16 Z" fill="rgba(45,139,139,.55)" clip-path="url(#clip-bot)" id="sand-bot"/>
+    <!-- drip line -->
+    <line id="sand-drip" x1="19" y1="24" x2="19" y2="32" stroke="rgba(45,139,139,.5)" stroke-width="1" stroke-dasharray="2 2"/>
+  </svg>
+  <div id="timer-label">TIEMPO</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     NAV ARROWS
+     ══════════════════════════════════════════════════════════════ -->
+<button class="nav-arrow off" id="nav-prev" aria-label="Anterior">
+  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 5L8 10l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<button class="nav-arrow" id="nav-next" aria-label="Siguiente">
+  <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<div id="keyhint">
+  <div class="keybadge">&#8592;</div><div class="keybadge">&#8594;</div><span>flechas</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     DECK — ALL SLIDES
+     ══════════════════════════════════════════════════════════════ -->
+<div id="deck">
+
+<!-- ────────────────────────────────────────────────────────────────
+  00  PORTADA
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark active" data-i="0" data-phase="Portada">
+  <div class="inner">
+    <div class="lbl lbl-teal">Derivados Exóticos · Finanzas Cuantitativas</div>
+    <h1 class="t-xl">La opción que<br/><em>compra tiempo</em></h1>
+    <p class="t-sub" style="margin-top:.8rem; max-width:50ch;">
+      Chooser Option — el derecho de esperar, observar y decidir.
+    </p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><div class="ml">Tipo</div><div class="mv">Opción Exótica</div></div>
+      <div class="cover-meta-item"><div class="ml">Payoff</div><div class="mv">max(C, P)</div></div>
+      <div class="cover-meta-item"><div class="ml">Clave</div><div class="mv">Flexibilidad en t<sub>c</sub></div></div>
+    </div>
+    <div class="cover-authors" style="margin-top:1.5rem;">
+      <div class="cover-author"><div class="ca-dot"></div><div class="ca-name">Juan Felipe Barriga Beltrán</div></div>
+      <div class="cover-author"><div class="ca-dot"></div><div class="ca-name">Ana Sofía Rojas Valderrama</div></div>
+    </div>
+  </div>
+  <div class="cover-ghost">00</div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  01  INTRODUCCIÓN — ¿Qué es una Chooser Option?
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="1" data-phase="Introducción">
+  <div class="inner">
+    <div class="lbl lbl-teal">Introducción</div>
+    <h2 class="t-h">¿Qué es una Chooser Option?</h2>
+    <!-- PLACEHOLDER: definición conceptual, opción exótica, qué problema resuelve -->
+    <p class="t-body mt5">[Contenido por completar — definición, por qué exótica, problema que resuelve]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  02  CÓMO FUNCIONA — mecanismo con timeline
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark" data-i="2" data-phase="Mecanismo">
+  <div class="inner">
+    <div class="lbl lbl-blue">Mecanismo</div>
+    <h2 class="t-h">Cómo funciona</h2>
+    <!-- PLACEHOLDER: timeline t=0 → tc → T -->
+    <p class="t-body mt5">[Contenido por completar — timeline visual con los 3 momentos clave]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  03  FÓRMULA — presentación general
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="3" data-phase="Fórmula">
+  <div class="inner">
+    <div class="lbl lbl-amber">Valoración</div>
+    <h2 class="t-h">La fórmula de Rubinstein (1991)</h2>
+    <!-- PLACEHOLDER: fórmula completa, sin explicar aún cada parte -->
+    <p class="t-body mt5">[Contenido por completar — fórmula general V₀ = C_BS + P_BS(K*,tc)]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  04  FÓRMULA — Componente 1: Call BS
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark" data-i="4" data-phase="Fórmula">
+  <div class="inner">
+    <div class="lbl lbl-teal">Componente 1</div>
+    <h2 class="t-h">La pierna larga: C<sub>BS</sub>(S, K, T)</h2>
+    <!-- PLACEHOLDER: explicación del primer término de la fórmula, call estándar -->
+    <p class="t-body mt5">[Contenido por completar — Call Black-Scholes con vencimiento T]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  05  FÓRMULA — Componente 2: Put con K*
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="5" data-phase="Fórmula">
+  <div class="inner">
+    <div class="lbl lbl-blue">Componente 2</div>
+    <h2 class="t-h">La pierna corta: P<sub>BS</sub>(S, K*, t<sub>c</sub>)</h2>
+    <!-- PLACEHOLDER: segundo término — put con strike ajustado K* y vencimiento tc -->
+    <p class="t-body mt5">[Contenido por completar — Put con K* y vencimiento tc]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  06  FÓRMULA — ¿Por qué K*? Intuición de la paridad
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark" data-i="6" data-phase="Fórmula">
+  <div class="inner">
+    <div class="lbl lbl-amber">Intuición</div>
+    <h2 class="t-h">¿Por qué existe K*?</h2>
+    <!-- PLACEHOLDER: paridad put-call y por qué K* = K·e^{-(r-q)(T-tc)} -->
+    <p class="t-body mt5">[Contenido por completar — derivación de K* desde put-call parity]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  07  FÓRMULA — Interpretación final: "la compra de tiempo"
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="7" data-phase="Fórmula">
+  <div class="inner">
+    <div class="lbl lbl-teal">Interpretación</div>
+    <h2 class="t-h">El valor de esperar</h2>
+    <!-- PLACEHOLDER: intuición financiera final — la optionalidad sobre la dirección -->
+    <p class="t-body mt5">[Contenido por completar — la chooser = call + opción de elegir]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  08  PAYOFFS — Si termina siendo Call
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark" data-i="8" data-phase="Payoffs">
+  <div class="inner">
+    <div class="lbl lbl-green">Payoffs</div>
+    <h2 class="t-h">Escenario 1: eleges Call</h2>
+    <!-- PLACEHOLDER: payoff diagram para call + canvas Chart.js -->
+    <p class="t-body mt5">[Contenido por completar — payoff call + gráfico]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  09  PAYOFFS — Si termina siendo Put
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="9" data-phase="Payoffs">
+  <div class="inner">
+    <div class="lbl lbl-red" style="color:var(--red);">Payoffs</div>
+    <h2 class="t-h">Escenario 2: eleges Put</h2>
+    <!-- PLACEHOLDER: payoff diagram para put + canvas Chart.js -->
+    <p class="t-body mt5">[Contenido por completar — payoff put + gráfico]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  10  PRECIO Y VALORACIÓN — vs vanilla
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark" data-i="10" data-phase="Valoración">
+  <div class="inner">
+    <div class="lbl lbl-amber">Valoración</div>
+    <h2 class="t-h">¿Por qué es más cara que una vanilla?</h2>
+    <!-- PLACEHOLDER: comparación chooser vs call, put, straddle; factores de precio -->
+    <p class="t-body mt5">[Contenido por completar — tabla comparativa y factores de valor]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  11  USOS, VENTAJAS Y RIESGOS
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="11" data-phase="Usos">
+  <div class="inner">
+    <div class="lbl lbl-blue">Aplicaciones</div>
+    <h2 class="t-h">Usos, ventajas y riesgos</h2>
+    <!-- PLACEHOLDER: tarjetas con casos de uso, ventajas, riesgos -->
+    <p class="t-body mt5">[Contenido por completar — cards con usos / ventajas / riesgos]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  12  CASO PRÁCTICO — Contexto
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark" data-i="12" data-phase="Caso">
+  <div class="inner">
+    <div class="lbl lbl-amber">Caso práctico</div>
+    <h2 class="t-h">El trade: Apple antes del earnings</h2>
+    <!-- PLACEHOLDER: contexto del caso, empresa, fecha, precio, volatilidad -->
+    <p class="t-body mt5">[Contenido por completar — contexto narrativo del caso AAPL]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  13  CASO PRÁCTICO — Gráfica del movimiento
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="13" data-phase="Caso">
+  <div class="inner">
+    <div class="lbl lbl-amber">Caso práctico</div>
+    <h2 class="t-h">El movimiento del precio</h2>
+    <!-- PLACEHOLDER: gráfica histórica del precio + contexto "qué pasó" -->
+    <div class="mt5"><canvas id="chart-case" height="220"></canvas></div>
+    <p class="t-body mt4">[Contenido por completar — gráfica con datos simulados de AAPL]</p>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  14  DECISIÓN — Call o Put (clímax narrativo)
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark" data-i="14" data-phase="Decisión" id="s14-decision">
+  <div class="inner" style="text-align:center;">
+    <div class="lbl lbl-amber" style="justify-content:center;">⏳ Se acabó el tiempo — ¡Elige ahora!</div>
+    <h2 class="t-h">¿Call o Put?</h2>
+    <p class="t-sub mt4" style="max-width:50ch; margin:1rem auto;">
+      El earnings report sale mañana. Ya no puedes esperar más. Tienes que decidir.
+    </p>
+    <div class="choice-row">
+      <button class="choice-btn choice-call" onclick="chooseOutcome('call')">
+        <div class="choice-icon">📈</div>
+        <div class="choice-label" style="color:var(--green);">CALL</div>
+        <div class="choice-desc">Creo que Apple superará<br/>las expectativas</div>
+      </button>
+      <button class="choice-btn choice-put" onclick="chooseOutcome('put')">
+        <div class="choice-icon">📉</div>
+        <div class="choice-label" style="color:var(--red);">PUT</div>
+        <div class="choice-desc">Creo que Apple decepcionará<br/>al mercado</div>
+      </button>
+    </div>
+    <!-- Outcomes (hidden until choice) -->
+    <div class="outcome" id="outcome-call" style="margin-top:1.5rem;">
+      <!-- PLACEHOLDER: desenlace si elige call -->
+      <p class="t-body">[Desenlace: Apple sube 8% — Call en dinero — Payoff = $X]</p>
+    </div>
+    <div class="outcome" id="outcome-put" style="margin-top:1.5rem;">
+      <!-- PLACEHOLDER: desenlace si elige put -->
+      <p class="t-body">[Desenlace: Apple baja — Put en dinero — Payoff = $Y]</p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
+  15  CONCLUSIONES
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="15" data-phase="Conclusión">
+  <div class="inner">
+    <div class="lbl lbl-teal">Conclusión</div>
+    <h2 class="t-h">Cuatro lecciones de la Chooser Option</h2>
+    <!-- PLACEHOLDER: 4 cards con lecciones clave -->
+    <p class="t-body mt5">[Contenido por completar — las 4 ideas fundamentales]</p>
+  </div>
+</section>
+
+</div><!-- /deck -->
+
+<!-- ══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════════════════════════ -->
+<script>
+/* ── CONFIG ─────────────────────────────────────────────────────── */
+const SLIDES = document.querySelectorAll('.slide');
+const TOTAL  = SLIDES.length;
+let cur = 0;
+
+/* Phase labels for topbar */
+const PHASES = [...new Set([...SLIDES].map(s => s.dataset.phase))];
+
+/* Sand fill levels per slide (0 = full top, 1 = full bottom) */
+const SAND_LEVELS = [
+  0.02,  // 00 portada     — casi lleno arriba
+  0.10,  // 01 intro
+  0.20,  // 02 mecanismo
+  0.30,  // 03 fórmula general
+  0.38,  // 04 componente 1
+  0.46,  // 05 componente 2
+  0.54,  // 06 K*
+  0.60,  // 07 interpretación
+  0.68,  // 08 payoff call
+  0.72,  // 09 payoff put
+  0.78,  // 10 valoración
+  0.84,  // 11 usos/riesgos
+  0.88,  // 12 caso contexto
+  0.93,  // 13 caso gráfica
+  1.00,  // 14 decisión     — VACÍO, tiempo agotado
+  0.98,  // 15 conclusiones
+];
+
+const TIMER_LABELS = [
+  'EL TIEMPO\nES NUESTRO',
+  'CONTEXTO',
+  'MECANISMO',
+  'FÓRMULA',
+  'COMPONENTE 1',
+  'COMPONENTE 2',
+  'INTUICIÓN',
+  'VALOR DE\nESPERAR',
+  'PAYOFF CALL',
+  'PAYOFF PUT',
+  'VALORACIÓN',
+  'APLICACIONES',
+  'CASO REAL',
+  'MOVIMIENTO',
+  '¡ELIGE\nAHORA!',
+  'LECCIÓN\nAPRENDIDA',
+];
+
+/* ── TOPBAR PHASES ───────────────────────────────────────────────── */
+function buildPhases() {
+  const wrap = document.getElementById('tb-phases');
+  PHASES.forEach(ph => {
+    const div = document.createElement('div');
+    div.className = 'tb-phase';
+    div.textContent = ph;
+    div.dataset.phase = ph;
+    div.onclick = () => {
+      const idx = [...SLIDES].findIndex(s => s.dataset.phase === ph);
+      if (idx >= 0) goTo(idx);
+    };
+    wrap.appendChild(div);
+  });
+}
+
+function updatePhases() {
+  const curPhase = SLIDES[cur].dataset.phase;
+  document.querySelectorAll('.tb-phase').forEach(el => {
+    el.classList.toggle('act', el.dataset.phase === curPhase);
+  });
+}
+
+/* ── HOURGLASS TIMER ────────────────────────────────────────────── */
+function updateTimer(idx) {
+  const fill = SAND_LEVELS[idx] ?? 0;
+  const isDecision = idx === 14;
+
+  // Top sand height: from 16px (full) to 0px
+  const topH  = Math.max(0, 16 * (1 - fill));
+  // Bottom sand height: from 0px to 16px
+  const botH  = Math.min(16, 16 * fill);
+
+  const sandTop = document.getElementById('sand-top-clip');
+  const sandBot = document.getElementById('sand-bot-clip');
+  if (sandTop) sandTop.setAttribute('height', topH);
+  if (sandBot) {
+    sandBot.setAttribute('y', 48 - botH);
+    sandBot.setAttribute('height', botH);
+  }
+
+  // Drip line: only visible when sand is flowing
+  const drip = document.getElementById('sand-drip');
+  if (drip) drip.style.opacity = (fill > 0 && fill < 1) ? '1' : '0';
+
+  // Color at decision moment
+  const svg = document.getElementById('timer-svg');
+  if (svg) {
+    if (isDecision) {
+      svg.style.filter = 'drop-shadow(0 0 8px rgba(201,155,69,.7))';
+    } else {
+      svg.style.filter = '';
+    }
+  }
+
+  // Label
+  const lbl = document.getElementById('timer-label');
+  if (lbl) lbl.textContent = TIMER_LABELS[idx] || 'TIEMPO';
+
+  // Pulse animation on decision slide
+  const wrap = document.getElementById('timer-wrap');
+  if (wrap) {
+    wrap.style.animation = isDecision ? 'timerPulse .8s ease-in-out infinite alternate' : '';
+  }
+}
+
+/* ── NAVIGATION ─────────────────────────────────────────────────── */
+function goTo(n) {
+  if (n < 0 || n >= TOTAL || n === cur) return;
+  SLIDES[cur].classList.remove('active');
+  cur = n;
+  SLIDES[cur].classList.add('active');
+
+  // Progress bar
+  const pct = TOTAL > 1 ? (cur / (TOTAL - 1)) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  // Counter
+  document.getElementById('tb-cnt').textContent =
+    String(cur + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+
+  // Arrows
+  document.getElementById('nav-prev').classList.toggle('off', cur === 0);
+  document.getElementById('nav-next').classList.toggle('off', cur === TOTAL - 1);
+
+  // Timer & phases
+  updateTimer(cur);
+  updatePhases();
+
+  // Lazy chart init
+  if (cur === 13 && !window._caseChartInited) { window._caseChartInited = true; initCaseChart(); }
+}
+
+document.getElementById('nav-prev').addEventListener('click', () => goTo(cur - 1));
+document.getElementById('nav-next').addEventListener('click', () => goTo(cur + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
+});
+
+/* ── INTERACTIVE CASE — call/put decision ───────────────────────── */
+function chooseOutcome(choice) {
+  // Reset both
+  document.getElementById('outcome-call').classList.remove('show');
+  document.getElementById('outcome-put').classList.remove('show');
+
+  // Show chosen
+  setTimeout(() => {
+    document.getElementById('outcome-' + choice).classList.add('show');
+  }, 50);
+
+  // Disable buttons
+  document.querySelectorAll('.choice-btn').forEach(btn => btn.style.opacity = '.5');
+  const active = document.querySelector('.choice-' + choice);
+  if (active) active.style.opacity = '1';
+}
+
+/* ── CASE CHART (placeholder data) ──────────────────────────────── */
+function initCaseChart() {
+  const ctx = document.getElementById('chart-case');
+  if (!ctx || !window.Chart) return;
+
+  // Placeholder price series — to be filled with real data
+  const labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+  const prices = [165, 170, 158, 172, 182, 178, 188, 183, 195];
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'AAPL (USD)',
+        data: prices,
+        borderColor: 'rgba(45,139,139,.85)',
+        backgroundColor: 'rgba(45,139,139,.08)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(45,139,139,.9)',
+        pointRadius: 3,
+        fill: true,
+        tension: .4,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: 'rgba(241,250,238,.4)', font: { family: 'JetBrains Mono', size: 10 } } },
+        y: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: 'rgba(241,250,238,.4)', font: { family: 'JetBrains Mono', size: 10 } } }
+      }
+    }
+  });
+}
+
+/* ── INIT ────────────────────────────────────────────────────────── */
+buildPhases();
+updatePhases();
+updateTimer(0);
+
+// KaTeX auto-render once loaded
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left:'\\[', right:'\\]', display:true},
+        {left:'\\(', right:'\\)', display:false},
+      ]
+    });
+  }
+});
+
+/* ── TIMER PULSE CSS (inserted dynamically) ─────────────────────── */
+const styleTag = document.createElement('style');
+styleTag.textContent = `
+  @keyframes timerPulse {
+    from { transform: scale(1);    filter: drop-shadow(0 0 6px rgba(201,155,69,.6)); }
+    to   { transform: scale(1.08); filter: drop-shadow(0 0 14px rgba(201,155,69,.9)); }
+  }
+  .lbl-red::before { background: var(--red); }
+`;
+document.head.appendChild(styleTag);
+</script>
+
+</body>
+</html>
