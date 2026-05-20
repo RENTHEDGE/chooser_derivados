@@ -1338,50 +1338,158 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     <div class="lbl lbl-blue">Componente 2</div>
     <h2 class="t-h">La pierna corta: P<sub>BS</sub>(S, K*, t<sub>c</sub>)</h2>
 
-    <div class="g2 mt5">
-      <div>
-        <div class="co co-blue">
-          <div class="co-mark cm-blue">¿Qué es?</div>
-          <div class="co-text">
-            Una <strong>put con vencimiento en t<sub>c</sub></strong> (no en T, sino en la fecha de decisión). Pero tiene un strike <strong>ajustado: K*</strong>.
-          </div>
-        </div>
-        <div class="co co-amber" style="margin-top:.8rem;">
-          <div class="co-mark cm-amber">Payoff en t<sub>c</sub></div>
-          <div class="co-text">
-            \(\max(K^* - S_{t_c}, 0)\)
-            <br/>Si el subyacente cae, la put imprime ganancia limitada por K*.
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:1rem;justify-content:center;">
-        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;text-align:center;">
-          <svg width="100%" height="140" viewBox="0 0 200 140" style="max-width:180px;margin:0 auto;display:block;">
-            <!-- Ejes -->
-            <line x1="30" y1="110" x2="180" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
-            <line x1="30" y1="20" x2="30" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
-            <!-- Línea de ganancia -->
-            <line x1="30" y1="40" x2="110" y2="110" stroke="var(--blue)" stroke-width="2.5"/>
-            <!-- Línea de pérdida -->
-            <line x1="110" y1="110" x2="180" y2="110" stroke="var(--ink3)" stroke-width="2" opacity=".5"/>
-            <!-- Strike K* -->
-            <circle cx="110" cy="110" r="3" fill="var(--amber)"/>
-            <text x="110" y="130" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink3)">K*</text>
-            <!-- Etiquetas -->
-            <text x="10" y="25" font-family="var(--mono)" font-size="9" fill="var(--ink3)">Payoff</text>
-            <text x="175" y="120" font-family="var(--mono)" font-size="9" fill="var(--ink3)">S<tspan font-size="8">tc</tspan></text>
-          </svg>
-          <div style="font-size:.7rem;color:var(--ink3);margin-top:.6rem;">Diagrama de payoff: Put</div>
-        </div>
-      </div>
-    </div>
+    <div style="margin-top:1.1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
 
-    <div style="margin-top:1.2rem;font-size:.78rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(74,158,187,.3);padding-left:.85rem;">
-      <strong style="color:var(--blue);">Nota sobre K* y t<sub>c</sub>:</strong>
-      La put vence <em>antes</em> que la call (en t<sub>c</sub>, no en T). Su strike K* está ajustado hacia abajo por el factor \(e^{-(r-q)(T-t_c)}\). Este ajuste refleja el costo de oportunidad de esperar desde t<sub>c</sub> hasta T.
+      <!-- Columna izquierda: definición + botones -->
+      <div style="display:flex;flex-direction:column;gap:.7rem;">
+        <div class="co co-blue" style="padding:.75rem 1rem;">
+          <div class="co-mark cm-blue" style="padding-top:0;">¿Qué es?</div>
+          <div class="co-text" style="font-size:.76rem;">
+            Put vence en <strong>t<sub>c</sub></strong> (antes de T) con strike <strong>ajustado K*</strong>.
+            Captura el alza bajista pero con prima más barata que una put estándar.
+          </div>
+        </div>
+
+        <!-- 3 botones clicables -->
+        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Explora — haz click</div>
+
+        <div id="s5-btn-payoff" onclick="s5Show('payoff')"
+          style="background:rgba(74,158,187,.08);border:1px solid rgba(74,158,187,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
+          <div style="font-size:.78rem;font-weight:600;color:var(--blue);margin-bottom:.2rem;">① Payoff en t<sub>c</sub></div>
+          <div style="font-size:.72rem;color:var(--ink3);">max(K* − S<sub>tc</sub>, 0) — protección a la baja con strike reducido</div>
+        </div>
+
+        <div id="s5-btn-precio" onclick="s5Show('precio')"
+          style="background:rgba(201,155,69,.08);border:1px solid rgba(201,155,69,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
+          <div style="font-size:.78rem;font-weight:600;color:var(--amber);margin-bottom:.2rem;">② Precio: K* vs K</div>
+          <div style="font-size:.72rem;color:var(--ink3);">Put con K* es más barata — el ajuste baja el costo</div>
+        </div>
+
+        <div id="s5-btn-vega" onclick="s5Show('vega')"
+          style="background:rgba(124,111,205,.08);border:1px solid rgba(124,111,205,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
+          <div style="font-size:.78rem;font-weight:600;color:var(--violet);margin-bottom:.2rem;">③ Vega — sensibilidad a σ</div>
+          <div style="font-size:.72rem;color:var(--ink3);">Ambas piernas ganan con volatilidad, pero de modos distintos</div>
+        </div>
+
+        <div style="margin-top:.4rem;font-size:.7rem;color:var(--ink3);line-height:1.6;border-left:2px solid rgba(74,158,187,.3);padding-left:.6rem;">
+          <strong style="color:var(--blue);">Clave:</strong> El ajuste K* = K·e<sup>−(r−q)(T−tc)</sup> permite ahorrar prima sin sacrificar la estrategia.
+        </div>
+      </div>
+
+      <!-- Columna derecha: panel de gráfico -->
+      <div id="s5-panel">
+        <div id="s5-placeholder" style="display:flex;align-items:center;justify-content:center;height:100%;min-height:220px;border:1px dashed rgba(255,255,255,.1);border-radius:var(--rx);color:var(--ink3);font-size:.74rem;font-family:var(--mono);">
+          Selecciona un concepto
+        </div>
+
+        <!-- Payoff -->
+        <div id="s5-panel-payoff" style="display:none;background:rgba(74,158,187,.05);border:1px solid rgba(74,158,187,.2);border-radius:var(--rx);padding:.9rem;height:100%;">
+          <div style="font-family:var(--mono);font-size:.56rem;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Payoff en t<sub>c</sub></div>
+          <div style="height:175px;"><canvas id="chart-s5-payoff"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.68rem;color:var(--ink3);">K* es más bajo que K: la put cubre menos. Pero la diferencia se compensa con el tiempo que ganaste esperando hasta t<sub>c</sub>.</div>
+        </div>
+
+        <!-- Precio K* vs K -->
+        <div id="s5-panel-precio" style="display:none;background:rgba(201,155,69,.05);border:1px solid rgba(201,155,69,.2);border-radius:var(--rx);padding:.9rem;height:100%;">
+          <div style="font-family:var(--mono);font-size:.56rem;color:var(--amber);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Precio P(S) con K* vs con K estándar</div>
+          <div style="height:175px;"><canvas id="chart-s5-precio"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.68rem;color:var(--ink3);">La brecha entre ambas curvas es el <strong style="color:var(--amber);">ahorro de prima</strong>: exactamente lo que necesitas para pagar ambas piernas por menos que un straddle.</div>
+        </div>
+
+        <!-- Vega -->
+        <div id="s5-panel-vega" style="display:none;background:rgba(124,111,205,.05);border:1px solid rgba(124,111,205,.2);border-radius:var(--rx);padding:.9rem;height:100%;">
+          <div style="font-family:var(--mono);font-size:.56rem;color:var(--violet);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Vega: sensibilidad a volatilidad σ</div>
+          <div style="height:175px;"><canvas id="chart-s5-vega"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.68rem;color:var(--ink3);">Las dos piernas suben con volatilidad. Alguien que cree que va a haber movimiento grande (no sabe la dirección) quiere volatilidad alta: la chooser se vuelve valiosa.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  function norm(x) {
+    const a=[0.319381530,-0.356563782,1.781477937,-1.821255978,1.330274429];
+    const t=1/(1+0.2316419*Math.abs(x));
+    const poly=t*(a[0]+t*(a[1]+t*(a[2]+t*(a[3]+t*a[4]))));
+    const pdf=Math.exp(-x*x/2)/Math.sqrt(2*Math.PI);
+    const c=1-pdf*poly;
+    return x>=0?c:1-c;
+  }
+  function d1(S,K,T,r,sig){ return (Math.log(S/K)+(r+sig*sig/2)*T)/(sig*Math.sqrt(T)); }
+  function bsPut(S,K,T,r,sig){ const sq=sig*Math.sqrt(T); const _d1=d1(S,K,T,r,sig); return K*Math.exp(-r*T)*norm(sq-_d1)-S*norm(-_d1); }
+  function vega(S,K,T,r,sig){ const _d1=d1(S,K,T,r,sig); return S*Math.exp(-r*T)*Math.exp(-_d1*_d1/2)/Math.sqrt(2*Math.PI)*Math.sqrt(T); }
+
+  const K=100, T=0.5, r=0.05, sig=0.25, tc=0.25;
+  const Kstar = K * Math.exp(-(r)*(T-tc)); // q=0
+  const SPOTS = Array.from({length:17},(_,i)=>60+i*5);
+
+  const bOpts = {
+    responsive:true, maintainAspectRatio:false,
+    animation:{duration:420,easing:'easeOutQuart'},
+    plugins:{
+      legend:{display:true,labels:{color:'rgba(241,250,238,.65)',font:{family:'DM Sans',size:9},usePointStyle:true,padding:8,boxWidth:8}},
+      tooltip:{backgroundColor:'rgba(10,15,26,.9)',titleColor:'rgba(241,250,238,.9)',bodyColor:'rgba(241,250,238,.75)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleFont:{family:'JetBrains Mono',size:9},bodyFont:{family:'JetBrains Mono',size:9},padding:7}
+    },
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)',drawBorder:false},ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}}},
+      y:{grid:{color:'rgba(255,255,255,.07)',drawBorder:false},ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}}}
+    }
+  };
+
+  const inited={};
+  function initChart(id){
+    if(inited[id])return; inited[id]=true;
+    const labels=SPOTS.map(s=>'$'+s);
+
+    if(id==='payoff'){
+      new Chart(document.getElementById('chart-s5-payoff'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Payoff con K*',data:SPOTS.map(s=>Math.max(Kstar-s,0)),borderColor:'rgba(74,158,187,.9)',backgroundColor:'rgba(74,158,187,.1)',borderWidth:2.5,fill:true,tension:0,pointRadius:0,pointHoverRadius:4},
+          {label:'Payoff con K (ref)',data:SPOTS.map(s=>Math.max(K-s,0)),borderColor:'rgba(255,255,255,.25)',borderDash:[5,3],backgroundColor:'rgba(201,155,69,.05)',borderWidth:1.5,fill:true,tension:0,pointRadius:0}
+        ]},
+        options:{...bOpts,scales:{...bOpts.scales,y:{...bOpts.scales.y,ticks:{...bOpts.scales.y.ticks,callback:v=>'$'+v}}}}
+      });
+    } else if(id==='precio'){
+      const putKstar=SPOTS.map(s=>bsPut(s,Kstar,tc,r,sig));
+      const putK=SPOTS.map(s=>bsPut(s,K,T,r,sig));
+      new Chart(document.getElementById('chart-s5-precio'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'P(S, K*) — en la chooser',data:putKstar,borderColor:'rgba(74,158,187,.9)',backgroundColor:'rgba(74,158,187,.1)',borderWidth:2.5,fill:true,tension:.35,pointRadius:0,pointHoverRadius:4},
+          {label:'P(S, K) — put vanilla ref',data:putK,borderColor:'rgba(201,155,69,.8)',backgroundColor:'rgba(201,155,69,.05)',borderDash:[4,3],borderWidth:1.5,fill:true,tension:.35,pointRadius:0}
+        ]},
+        options:{...bOpts,scales:{...bOpts.scales,y:{...bOpts.scales.y,min:0,max:45,ticks:{...bOpts.scales.y.ticks,callback:v=>'$'+v}}}}
+      });
+    } else if(id==='vega'){
+      const vegas=SPOTS.map(s=>vega(s,K,T,r,sig)*100); // scaled for visibility
+      new Chart(document.getElementById('chart-s5-vega'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Vega (Put, tc=0.25)',data:SPOTS.map(s=>vega(s,Kstar,tc,r,sig)*100),borderColor:'rgba(124,111,205,.9)',backgroundColor:'rgba(124,111,205,.1)',borderWidth:2.5,fill:true,tension:.4,pointRadius:0,pointHoverRadius:4},
+          {label:'Vega (Call, T=0.5)',data:vegas,borderColor:'rgba(45,139,139,.7)',backgroundColor:'rgba(45,139,139,.05)',borderDash:[4,3],borderWidth:1.5,fill:true,tension:.4,pointRadius:0}
+        ]},
+        options:{...bOpts,scales:{...bOpts.scales,y:{...bOpts.scales.y,ticks:{...bOpts.scales.y.ticks,callback:v=>v.toFixed(1)}}}}
+      });
+    }
+  }
+
+  window.s5Show=function(id){
+    document.getElementById('s5-placeholder').style.display='none';
+    ['payoff','precio','vega'].forEach(k=>{
+      document.getElementById('s5-panel-'+k).style.display='none';
+      const btn=document.getElementById('s5-btn-'+k);
+      if(btn){btn.style.transform='';btn.style.boxShadow='';}
+    });
+    document.getElementById('s5-panel-'+id).style.display='block';
+    const btn=document.getElementById('s5-btn-'+id);
+    if(btn){btn.style.transform='translateX(4px)';btn.style.boxShadow='inset 3px 0 0 var(--blue)';}
+    initChart(id);
+  };
+})();
+</script>
 
 <!-- ────────────────────────────────────────────────────────────────
   06  FÓRMULA — ¿Por qué K*? Intuición de la paridad
