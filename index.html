@@ -421,17 +421,17 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark active" data-i="0" data-phase="Portada">
   <div class="inner">
-    <div class="lbl lbl-teal">Derivados Exóticos · Finanzas Cuantitativas</div>
-    <h1 class="t-xl">La opción que<br/><em>compra tiempo</em></h1>
-    <p class="t-sub" style="margin-top:.8rem; max-width:50ch;">
+    <div class="lbl lbl-teal s0-el" style="opacity:0;transform:translateY(-16px);">Derivados Exóticos · Finanzas Cuantitativas</div>
+    <h1 class="t-xl s0-el" style="opacity:0;transform:translateY(20px);">La opción que<br/><em>compra tiempo</em></h1>
+    <p class="t-sub s0-el" style="margin-top:.8rem;max-width:50ch;opacity:0;transform:translateY(16px);">
       Chooser Option — el derecho de esperar, observar y decidir.
     </p>
-    <div class="cover-meta">
+    <div class="cover-meta s0-el" style="opacity:0;transform:translateY(14px);">
       <div class="cover-meta-item"><div class="ml">Tipo</div><div class="mv">Opción Exótica</div></div>
       <div class="cover-meta-item"><div class="ml">Payoff</div><div class="mv">max(C, P)</div></div>
       <div class="cover-meta-item"><div class="ml">Clave</div><div class="mv">Flexibilidad en t<sub>c</sub></div></div>
     </div>
-    <div class="cover-authors" style="margin-top:1.5rem;">
+    <div class="cover-authors s0-el" style="margin-top:1.5rem;opacity:0;transform:translateY(12px);">
       <div class="cover-author"><div class="ca-dot"></div><div class="ca-name">Juan Felipe Barriga Beltrán</div></div>
       <div class="cover-author"><div class="ca-dot"></div><div class="ca-name">Ana Sofía Rojas Valderrama</div></div>
     </div>
@@ -479,7 +479,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
       <!-- Columna derecha: contraste -->
       <div style="display:flex;flex-direction:column;gap:.55rem;justify-content:center;">
-        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.1rem;">Contraste rápido — haz click</div>
+        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.1rem;">Contraste rápido</div>
 
         <div id="s1-card-call" onclick="s1ShowChart('call')"
           style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.8rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b),box-shadow .2s;">
@@ -747,7 +747,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         <text x="755" y="46" text-anchor="end" font-family="DM Sans" font-size="10" fill="var(--ink3)">tiempo</text>
       </svg>
       <div style="text-align:center;font-size:.68rem;color:var(--ink3);margin-top:.3rem;">
-        Haz click en cada punto para ver qué sucede
+        Haz click en los puntos para ver más detalles
       </div>
     </div>
 
@@ -983,6 +983,9 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
       group.addEventListener('click', () => showPanel(id));
     });
   });
+
+  /* expose for external auto-play */
+  window.s2ShowPanel = showPanel;
 })();
 </script>
 
@@ -1007,7 +1010,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         donde&nbsp;&nbsp;
         <span id="s3-btn-kstar" onclick="s3Show('kstar')" style="color:var(--amber);background:rgba(201,155,69,.1);border:1px solid rgba(201,155,69,.25);border-radius:6px;padding:.15rem .5rem;cursor:pointer;transition:background .2s;">K* = K · e<sup>−(r−q)(T−t<sub>c</sub>)</sup></span>
       </div>
-      <div style="margin-top:.5rem;font-family:var(--mono);font-size:.6rem;color:var(--ink3);">haz click en cada término para ver su gráfico</div>
+      <div style="margin-top:.5rem;font-family:var(--mono);font-size:.6rem;color:var(--ink3);">click en cada término para explorar</div>
     </div>
 
     <!-- LAYOUT: valores calculados + panel -->
@@ -1205,7 +1208,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         </div>
 
         <!-- 3 botones clicables -->
-        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Explora — haz click</div>
+        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Explora</div>
 
         <div id="s4-btn-payoff" onclick="s4Show('payoff')"
           style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
@@ -1363,7 +1366,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         </div>
 
         <!-- 3 botones clicables -->
-        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Explora — haz click</div>
+        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Explora</div>
 
         <div id="s5-btn-payoff" onclick="s5Show('payoff')"
           style="background:rgba(74,158,187,.08);border:1px solid rgba(74,158,187,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
@@ -1992,6 +1995,207 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
       setTimeout(()=>animCount('s9-v3',21,'+$',700),600);
     },1800);
   });
+})();
+</script>
+
+<script>
+/* ── SLIDES 00–05 — Auto-play entrance animations ─────────────────── */
+(function() {
+
+  /* ── helper: animate a list of elements in with stagger ── */
+  function cascade(els, delay0, step, dur) {
+    els.forEach(function(el, i) {
+      setTimeout(function() {
+        el.style.transition = 'opacity ' + dur + 'ms ease, transform ' + dur + 'ms ease';
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      }, delay0 + i * step);
+    });
+  }
+
+  /* ── Slide 00 — Portada ── */
+  var s0 = document.querySelector('[data-i="0"]');
+  /* Run once on first render since it starts active */
+  setTimeout(function() {
+    cascade(document.querySelectorAll('.s0-el'), 120, 200, 700);
+  }, 100);
+  s0.addEventListener('slideenter', function() {
+    document.querySelectorAll('.s0-el').forEach(function(el) {
+      el.style.opacity = '0';
+      el.style.transform = el.classList.contains('t-xl') ? 'translateY(20px)' :
+                           el.classList.contains('lbl')  ? 'translateY(-16px)' : 'translateY(14px)';
+    });
+    setTimeout(function() {
+      cascade(document.querySelectorAll('.s0-el'), 0, 200, 700);
+    }, 80);
+  });
+
+  /* ── Slide 01 — Introducción ── */
+  document.querySelector('[data-i="1"]').addEventListener('slideenter', function() {
+    /* Cards on left column */
+    var leftCards = document.querySelectorAll('[data-i="1"] .co');
+    leftCards.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateX(-18px)'; });
+    /* Right-column items */
+    var rightItems = [
+      document.getElementById('s1-card-call'),
+      document.getElementById('s1-card-put'),
+      document.getElementById('s1-card-chooser'),
+    ].filter(Boolean);
+    rightItems.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateX(18px)'; });
+
+    /* Hide panel & placeholder */
+    var placeholder = document.getElementById('s1-panel-placeholder');
+    if (placeholder) placeholder.style.display = 'flex';
+    ['problema','call','put','chooser'].forEach(function(k) {
+      var p = document.getElementById('s1-panel-' + k);
+      if (p) p.style.display = 'none';
+    });
+
+    /* Animate left cards */
+    cascade(leftCards, 150, 200, 480);
+    /* Animate right items */
+    cascade(rightItems, 350, 180, 450);
+    /* Auto-show chooser chart after all cards visible */
+    setTimeout(function() { if (window.s1ShowChart) window.s1ShowChart('chooser'); }, 1400);
+  });
+
+  /* ── Slide 02 — Mecanismo (timeline) ── */
+  document.querySelector('[data-i="2"]').addEventListener('slideenter', function() {
+    /* Reset panels */
+    var ph = document.getElementById('s2-panel-placeholder');
+    if (ph) { ph.style.display = 'flex'; ph.style.opacity = '0'; }
+    ['t0','tc','T'].forEach(function(k) {
+      var p = document.getElementById('s2-panel-' + k);
+      if (p) p.style.display = 'none';
+    });
+
+    /* Animate timeline container */
+    var timelineBox = document.querySelector('[data-i="2"] .inner > div:first-of-type');
+    if (timelineBox) {
+      timelineBox.style.opacity = '0';
+      timelineBox.style.transform = 'translateY(20px)';
+      setTimeout(function() {
+        timelineBox.style.transition = 'opacity .5s ease, transform .5s ease';
+        timelineBox.style.opacity = '1';
+        timelineBox.style.transform = 'none';
+      }, 100);
+    }
+    /* Fade in placeholder */
+    if (ph) {
+      setTimeout(function() {
+        ph.style.transition = 'opacity .4s ease';
+        ph.style.opacity = '1';
+      }, 400);
+    }
+    /* Auto-reveal each panel in sequence: t=0 → tc → T */
+    var panels = ['t0','tc','T'];
+    panels.forEach(function(id, i) {
+      setTimeout(function() {
+        if (window.s2ShowPanel) {
+          window.s2ShowPanel(id);
+        } else {
+          /* fallback — call internal showPanel via click simulation */
+          var grp = document.getElementById(id + '-group');
+          if (grp) grp.dispatchEvent(new MouseEvent('click'));
+        }
+      }, 800 + i * 1600);
+    });
+  });
+
+  /* ── Slide 03 — Fórmula ── */
+  document.querySelector('[data-i="3"]').addEventListener('slideenter', function() {
+    /* Animate formula box */
+    var formulaBox = document.querySelector('[data-i="3"] .inner > div:nth-child(3)');
+    var paramsCol  = document.querySelector('[data-i="3"] .inner > div:nth-child(4)');
+
+    if (formulaBox) {
+      formulaBox.style.opacity = '0';
+      formulaBox.style.transform = 'translateY(16px)';
+      setTimeout(function() {
+        formulaBox.style.transition = 'opacity .5s ease, transform .5s ease';
+        formulaBox.style.opacity = '1';
+        formulaBox.style.transform = 'none';
+      }, 150);
+    }
+    if (paramsCol) {
+      paramsCol.style.opacity = '0';
+      paramsCol.style.transform = 'translateY(14px)';
+      setTimeout(function() {
+        paramsCol.style.transition = 'opacity .5s ease, transform .5s ease';
+        paramsCol.style.opacity = '1';
+        paramsCol.style.transform = 'none';
+      }, 400);
+    }
+    /* Auto-show kstar explanation */
+    setTimeout(function() {
+      if (window.s3Show) window.s3Show('kstar');
+    }, 1100);
+  });
+
+  /* ── Slide 04 — Pierna larga ── */
+  document.querySelector('[data-i="4"]').addEventListener('slideenter', function() {
+    var def = document.querySelector('[data-i="4"] .co');
+    var btns = [
+      document.getElementById('s4-btn-payoff'),
+      document.getElementById('s4-btn-precio'),
+      document.getElementById('s4-btn-delta'),
+    ].filter(Boolean);
+
+    /* Reset */
+    document.getElementById('s4-placeholder').style.display = 'flex';
+    ['payoff','precio','delta'].forEach(function(k) {
+      var p = document.getElementById('s4-panel-' + k);
+      if (p) p.style.display = 'none';
+    });
+
+    if (def) { def.style.opacity = '0'; def.style.transform = 'translateY(16px)'; }
+    btns.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateX(-12px)'; });
+
+    if (def) {
+      setTimeout(function() {
+        def.style.transition = 'opacity .45s ease, transform .45s ease';
+        def.style.opacity = '1';
+        def.style.transform = 'none';
+      }, 150);
+    }
+    cascade(btns, 350, 200, 440);
+    setTimeout(function() { if (window.s4Show) window.s4Show('payoff'); }, 1350);
+  });
+
+  /* ── Slide 05 — Pierna corta ── */
+  document.querySelector('[data-i="5"]').addEventListener('slideenter', function() {
+    var def = document.querySelector('[data-i="5"] .co');
+    var btns = [
+      document.getElementById('s5-btn-payoff'),
+      document.getElementById('s5-btn-precio'),
+      document.getElementById('s5-btn-vega'),
+    ].filter(Boolean);
+
+    /* Reset */
+    var ph5 = document.getElementById('s5-placeholder');
+    if (ph5) ph5.style.display = 'flex';
+    ['payoff','precio','vega'].forEach(function(k) {
+      var p = document.getElementById('s5-panel-' + k);
+      if (p) p.style.display = 'none';
+    });
+
+    if (def) { def.style.opacity = '0'; def.style.transform = 'translateY(16px)'; }
+    btns.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateX(-12px)'; });
+
+    if (def) {
+      setTimeout(function() {
+        def.style.transition = 'opacity .45s ease, transform .45s ease';
+        def.style.opacity = '1';
+        def.style.transform = 'none';
+      }, 150);
+    }
+    cascade(btns, 350, 200, 440);
+    setTimeout(function() { if (window.s5Show) window.s5Show('payoff'); }, 1350);
+  });
+
+  /* expose showPanel for slide 02 auto-trigger */
+  window.s2ShowPanel = null; // populated by slide 02's own IIFE if refactored
+
 })();
 </script>
 
