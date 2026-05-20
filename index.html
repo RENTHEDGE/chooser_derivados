@@ -527,60 +527,114 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     <div class="lbl lbl-blue">Mecanismo</div>
     <h2 class="t-h">Cómo funciona</h2>
 
-    <!-- TIMELINE -->
-    <div class="timeline mt5">
-      <div class="tl-step">
-        <div class="tl-dot d-teal">t₀</div>
-        <div class="tl-title">Hoy</div>
-        <div class="tl-desc">Compras la opción y pagas la prima</div>
-      </div>
-      <div class="tl-step">
-        <div class="tl-dot d-blue">t<sub style="font-size:.6em">c</sub></div>
-        <div class="tl-title">Fecha chooser</div>
-        <div class="tl-desc">Observas el mercado y eliges: ¿call o put?</div>
-      </div>
-      <div class="tl-step">
-        <div class="tl-dot d-amber">T</div>
-        <div class="tl-title">Vencimiento</div>
-        <div class="tl-desc">Se ejerce la opción elegida</div>
+    <!-- INTERACTIVE TIMELINE CHART -->
+    <div style="margin-top:1.5rem;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.5rem;position:relative;overflow:hidden;">
+      <svg id="timeline-chart" width="100%" height="280" viewBox="0 0 800 280" style="display:block;">
+        <!-- Eje horizontal -->
+        <line x1="60" y1="200" x2="750" y2="200" stroke="rgba(255,255,255,.15)" stroke-width="2"/>
+
+        <!-- Punto t=0 -->
+        <g id="t0-group">
+          <circle cx="100" cy="200" r="12" fill="rgba(45,139,139,.3)" stroke="var(--teal)" stroke-width="2"/>
+          <text x="100" y="230" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="var(--teal)" font-weight="600">t = 0</text>
+          <text x="100" y="250" text-anchor="middle" font-family="DM Sans" font-size="12" fill="var(--ink3)">HOY</text>
+
+          <!-- Info box (hidden) -->
+          <rect id="t0-box" x="35" y="40" width="130" height="140" rx="6" fill="rgba(45,139,139,.1)" stroke="rgba(45,139,139,.4)" stroke-width="1" style="display:none;"/>
+          <text id="t0-label" x="100" y="65" text-anchor="middle" font-family="DM Sans" font-size="13" font-weight="600" fill="var(--teal)" style="display:none;">Compras la opción</text>
+          <text id="t0-v1" x="100" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">S₀ = $150</text>
+          <text id="t0-v2" x="100" y="108" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">K = $150</text>
+          <text id="t0-v3" x="100" y="126" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">Prima P = $8.50</text>
+          <text id="t0-v4" x="100" y="144" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">σ = 28%</text>
+        </g>
+
+        <!-- Punto t=tc (chooser date) -->
+        <g id="tc-group">
+          <circle cx="400" cy="200" r="12" fill="rgba(74,158,187,.3)" stroke="var(--blue)" stroke-width="2"/>
+          <text x="400" y="230" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="var(--blue)" font-weight="600">t = t<tspan font-size="11">c</tspan></text>
+          <text x="400" y="250" text-anchor="middle" font-family="DM Sans" font-size="12" fill="var(--ink3)">DECISIÓN</text>
+
+          <!-- Info box (hidden) -->
+          <rect id="tc-box" x="335" y="40" width="130" height="140" rx="6" fill="rgba(74,158,187,.1)" stroke="rgba(74,158,187,.4)" stroke-width="1" style="display:none;"/>
+          <text id="tc-label" x="400" y="65" text-anchor="middle" font-family="DM Sans" font-size="13" font-weight="600" fill="var(--blue)" style="display:none;">Ves el mercado</text>
+          <text id="tc-v1" x="400" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">S<tspan font-size="9">tc</tspan> = $165</text>
+          <text id="tc-v2" x="400" y="108" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--blue)" style="display:none;">Call vale: $18.5</text>
+          <text id="tc-v3" x="400" y="126" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--blue)" style="display:none;">Put vale: $2.1</text>
+          <text id="tc-v4" x="400" y="144" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--teal)" font-weight="600" style="display:none;">→ Elige CALL</text>
+        </g>
+
+        <!-- Punto t=T (vencimiento) -->
+        <g id="T-group">
+          <circle cx="700" cy="200" r="12" fill="rgba(201,155,69,.3)" stroke="var(--amber)" stroke-width="2"/>
+          <text x="700" y="230" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="var(--amber)" font-weight="600">t = T</text>
+          <text x="700" y="250" text-anchor="middle" font-family="DM Sans" font-size="12" fill="var(--ink3)">VENCIMIENTO</text>
+
+          <!-- Info box (hidden) -->
+          <rect id="T-box" x="635" y="40" width="130" height="140" rx="6" fill="rgba(201,155,69,.1)" stroke="rgba(201,155,69,.4)" stroke-width="1" style="display:none;"/>
+          <text id="T-label" x="700" y="65" text-anchor="middle" font-family="DM Sans" font-size="13" font-weight="600" fill="var(--amber)" style="display:none;">Se ejerce</text>
+          <text id="T-v1" x="700" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">S<tspan font-size="9">T</tspan> = $172</text>
+          <text id="T-v2" x="700" y="108" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">Elegiste: CALL</text>
+          <text id="T-v3" x="700" y="126" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--green)" font-weight="600" style="display:none;">Payoff = $22</text>
+          <text id="T-v4" x="700" y="144" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--green)" style="display:none;">Neto = +$13.5</text>
+        </g>
+
+        <!-- Connecting line labels -->
+        <text x="250" y="175" font-family="DM Sans" font-size="11" fill="var(--ink3)" text-anchor="middle">Observas</text>
+        <text x="550" y="175" font-family="DM Sans" font-size="11" fill="var(--ink3)" text-anchor="middle">Ejerces</text>
+      </svg>
+
+      <!-- Hover hints -->
+      <div style="margin-top:.8rem;text-align:center;font-size:.72rem;color:var(--ink3);">
+        Pasa el cursor sobre cada punto para ver detalles
       </div>
     </div>
 
-    <!-- DETALLE DE CADA PASO -->
-    <div class="g3 mt4">
-      <div class="co co-teal" style="flex-direction:column;gap:.4rem;">
-        <div class="co-mark cm-teal" style="padding-top:0;">① t = 0</div>
-        <div class="co-text">
-          Pagas la prima <strong>P</strong> al vendedor.<br/>
-          Se fijan <strong>K</strong> (strike) y <strong>T</strong> (vencimiento).<br/>
-          <span style="color:var(--ink3);font-size:.82rem;">Aún no decides si quieres call o put.</span>
-        </div>
-      </div>
-      <div class="co co-blue" style="flex-direction:column;gap:.4rem;">
-        <div class="co-mark cm-blue" style="padding-top:0;">② t = t<sub>c</sub> &lt; T</div>
-        <div class="co-text">
-          Observas el precio spot <strong>S<sub>t_c</sub></strong>.<br/>
-          Eliges si tu opción será <strong>call</strong> o <strong>put</strong>.<br/>
-          <span style="color:var(--ink3);font-size:.82rem;">Valor en este momento: max(C, P)</span>
-        </div>
-      </div>
-      <div class="co co-amber" style="flex-direction:column;gap:.4rem;">
-        <div class="co-mark cm-amber" style="padding-top:0;">③ t = T</div>
-        <div class="co-text">
-          Se ejerce la opción elegida en t<sub>c</sub>.<br/>
-          <strong>Si call:</strong> max(S<sub>T</sub> − K, 0)<br/>
-          <strong>Si put:</strong> max(K − S<sub>T</sub>, 0)
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:.9rem;font-size:.78rem;color:var(--ink3);border-left:2px solid rgba(74,158,187,.3);padding-left:.85rem;line-height:1.6;">
-      Condición fundamental: <strong style="color:var(--blue);">t<sub>c</sub> &lt; T</strong> —
-      la fecha de elección siempre ocurre <em>antes</em> del vencimiento.
-      Ahí radica el valor de "comprar tiempo".
+    <!-- Explicación de los pasos -->
+    <div style="margin-top:1.2rem;font-size:.78rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(74,158,187,.3);padding-left:.85rem;">
+      <strong style="color:var(--blue);">La clave está en t<sub>c</sub>:</strong>
+      Entre hoy y el vencimiento hay un momento crucial donde decides. El mercado ya se movió,
+      y puedes elegir la pierna que más valor tiene. Eso es el poder de la chooser.
     </div>
   </div>
 </section>
+
+<script>
+// Slide 02 interactive timeline
+document.addEventListener('DOMContentLoaded', function() {
+  const groups = ['t0', 'tc', 'T'];
+  groups.forEach(id => {
+    const group = document.getElementById(id + '-group');
+    if (!group) return;
+
+    const circle = group.querySelector('circle');
+    const box = document.getElementById(id + '-box');
+    const labels = group.querySelectorAll('[id^="' + id + '-"]');
+
+    group.style.cursor = 'pointer';
+    group.addEventListener('mouseenter', () => {
+      circle.style.filter = 'drop-shadow(0 0 10px currentColor)';
+      box.style.display = 'block';
+      labels.forEach(el => {
+        if (el.id !== id + '-box' && el.id !== id + '-group') {
+          if (el.id.includes('-v') || el.id.includes('-label')) {
+            el.style.display = 'block';
+          }
+        }
+      });
+    });
+
+    group.addEventListener('mouseleave', () => {
+      circle.style.filter = '';
+      box.style.display = 'none';
+      labels.forEach(el => {
+        if (el.id.includes('-v') || el.id.includes('-label')) {
+          el.style.display = 'none';
+        }
+      });
+    });
+  });
+});
+</script>
 
 <!-- ────────────────────────────────────────────────────────────────
   03  FÓRMULA — presentación general
