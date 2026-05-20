@@ -434,8 +434,63 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   <div class="inner">
     <div class="lbl lbl-teal">Introducción</div>
     <h2 class="t-h">¿Qué es una Chooser Option?</h2>
-    <!-- PLACEHOLDER: definición conceptual, opción exótica, qué problema resuelve -->
-    <p class="t-body mt5">[Contenido por completar — definición, por qué exótica, problema que resuelve]</p>
+    <div class="g2 mt5">
+      <!-- Columna izquierda: definición + exótica -->
+      <div>
+        <div class="co co-teal">
+          <div class="co-mark cm-teal">Definición</div>
+          <div class="co-text">
+            Un contrato que otorga el derecho de elegir, en una fecha futura <strong>t<sub>c</sub></strong>,
+            si la opción actuará como <strong>call</strong> o como <strong>put</strong>
+            — mismo strike <em>K</em>, mismo vencimiento <em>T</em>.
+          </div>
+        </div>
+        <div class="co co-blue">
+          <div class="co-mark cm-blue">¿Por qué exótica?</div>
+          <div class="co-text">
+            A diferencia de una opción vanilla, la dirección <em>no se decide al comprar</em>.
+            La flexibilidad de elegir después tiene un valor propio que la hace "exótica plain"
+            con solución cerrada bajo Black-Scholes.
+          </div>
+        </div>
+        <div class="co co-amber">
+          <div class="co-mark cm-amber">El problema que resuelve</div>
+          <div class="co-text">
+            En eventos binarios (earnings, decisiones de banco central, referéndums),
+            la dirección del mercado es incierta. La chooser permite
+            <strong>comprar tiempo</strong> para observar y decidir mejor.
+          </div>
+        </div>
+      </div>
+      <!-- Columna derecha: contraste vanilla vs chooser -->
+      <div style="display:flex;flex-direction:column;gap:.7rem;justify-content:center;">
+        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.2rem;">Contraste rápido</div>
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;">
+          <span style="font-size:1.1rem;flex-shrink:0;">📌</span>
+          <div>
+            <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;">Call vanilla</div>
+            <div style="font-size:.78rem;color:var(--ink3);">Decides hoy que el precio <em>subirá</em>. Si baja, pierdes la prima.</div>
+          </div>
+        </div>
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;">
+          <span style="font-size:1.1rem;flex-shrink:0;">📌</span>
+          <div>
+            <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;">Put vanilla</div>
+            <div style="font-size:.78rem;color:var(--ink3);">Decides hoy que el precio <em>bajará</em>. Si sube, pierdes la prima.</div>
+          </div>
+        </div>
+        <div style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.3);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;">
+          <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
+          <div>
+            <div style="font-size:.78rem;font-weight:600;color:var(--teal);margin-bottom:.2rem;">Chooser Option</div>
+            <div style="font-size:.78rem;color:var(--ink2);">Pagas hoy. En <strong>t<sub>c</sub></strong> ves el mercado. <em>Entonces</em> eliges.</div>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--ink3);border-left:2px solid rgba(45,139,139,.3);padding-left:.75rem;margin-top:.2rem;line-height:1.5;">
+          Payoff en t<sub>c</sub>: <strong style="color:var(--teal);">V = max(C, P)</strong>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
