@@ -703,8 +703,49 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-teal">Componente 1</div>
     <h2 class="t-h">La pierna larga: C<sub>BS</sub>(S, K, T)</h2>
-    <!-- PLACEHOLDER: explicación del primer término de la fórmula, call estándar -->
-    <p class="t-body mt5">[Contenido por completar — Call Black-Scholes con vencimiento T]</p>
+
+    <div class="g2 mt5">
+      <div>
+        <div class="co co-teal">
+          <div class="co-mark cm-teal">¿Qué es?</div>
+          <div class="co-text">
+            Una <strong>call estándar de Black-Scholes</strong> que vence en <strong>T</strong> (el vencimiento final de la chooser). Tiene strike <strong>K</strong>.
+          </div>
+        </div>
+        <div class="co co-blue" style="margin-top:.8rem;">
+          <div class="co-mark cm-blue">Payoff en T</div>
+          <div class="co-text">
+            \(\max(S_T - K, 0)\)
+            <br/>Si el subyacente sube, la call imprime ganancia ilimitada.
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;justify-content:center;">
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;text-align:center;">
+          <svg width="100%" height="140" viewBox="0 0 200 140" style="max-width:180px;margin:0 auto;display:block;">
+            <!-- Ejes -->
+            <line x1="30" y1="110" x2="180" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <line x1="30" y1="20" x2="30" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <!-- Línea de pérdida -->
+            <line x1="30" y1="110" x2="90" y2="110" stroke="var(--ink3)" stroke-width="2" opacity=".5"/>
+            <!-- Línea de ganancia -->
+            <line x1="90" y1="110" x2="180" y2="20" stroke="var(--teal)" stroke-width="2.5"/>
+            <!-- Strike -->
+            <circle cx="90" cy="110" r="3" fill="var(--amber)"/>
+            <text x="90" y="130" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink3)">K</text>
+            <!-- Etiquetas -->
+            <text x="10" y="25" font-family="var(--mono)" font-size="9" fill="var(--ink3)">Payoff</text>
+            <text x="175" y="120" font-family="var(--mono)" font-size="9" fill="var(--ink3)">S<tspan font-size="8">T</tspan></text>
+          </svg>
+          <div style="font-size:.7rem;color:var(--ink3);margin-top:.6rem;">Diagrama de payoff: Call</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.2rem;font-size:.78rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(45,139,139,.3);padding-left:.85rem;">
+      <strong style="color:var(--teal);">¿Por qué en la chooser?</strong>
+      Esta call representa tu protección al alza. En <strong>t<sub>c</sub></strong>, si el mercado sube mucho y la call vale más que la put, elegirás ejercerla. Es la "opción A" en tu decisión binaria.
+    </div>
   </div>
 </section>
 
@@ -715,8 +756,49 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-blue">Componente 2</div>
     <h2 class="t-h">La pierna corta: P<sub>BS</sub>(S, K*, t<sub>c</sub>)</h2>
-    <!-- PLACEHOLDER: segundo término — put con strike ajustado K* y vencimiento tc -->
-    <p class="t-body mt5">[Contenido por completar — Put con K* y vencimiento tc]</p>
+
+    <div class="g2 mt5">
+      <div>
+        <div class="co co-blue">
+          <div class="co-mark cm-blue">¿Qué es?</div>
+          <div class="co-text">
+            Una <strong>put con vencimiento en t<sub>c</sub></strong> (no en T, sino en la fecha de decisión). Pero tiene un strike <strong>ajustado: K*</strong>.
+          </div>
+        </div>
+        <div class="co co-amber" style="margin-top:.8rem;">
+          <div class="co-mark cm-amber">Payoff en t<sub>c</sub></div>
+          <div class="co-text">
+            \(\max(K^* - S_{t_c}, 0)\)
+            <br/>Si el subyacente cae, la put imprime ganancia limitada por K*.
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;justify-content:center;">
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;text-align:center;">
+          <svg width="100%" height="140" viewBox="0 0 200 140" style="max-width:180px;margin:0 auto;display:block;">
+            <!-- Ejes -->
+            <line x1="30" y1="110" x2="180" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <line x1="30" y1="20" x2="30" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <!-- Línea de ganancia -->
+            <line x1="30" y1="40" x2="110" y2="110" stroke="var(--blue)" stroke-width="2.5"/>
+            <!-- Línea de pérdida -->
+            <line x1="110" y1="110" x2="180" y2="110" stroke="var(--ink3)" stroke-width="2" opacity=".5"/>
+            <!-- Strike K* -->
+            <circle cx="110" cy="110" r="3" fill="var(--amber)"/>
+            <text x="110" y="130" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink3)">K*</text>
+            <!-- Etiquetas -->
+            <text x="10" y="25" font-family="var(--mono)" font-size="9" fill="var(--ink3)">Payoff</text>
+            <text x="175" y="120" font-family="var(--mono)" font-size="9" fill="var(--ink3)">S<tspan font-size="8">tc</tspan></text>
+          </svg>
+          <div style="font-size:.7rem;color:var(--ink3);margin-top:.6rem;">Diagrama de payoff: Put</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.2rem;font-size:.78rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(74,158,187,.3);padding-left:.85rem;">
+      <strong style="color:var(--blue);">Nota sobre K* y t<sub>c</sub>:</strong>
+      La put vence <em>antes</em> que la call (en t<sub>c</sub>, no en T). Su strike K* está ajustado hacia abajo por el factor \(e^{-(r-q)(T-t_c)}\). Este ajuste refleja el costo de oportunidad de esperar desde t<sub>c</sub> hasta T.
+    </div>
   </div>
 </section>
 
@@ -727,8 +809,44 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-amber">Intuición</div>
     <h2 class="t-h">¿Por qué existe K*?</h2>
-    <!-- PLACEHOLDER: paridad put-call y por qué K* = K·e^{-(r-q)(T-tc)} -->
-    <p class="t-body mt5">[Contenido por completar — derivación de K* desde put-call parity]</p>
+
+    <div style="margin-top:1.5rem;">
+      <div class="co co-amber">
+        <div class="co-mark cm-amber">La paridad put-call</div>
+        <div class="co-text" style="font-size:.82rem;">
+          En cualquier momento, existe una relación fundamental:
+          <div style="margin:0.8rem 0;text-align:center;">
+            \[C(K, T) - P(K, T) = S \cdot e^{-qT} - K \cdot e^{-rT}\]
+          </div>
+          Esta relación asegura que no haya arbitraje entre calls y puts.
+        </div>
+      </div>
+
+      <div style="margin-top:1.2rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="co co-teal" style="padding:.9rem;">
+          <div class="co-mark cm-teal" style="padding-top:0;">En t = 0</div>
+          <div class="co-text" style="font-size:.76rem;">
+            Call y Put vencen ambas en T con el mismo strike K.
+          </div>
+        </div>
+        <div class="co co-blue" style="padding:.9rem;">
+          <div class="co-mark cm-blue" style="padding-top:0;">En t = t<sub>c</sub></div>
+          <div class="co-text" style="font-size:.76rem;">
+            Si queremos que valgan "lo mismo" en t<sub>c</sub>, debemos ajustar el strike de la put a <strong>K*</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;">
+        <div style="font-family:var(--mono);font-size:.7rem;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem;">Fórmula de K*</div>
+        <div style="font-size:.9rem;text-align:center;">
+          \[K^* = K \cdot e^{-(r-q)(T-t_c)}\]
+        </div>
+        <div style="font-size:.72rem;color:var(--ink3);margin-top:.8rem;line-height:1.5;">
+          El exponente \(-(r-q)(T-t_c)\) es negativo, por lo que <strong>K* < K</strong>. La put tiene strike más bajo porque vence antes.
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -739,8 +857,41 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-teal">Interpretación</div>
     <h2 class="t-h">El valor de esperar</h2>
-    <!-- PLACEHOLDER: intuición financiera final — la optionalidad sobre la dirección -->
-    <p class="t-body mt5">[Contenido por completar — la chooser = call + opción de elegir]</p>
+
+    <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="co co-teal">
+          <div class="co-mark cm-teal">Lo que obtienes</div>
+          <div class="co-text">
+            <strong>C<sub>BS</sub>:</strong> protección al alza (call completa).
+            <br/><strong>+ P<sub>BS</sub>:</strong> protección a la baja (put con strike reducido).
+            <br/>= Exposición a ambas direcciones.
+          </div>
+        </div>
+        <div class="co co-blue">
+          <div class="co-mark cm-blue">Lo que pagas</div>
+          <div class="co-text">
+            Una prima <strong>V₀</strong> que es menor que si compraras un <em>straddle</em> (call + put con el mismo strike).
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;">
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1rem;text-align:center;">
+          <div style="font-family:var(--serif);font-size:1.1rem;color:var(--teal);margin-bottom:.6rem;font-weight:500;">La fórmula resume:</div>
+          <div style="background:rgba(45,139,139,.1);border:1px solid rgba(45,139,139,.3);border-radius:8px;padding:.8rem;margin-bottom:.6rem;">
+            <div style="font-family:var(--mono);font-size:.8rem;color:var(--ink2);line-height:1.8;">
+              V₀ = Upside<br/>+ Downside<br/>− (Esperar)
+            </div>
+          </div>
+          <div style="font-size:.7rem;color:var(--ink3);">Equals: flexibilidad direccional</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;font-size:.78rem;color:var(--ink2);line-height:1.8;border-left:3px solid rgba(45,139,139,.4);padding-left:1rem;background:rgba(45,139,139,.05);border-radius:0 8px 8px 0;padding:.9rem .85rem .9rem 1rem;">
+      <strong style="color:var(--teal);">La intuición profunda:</strong>
+      La chooser te permite <strong>vender</strong> información (pagas K* reducida) a cambio de <strong>recibir</strong> optionalidad. En t<sub>c</sub>, el mercado reveló información. Ahora sabes si subió o bajó. Y puedes elegir la pierna que aprovecha ese escenario. Eso es lo que <strong>compra tiempo</strong>.
+    </div>
   </div>
 </section>
 
@@ -751,8 +902,51 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-green">Payoffs</div>
     <h2 class="t-h">Escenario 1: eleges Call</h2>
-    <!-- PLACEHOLDER: payoff diagram para call + canvas Chart.js -->
-    <p class="t-body mt5">[Contenido por completar — payoff call + gráfico]</p>
+
+    <div class="g2 mt4">
+      <div>
+        <div class="co co-green">
+          <div class="co-mark cm-green" style="background:var(--green);">¿Cuándo?</div>
+          <div class="co-text">
+            Cuando en t<sub>c</sub> observas que el subyacente <strong>subió significativamente</strong>.
+            El valor de la call es mayor que el de la put: <strong>C > P</strong>.
+          </div>
+        </div>
+        <div class="co co-teal" style="margin-top:.8rem;">
+          <div class="co-mark cm-teal">En T (vencimiento)</div>
+          <div class="co-text">
+            <strong>Payoff = max(S<sub>T</sub> − K, 0)</strong>
+            <br/>Ganancia ilimitada si S<sub>T</sub> > K.<br/>Pérdida limitada a prima si S<sub>T</sub> ≤ K.
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:1rem;">
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;text-align:center;">
+          <svg width="100%" height="150" viewBox="0 0 220 150" style="max-width:200px;margin:0 auto;display:block;">
+            <!-- Ejes -->
+            <line x1="30" y1="110" x2="200" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <line x1="30" y1="20" x2="30" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <!-- Línea de pérdida (prima) -->
+            <line x1="30" y1="100" x2="90" y2="100" stroke="var(--red)" stroke-width="2.5" opacity=".7"/>
+            <!-- Línea de ganancia -->
+            <line x1="90" y1="100" x2="200" y2="20" stroke="var(--green)" stroke-width="2.5"/>
+            <!-- Strike -->
+            <circle cx="90" cy="110" r="3" fill="var(--amber)"/>
+            <text x="90" y="130" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink3)">K</text>
+            <!-- Etiquetas -->
+            <text x="8" y="20" font-family="var(--mono)" font-size="9" fill="var(--ink3)">Payoff</text>
+            <text x="195" y="120" font-family="var(--mono)" font-size="9" fill="var(--ink3)">S<tspan font-size="8">T</tspan></text>
+            <!-- Prima -->
+            <text x="45" y="85" font-family="var(--mono)" font-size="8" fill="var(--red)" opacity=".8">-P</text>
+          </svg>
+          <div style="font-size:.7rem;color:var(--ink3);margin-top:.6rem;">Payoff final: Call elegida</div>
+        </div>
+        <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:8px;padding:.8rem;font-size:.72rem;color:var(--ink2);line-height:1.5;">
+          <strong style="color:var(--green);">Máximo potencial:</strong> Ilimitado
+          <br/><strong style="color:var(--green);">Riesgo:</strong> Prima pagada (P)
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -763,8 +957,51 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-red" style="color:var(--red);">Payoffs</div>
     <h2 class="t-h">Escenario 2: eleges Put</h2>
-    <!-- PLACEHOLDER: payoff diagram para put + canvas Chart.js -->
-    <p class="t-body mt5">[Contenido por completar — payoff put + gráfico]</p>
+
+    <div class="g2 mt4">
+      <div>
+        <div class="co co-red" style="border-left-color:var(--red);">
+          <div class="co-mark cm-red" style="background:var(--red);">¿Cuándo?</div>
+          <div class="co-text">
+            Cuando en t<sub>c</sub> observas que el subyacente <strong>cayó significativamente</strong>.
+            El valor de la put es mayor que el de la call: <strong>P > C</strong>.
+          </div>
+        </div>
+        <div class="co co-blue" style="margin-top:.8rem;border-left-color:var(--blue);">
+          <div class="co-mark cm-blue">En T (vencimiento)</div>
+          <div class="co-text">
+            <strong>Payoff = max(K − S<sub>T</sub>, 0)</strong>
+            <br/>Ganancia limitada a (K − S<sub>T</sub>).<br/>Pérdida limitada a prima si S<sub>T</sub> ≥ K.
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:1rem;">
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;text-align:center;">
+          <svg width="100%" height="150" viewBox="0 0 220 150" style="max-width:200px;margin:0 auto;display:block;">
+            <!-- Ejes -->
+            <line x1="30" y1="110" x2="200" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <line x1="30" y1="20" x2="30" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <!-- Línea de ganancia -->
+            <line x1="30" y1="30" x2="130" y2="110" stroke="var(--blue)" stroke-width="2.5"/>
+            <!-- Línea de pérdida (prima) -->
+            <line x1="130" y1="110" x2="200" y2="100" stroke="var(--red)" stroke-width="2.5" opacity=".7"/>
+            <!-- Strike -->
+            <circle cx="130" cy="110" r="3" fill="var(--amber)"/>
+            <text x="130" y="130" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink3)">K</text>
+            <!-- Etiquetas -->
+            <text x="8" y="20" font-family="var(--mono)" font-size="9" fill="var(--ink3)">Payoff</text>
+            <text x="195" y="120" font-family="var(--mono)" font-size="9" fill="var(--ink3)">S<tspan font-size="8">T</tspan></text>
+            <!-- Prima -->
+            <text x="160" y="85" font-family="var(--mono)" font-size="8" fill="var(--red)" opacity=".8">-P</text>
+          </svg>
+          <div style="font-size:.7rem;color:var(--ink3);margin-top:.6rem;">Payoff final: Put elegida</div>
+        </div>
+        <div style="background:rgba(74,158,187,.08);border:1px solid rgba(74,158,187,.3);border-radius:8px;padding:.8rem;font-size:.72rem;color:var(--ink2);line-height:1.5;">
+          <strong style="color:var(--blue);">Máximo potencial:</strong> K − S<sub>T</sub>
+          <br/><strong style="color:var(--blue);">Riesgo:</strong> Prima pagada (P)
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -775,8 +1012,45 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-amber">Valoración</div>
     <h2 class="t-h">¿Por qué es más cara que una vanilla?</h2>
-    <!-- PLACEHOLDER: comparación chooser vs call, put, straddle; factores de precio -->
-    <p class="t-body mt5">[Contenido por completar — tabla comparativa y factores de valor]</p>
+
+    <div style="margin-top:1.5rem;">
+      <div style="font-size:.74rem;color:var(--ink2);margin-bottom:1rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;">Comparativa de precios (S = K = 100, T = 1 año, t<sub>c</sub> = 6 meses, r = 5%, σ = 25%)</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th style="font-size:.7rem;">Instrumento</th><th style="font-size:.7rem;">Prima</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--green);font-weight:600;">Chooser</td><td style="color:var(--green);font-weight:600;">$8.92</td></tr>
+              <tr><td style="color:var(--ink2);">Call Vainilla</td><td style="color:var(--ink2);">$6.04</td></tr>
+              <tr><td style="color:var(--ink2);">Put Vainilla</td><td style="color:var(--ink2);">$5.13</td></tr>
+              <tr><td style="color:var(--ink2);">Straddle (C+P)</td><td style="color:var(--ink2);">$11.17</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:.6rem;">
+          <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:8px;padding:.7rem;font-size:.7rem;line-height:1.6;">
+            <strong style="color:var(--green);">Chooser > Call</strong><br/>
+            +48% más cara (paga por optionalidad)
+          </div>
+          <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:8px;padding:.7rem;font-size:.7rem;line-height:1.6;">
+            <strong style="color:var(--green);">Chooser < Straddle</strong><br/>
+            −20% más barata (reduces payoff máximo)
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:.8rem;">
+        <div class="co co-amber">
+          <div class="co-mark cm-amber">¿Por qué el premium?</div>
+          <div class="co-text" style="font-size:.78rem;">
+            <strong>Optionalidad:</strong> Pagas por el derecho a elegir DESPUÉS de ver el mercado.
+            <br/><strong>Menor riesgo:</strong> No pagas ambas piernas por completo; pagas por K* ajustado.
+            <br/><strong>Volatilidad:</strong> Mayor volatilidad entre t₀ y t<sub>c</sub> = mayor valor de la opción.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -787,8 +1061,33 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-blue">Aplicaciones</div>
     <h2 class="t-h">Usos, ventajas y riesgos</h2>
-    <!-- PLACEHOLDER: tarjetas con casos de uso, ventajas, riesgos -->
-    <p class="t-body mt5">[Contenido por completar — cards con usos / ventajas / riesgos]</p>
+
+    <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="co co-blue">
+        <div class="co-mark cm-blue">Casos de uso</div>
+        <div class="co-text" style="font-size:.78rem;">
+          <strong>Earnings:</strong> No sabes si subirá o bajará, así que compras flexibilidad.<br/>
+          <strong>Anuncios:</strong> FDA approval, M&A news, resultados trimestrales.<br/>
+          <strong>Política:</strong> Elecciones, cambios regulatorios.<br/>
+          <strong>Commodities:</strong> Reportes de inventario, condiciones climáticas.
+        </div>
+      </div>
+      <div class="co co-green" style="border-left-color:var(--green);">
+        <div class="co-mark cm-green" style="background:var(--green);">Ventajas</div>
+        <div class="co-text" style="font-size:.78rem;">
+          <strong>Flexibilidad:</strong> Esperas a ver el mercado antes de decidir.<br/>
+          <strong>Costo:</strong> Más barata que straddle.
+          <br/><strong>Límite de riesgo:</strong> Prima conocida desde el inicio.<br/>
+          <strong>Exposición simétrica:</strong> Proteción al alza y a la baja.
+        </div>
+      </div>
+      <div class="co co-red" style="border-left-color:var(--red);grid-column:1/-1;">
+        <div class="co-mark cm-red" style="background:var(--red);">Riesgos y limitaciones</div>
+        <div class="co-text" style="font-size:.78rem;">
+          <strong>Riesgo de liquidez:</strong> Opción exótica, menos líquida que vanilla. <strong>Riesgo de gap:</strong> El mercado puede mover más entre t₀ y t<sub>c</sub>, anulando el valor de la opción. <strong>Riesgo de modelo:</strong> La fórmula de Rubinstein asume distribución lognormal; eventos extremos pueden violarla. <strong>Riesgo de crédito del emisor:</strong> Es un derivado bilateral.
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -799,8 +1098,43 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-amber">Caso práctico</div>
     <h2 class="t-h">El trade: Apple antes del earnings</h2>
-    <!-- PLACEHOLDER: contexto del caso, empresa, fecha, precio, volatilidad -->
-    <p class="t-body mt5">[Contenido por completar — contexto narrativo del caso AAPL]</p>
+
+    <div class="g2 mt5">
+      <div>
+        <div class="co co-amber">
+          <div class="co-mark cm-amber">Situación</div>
+          <div class="co-text" style="font-size:.8rem;">
+            Estamos en enero, Apple dará resultados Q1 en una semana. El mercado está nervioso: ¿Iphone 16 vendió bien? ¿Margen mejoró?<br/><br/>
+            <strong>Tu perspectiva:</strong> Volátil, pero no sabes la dirección.
+          </div>
+        </div>
+        <div class="co co-blue" style="margin-top:.8rem;">
+          <div class="co-mark cm-blue">Parámetros</div>
+          <div class="co-text" style="font-size:.77rem;">
+            • Subyacente: AAPL = $230<br/>
+            • Strike: K = $230<br/>
+            • Hoy (t₀): 7 enero<br/>
+            • Earnings (t<sub>c</sub>): 14 enero (1 semana)<br/>
+            • Vencimiento (T): 21 enero (2 semanas)<br/>
+            • Volatilidad: σ = 35% (anualizada)<br/>
+            • r = 5%, q = 0%
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;">
+        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;text-align:center;">
+          <div style="font-family:var(--serif);font-size:1rem;color:var(--amber);margin-bottom:.8rem;font-weight:500;">Precio de la chooser</div>
+          <div style="font-family:var(--mono);font-size:1.3rem;color:var(--amber);margin-bottom:.6rem;font-weight:600;">$9.82</div>
+          <div style="font-size:.72rem;color:var(--ink3);line-height:1.6;border-top:1px solid rgba(255,255,255,.1);padding-top:.8rem;">
+            Es un 63% más cara que una call vanilla ($6.04) pero 12% más barata que un straddle ($11.17).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.2rem;font-size:.76rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(201,155,69,.3);padding-left:.85rem;">
+      <strong style="color:var(--amber);">Tu pregunta:</strong> ¿Vale la pena pagar $9.82 por la flexibilidad de esperar hasta el earnings antes de elegir?
+    </div>
   </div>
 </section>
 
@@ -811,9 +1145,32 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-amber">Caso práctico</div>
     <h2 class="t-h">El movimiento del precio</h2>
-    <!-- PLACEHOLDER: gráfica histórica del precio + contexto "qué pasó" -->
-    <div class="mt5"><canvas id="chart-case" height="220"></canvas></div>
-    <p class="t-body mt4">[Contenido por completar — gráfica con datos simulados de AAPL]</p>
+
+    <div class="mt4" style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.5rem;">
+      <canvas id="chart-case" height="220"></canvas>
+    </div>
+
+    <div style="margin-top:1.2rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;">
+      <div style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.3);border-radius:8px;padding:.8rem;text-align:center;">
+        <div style="font-family:var(--mono);font-size:.75rem;color:var(--teal);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;">t = 0 (Hoy)</div>
+        <div style="font-family:var(--mono);font-size:.9rem;color:var(--ink);">S = $230</div>
+      </div>
+      <div style="background:rgba(74,158,187,.08);border:1px solid rgba(74,158,187,.3);border-radius:8px;padding:.8rem;text-align:center;">
+        <div style="font-family:var(--mono);font-size:.75rem;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;">t = t_c (Earnings)</div>
+        <div style="font-family:var(--mono);font-size:.9rem;color:var(--ink);">S ↑ $248 (+7.8%)</div>
+        <div style="font-size:.7rem;color:var(--ink3);margin-top:.3rem;">📈 Buenas noticias</div>
+      </div>
+      <div style="background:rgba(201,155,69,.08);border:1px solid rgba(201,155,69,.3);border-radius:8px;padding:.8rem;text-align:center;">
+        <div style="font-family:var(--mono);font-size:.75rem;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;">t = T (Vencimiento)</div>
+        <div style="font-family:var(--mono);font-size:.9rem;color:var(--ink);">S = $255 (+10.9%)</div>
+        <div style="font-size:.7rem;color:var(--ink3);margin-top:.3rem;">✓ Confirmado</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;font-size:.76rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(74,158,187,.3);padding-left:.85rem;">
+      <strong style="color:var(--blue);">¿Qué pasó?</strong>
+      Apple anunció crecimiento de iPhone 16 en mercados emergentes. Las ganancias superaron proyecciones. El mercado reaccionó al alza. Tu chooser ahora vale mucho más que la prima de $9.82 que pagaste.
+    </div>
   </div>
 </section>
 
@@ -822,19 +1179,19 @@ document.addEventListener('DOMContentLoaded', function() {
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark" data-i="14" data-phase="Decisión" id="s14-decision">
   <div class="inner" style="text-align:center;">
-    <div class="lbl lbl-amber" style="justify-content:center;">⏳ Se acabó el tiempo — ¡Elige ahora!</div>
+    <div class="lbl lbl-amber" style="justify-content:center;">Se acabó el tiempo — ¡Elige ahora!</div>
     <h2 class="t-h">¿Call o Put?</h2>
     <p class="t-sub mt4" style="max-width:50ch; margin:1rem auto;">
       El earnings report sale mañana. Ya no puedes esperar más. Tienes que decidir.
     </p>
     <div class="choice-row">
       <button class="choice-btn choice-call" onclick="chooseOutcome('call')">
-        <div class="choice-icon">📈</div>
+        <div class="choice-icon" style="font-size:2rem;font-weight:700;color:var(--green);">↑</div>
         <div class="choice-label" style="color:var(--green);">CALL</div>
         <div class="choice-desc">Creo que Apple superará<br/>las expectativas</div>
       </button>
       <button class="choice-btn choice-put" onclick="chooseOutcome('put')">
-        <div class="choice-icon">📉</div>
+        <div class="choice-icon" style="font-size:2rem;font-weight:700;color:var(--red);">↓</div>
         <div class="choice-label" style="color:var(--red);">PUT</div>
         <div class="choice-desc">Creo que Apple decepcionará<br/>al mercado</div>
       </button>
@@ -858,8 +1215,38 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="inner">
     <div class="lbl lbl-teal">Conclusión</div>
     <h2 class="t-h">Cuatro lecciones de la Chooser Option</h2>
-    <!-- PLACEHOLDER: 4 cards con lecciones clave -->
-    <p class="t-body mt5">[Contenido por completar — las 4 ideas fundamentales]</p>
+
+    <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="co co-teal">
+        <div class="co-mark cm-teal">① La optionalidad tiene precio</div>
+        <div class="co-text" style="font-size:.77rem;">
+          Pagar por flexibilidad (esperar antes de elegir) cuesta dinero. Pero en escenarios de incertidumbre extrema, es el precio más barato que la protección simultánea (straddle).
+        </div>
+      </div>
+      <div class="co co-blue">
+        <div class="co-mark cm-blue">② El tiempo es información</div>
+        <div class="co-text" style="font-size:.77rem;">
+          Entre t₀ y t<sub>c</sub>, el mercado revela información clave. La chooser te permite esperar esa revelación. Sin información, la decisión es ciega; con ella, es informada.
+        </div>
+      </div>
+      <div class="co co-amber">
+        <div class="co-mark cm-amber">③ Rubinstein lo hizo elegante</div>
+        <div class="co-text" style="font-size:.77rem;">
+          La fórmula cerrada (call BS + put BS con K* ajustado) es una joya matemática. No necesita simulación ni aproximaciones. La put con K* captura exactamente el valor temporal.
+        </div>
+      </div>
+      <div class="co co-green">
+        <div class="co-mark cm-green">④ El riesgo sigue existiendo</div>
+        <div class="co-text" style="font-size:.77rem;">
+          La chooser no elimina riesgo; lo redistribuye. Pagas menos prima, pero tienes payoff limitado (comparado con straddle). El trade-off es la esencia de las finanzas.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.8rem;font-size:.8rem;color:var(--ink2);line-height:1.8;border-left:3px solid rgba(45,139,139,.4);padding-left:1rem;background:rgba(45,139,139,.04);border-radius:0 8px 8px 0;padding:.9rem 1rem;text-align:center;">
+      <strong style="color:var(--teal);font-size:.88rem;">Resumen:</strong>
+      La chooser option es una respuesta elegante a un problema real: "No sé qué dirección tomará, pero sé que en t<sub>c</sub> tendré más información". Su valor reside en la capacidad de convertir incertidumbre en flexibilidad, y eso es lo que hace que compre tiempo.
+    </div>
   </div>
 </section>
 
@@ -1106,6 +1493,149 @@ function s1Toggle(el) {
   const isOpen = el.classList.contains('open');
   el.classList.toggle('open', !isOpen);
   extra.style.display = isOpen ? 'none' : 'block';
+}
+
+/* ── SLIDE 13 — Price Movement Chart ────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const chartCanvas = document.getElementById('chart-case');
+  if (chartCanvas && window.Chart) {
+    new Chart(chartCanvas, {
+      type: 'line',
+      data: {
+        labels: ['7 Ene\n(t=0)', '10 Ene', '12 Ene', '14 Ene\n(t=tc)', '16 Ene', '21 Ene\n(T)'],
+        datasets: [{
+          label: 'Precio AAPL',
+          data: [230, 236, 244, 248, 252, 255],
+          borderColor: 'rgba(76,175,125,0.8)',
+          backgroundColor: 'rgba(76,175,125,0.05)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 5,
+          pointBackgroundColor: 'rgba(76,175,125,1)',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointHoverRadius: 7,
+          segment: {
+            borderColor: ctx => {
+              const idx = ctx.dataIndex;
+              if (idx === 3) return 'rgba(74,158,187,1)'; // t_c highlighted
+              return 'rgba(76,175,125,0.8)';
+            },
+            borderWidth: ctx => ctx.dataIndex === 3 ? 3 : 2.5
+          }
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: 'rgba(241,250,238,0.8)',
+              font: { family: 'var(--mono)', size: 11 },
+              usePointStyle: true,
+              padding: 16
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(10,15,26,0.9)',
+            titleColor: 'rgba(241,250,238,0.92)',
+            bodyColor: 'rgba(241,250,238,0.8)',
+            borderColor: 'rgba(76,175,125,0.4)',
+            borderWidth: 1,
+            titleFont: { family: 'var(--mono)', size: 12, weight: '600' },
+            bodyFont: { family: 'var(--mono)', size: 11 },
+            padding: 12,
+            displayColors: false,
+            callbacks: {
+              label: ctx => {
+                const val = ctx.parsed.y;
+                const change = ((val - 230) / 230 * 100).toFixed(1);
+                return `$${val.toFixed(0)} (${change > 0 ? '+' : ''}${change}%)`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+            ticks: { color: 'rgba(241,250,238,0.6)', font: { family: 'var(--mono)', size: 10 } }
+          },
+          y: {
+            min: 220,
+            max: 260,
+            grid: { color: 'rgba(255,255,255,0.08)', drawBorder: false },
+            ticks: {
+              color: 'rgba(241,250,238,0.6)',
+              font: { family: 'var(--mono)', size: 10 },
+              callback: val => '$' + val
+            }
+          }
+        }
+      }
+    });
+  }
+});
+
+/* ── SLIDE 14 — Decision Outcomes ───────────────────────────────────── */
+function chooseOutcome(choice) {
+  const outcomeCall = document.getElementById('outcome-call');
+  const outcomePut = document.getElementById('outcome-put');
+
+  if (choice === 'call') {
+    outcomeCall.innerHTML = `
+      <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:8px;padding:1.2rem;">
+        <div style="font-size:.85rem;color:var(--green);font-weight:600;margin-bottom:.8rem;">✓ CALL — DECISIÓN CORRECTA</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.77rem;color:var(--ink2);line-height:1.6;">
+          <div>
+            <strong style="color:var(--green);">En t<sub>c</sub>:</strong>
+            S = $248 > K = $230<br/>
+            Call vale: $18.50<br/>
+            Put vale: $2.10<br/>
+            <strong style="color:var(--green);">→ Eliges CALL</strong>
+          </div>
+          <div>
+            <strong style="color:var(--green);">En T:</strong>
+            S<sub>T</sub> = $255 > K<br/>
+            Payoff Call = $255 − $230 = $25<br/>
+            Menos prima: $25 − $9.82 = <strong style="color:var(--green);font-size:.95rem;">+$15.18</strong><br/>
+            <strong style="color:var(--green);">ROI: +154%</strong>
+          </div>
+        </div>
+      </div>
+    `;
+    outcomeCall.style.display = 'block';
+    outcomePut.style.display = 'none';
+  } else {
+    outcomePut.innerHTML = `
+      <div style="background:rgba(224,92,92,.08);border:1px solid rgba(224,92,92,.3);border-radius:8px;padding:1.2rem;">
+        <div style="font-size:.85rem;color:var(--red);font-weight:600;margin-bottom:.8rem;">✗ PUT — DECISIÓN INCORRECTA</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.77rem;color:var(--ink2);line-height:1.6;">
+          <div>
+            <strong style="color:var(--red);">En t<sub>c</sub>:</strong>
+            S = $248 > K = $230<br/>
+            Call vale: $18.50<br/>
+            Put vale: $2.10<br/>
+            <strong style="color:var(--red);">→ Eliges PUT (error)</strong>
+          </div>
+          <div>
+            <strong style="color:var(--red);">En T:</strong>
+            S<sub>T</sub> = $255 > K<br/>
+            Payoff Put = max($230 − $255, 0) = $0<br/>
+            Menos prima: $0 − $9.82 = <strong style="color:var(--red);font-size:.95rem;">−$9.82</strong><br/>
+            <strong style="color:var(--red);">ROI: −100%</strong>
+          </div>
+        </div>
+      </div>
+    `;
+    outcomePut.style.display = 'block';
+    outcomeCall.style.display = 'none';
+  }
+
+  // Disable buttons after choice
+  document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
 }
 </script>
 
