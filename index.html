@@ -982,57 +982,195 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     <div class="lbl lbl-amber">Valoración</div>
     <h2 class="t-h">La fórmula de Rubinstein (1991)</h2>
 
-    <!-- Fórmula principal -->
-    <div class="formula-box hl-amber mt5 katex-lg">
-      \[V_0 = C_{BS}(S,\,K,\,T,\,r,\,q,\,\sigma) \;+\; P_{BS}(S,\,K^*,\,t_c,\,r,\,q,\,\sigma)\]
-      <div style="margin-top:.6rem;font-family:var(--mono);font-size:.62rem;color:var(--amber);opacity:.8;">
-        donde \(\;K^* = K \cdot e^{-(r-q)(T-t_c)}\)
+    <!-- FÓRMULA COLOR-CODED -->
+    <div style="margin-top:1.2rem;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1rem 1.4rem;text-align:center;">
+      <div style="font-family:var(--mono);font-size:1rem;line-height:2;letter-spacing:.02em;">
+        <span style="color:var(--amber);font-size:1.05rem;font-weight:700;">V₀</span>
+        <span style="color:var(--ink3);margin:0 .5rem;">=</span>
+        <span id="s3-btn-call" onclick="s3Show('call')" style="color:var(--teal);background:rgba(45,139,139,.12);border:1px solid rgba(45,139,139,.3);border-radius:6px;padding:.2rem .6rem;cursor:pointer;transition:background .2s,box-shadow .2s;font-weight:600;">C<sub style="font-size:.65em">BS</sub>(S, K, T, σ)</span>
+        <span style="color:var(--ink3);margin:0 .5rem;">+</span>
+        <span id="s3-btn-put" onclick="s3Show('put')" style="color:var(--blue);background:rgba(74,158,187,.12);border:1px solid rgba(74,158,187,.3);border-radius:6px;padding:.2rem .6rem;cursor:pointer;transition:background .2s,box-shadow .2s;font-weight:600;">P<sub style="font-size:.65em">BS</sub>(S, <span style="color:var(--amber);">K*</span>, t<sub style="font-size:.65em">c</sub>, σ)</span>
       </div>
+      <div style="margin-top:.5rem;font-family:var(--mono);font-size:.75rem;color:var(--ink3);">
+        donde&nbsp;&nbsp;
+        <span id="s3-btn-kstar" onclick="s3Show('kstar')" style="color:var(--amber);background:rgba(201,155,69,.1);border:1px solid rgba(201,155,69,.25);border-radius:6px;padding:.15rem .5rem;cursor:pointer;transition:background .2s;">K* = K · e<sup>−(r−q)(T−t<sub>c</sub>)</sup></span>
+      </div>
+      <div style="margin-top:.5rem;font-family:var(--mono);font-size:.6rem;color:var(--ink3);">haz click en cada término para ver su gráfico</div>
     </div>
 
-    <!-- Dos columnas: contexto + parámetros -->
-    <div class="g2 mt5">
-      <div>
-        <div class="co co-amber">
-          <div class="co-mark cm-amber">Contexto</div>
-          <div class="co-text">
-            Rubinstein (1991) demostró que la chooser tiene <strong>solución cerrada</strong>
-            directamente desde Black-Scholes. No requiere simulación ni métodos numéricos.
-            Es una de las opciones exóticas más elegantes matemáticamente.
-          </div>
+    <!-- LAYOUT: valores calculados + panel -->
+    <div style="margin-top:.9rem;display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;">
+
+      <!-- Columna izquierda: parámetros y valores vivos -->
+      <div style="min-width:170px;display:flex;flex-direction:column;gap:.5rem;">
+        <div style="font-family:var(--mono);font-size:.55rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.1rem;">Parámetros (ejemplo)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem;font-family:var(--mono);font-size:.68rem;">
+          <div style="background:rgba(45,139,139,.1);border-radius:5px;padding:.35rem .5rem;color:var(--teal);">S = 100</div>
+          <div style="background:rgba(45,139,139,.1);border-radius:5px;padding:.35rem .5rem;color:var(--teal);">K = 100</div>
+          <div style="background:rgba(74,158,187,.1);border-radius:5px;padding:.35rem .5rem;color:var(--blue);">T = 0.5y</div>
+          <div style="background:rgba(74,158,187,.1);border-radius:5px;padding:.35rem .5rem;color:var(--blue);">tc = 0.25y</div>
+          <div style="background:rgba(255,255,255,.05);border-radius:5px;padding:.35rem .5rem;color:var(--ink2);">r = 5%</div>
+          <div style="background:rgba(255,255,255,.05);border-radius:5px;padding:.35rem .5rem;color:var(--ink2);">σ = 25%</div>
         </div>
-        <div class="co co-teal">
-          <div class="co-mark cm-teal">Intuición</div>
-          <div class="co-text">
-            La fórmula dice: la chooser vale lo mismo que
-            <strong>una call estándar</strong> más
-            <strong>una put con strike ajustado K*</strong>.
-            El ajuste K* refleja el costo de esperar a t<sub>c</sub>.
+        <div style="margin-top:.4rem;font-family:var(--mono);font-size:.55rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Valores calculados</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-family:var(--mono);font-size:.7rem;">
+          <div style="background:rgba(45,139,139,.12);border-radius:5px;padding:.35rem .6rem;display:flex;justify-content:space-between;">
+            <span style="color:var(--teal);">C<sub>BS</sub></span>
+            <span id="s3-val-c" style="color:var(--ink);">—</span>
+          </div>
+          <div style="background:rgba(201,155,69,.12);border-radius:5px;padding:.35rem .6rem;display:flex;justify-content:space-between;">
+            <span style="color:var(--amber);">K*</span>
+            <span id="s3-val-kstar" style="color:var(--ink);">—</span>
+          </div>
+          <div style="background:rgba(74,158,187,.12);border-radius:5px;padding:.35rem .6rem;display:flex;justify-content:space-between;">
+            <span style="color:var(--blue);">P<sub>BS</sub></span>
+            <span id="s3-val-p" style="color:var(--ink);">—</span>
+          </div>
+          <div style="background:rgba(201,155,69,.2);border:1px solid rgba(201,155,69,.4);border-radius:5px;padding:.35rem .6rem;display:flex;justify-content:space-between;">
+            <span style="color:var(--amber);font-weight:700;">V₀</span>
+            <span id="s3-val-v0" style="color:var(--amber);font-weight:700;">—</span>
           </div>
         </div>
       </div>
-      <div>
-        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.6rem;">Parámetros</div>
-        <div class="tbl-wrap">
-          <table class="tbl">
-            <thead><tr><th>Símbolo</th><th>Significado</th></tr></thead>
-            <tbody>
-              <tr><td style="color:var(--teal);font-family:var(--mono);">S</td><td>Precio spot del subyacente hoy</td></tr>
-              <tr><td style="color:var(--teal);font-family:var(--mono);">K</td><td>Strike de la opción</td></tr>
-              <tr><td style="color:var(--teal);font-family:var(--mono);">T</td><td>Vencimiento de la opción</td></tr>
-              <tr><td style="color:var(--blue);font-family:var(--mono);">t<sub>c</sub></td><td>Fecha de elección (chooser date)</td></tr>
-              <tr><td style="color:var(--amber);font-family:var(--mono);">K*</td><td>Strike ajustado de la pierna corta</td></tr>
-              <tr><td style="color:var(--ink2);font-family:var(--mono);">r, q, σ</td><td>Tasa libre de riesgo, dividendo, volatilidad</td></tr>
-            </tbody>
-          </table>
+
+      <!-- Panel de gráfico -->
+      <div id="s3-panel" style="border-radius:var(--rx);overflow:hidden;">
+        <div id="s3-placeholder" style="display:flex;align-items:center;justify-content:center;height:185px;border:1px dashed rgba(255,255,255,.1);border-radius:var(--rx);color:var(--ink3);font-size:.74rem;font-family:var(--mono);">
+          Haz click en un término de la fórmula
         </div>
-        <div style="margin-top:.7rem;font-size:.72rem;color:var(--ink3);border-left:2px solid rgba(201,155,69,.3);padding-left:.75rem;line-height:1.5;">
-          La explicaremos componente por componente en las siguientes diapositivas.
+        <!-- Panel C_BS -->
+        <div id="s3-panel-call" style="display:none;background:rgba(45,139,139,.05);border:1px solid rgba(45,139,139,.2);border-radius:var(--rx);padding:.9rem;">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--teal);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">C<sub>BS</sub> — Precio de la call vs precio del subyacente S</div>
+          <div style="height:150px;"><canvas id="chart-s3-call"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.7rem;color:var(--ink3);line-height:1.5;">La call vale más cuando S &gt; K. En S = K (ATM), la curva tiene su pendiente máxima.</div>
+        </div>
+        <!-- Panel P_BS -->
+        <div id="s3-panel-put" style="display:none;background:rgba(74,158,187,.05);border:1px solid rgba(74,158,187,.2);border-radius:var(--rx);padding:.9rem;">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">P<sub>BS</sub> — Put con K* vs put con K</div>
+          <div style="height:150px;"><canvas id="chart-s3-put"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.7rem;color:var(--ink3);line-height:1.5;">La pierna put usa K* &lt; K: su prima es menor, pero vence antes (en t<sub>c</sub>). Así se evita pagar por ambas piernas completas.</div>
+        </div>
+        <!-- Panel K* -->
+        <div id="s3-panel-kstar" style="display:none;background:rgba(201,155,69,.05);border:1px solid rgba(201,155,69,.2);border-radius:var(--rx);padding:.9rem;">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--amber);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">K* vs t<sub>c</sub> — cómo cambia el strike ajustado</div>
+          <div style="height:150px;"><canvas id="chart-s3-kstar"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.7rem;color:var(--ink3);line-height:1.5;">Cuando t<sub>c</sub> → T, K* → K (plena prima). Cuando t<sub>c</sub> → 0, K* es mínimo (baratísima). Elegir t<sub>c</sub> pequeño baja el precio pero te da menos tiempo para observar.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  // ── Black-Scholes helpers ──────────────────────────────────────────
+  function norm(x) {
+    const a = [0.319381530,-0.356563782,1.781477937,-1.821255978,1.330274429];
+    const t = 1/(1+0.2316419*Math.abs(x));
+    const poly = t*(a[0]+t*(a[1]+t*(a[2]+t*(a[3]+t*a[4]))));
+    const pdf  = Math.exp(-x*x/2)/Math.sqrt(2*Math.PI);
+    const c    = 1 - pdf*poly;
+    return x >= 0 ? c : 1-c;
+  }
+  function bsCall(S,K,T,r,q,sig) {
+    if (T<=0) return Math.max(S-K,0);
+    const sq = sig*Math.sqrt(T);
+    const d1 = (Math.log(S/K)+(r-q+sig*sig/2)*T)/sq;
+    return S*Math.exp(-q*T)*norm(d1) - K*Math.exp(-r*T)*norm(d1-sq);
+  }
+  function bsPut(S,K,T,r,q,sig) {
+    if (T<=0) return Math.max(K-S,0);
+    const sq = sig*Math.sqrt(T);
+    const d1 = (Math.log(S/K)+(r-q+sig*sig/2)*T)/sq;
+    return K*Math.exp(-r*T)*norm(sq-d1) - S*Math.exp(-q*T)*norm(-d1);
+  }
+
+  const P = { S:100, K:100, T:0.5, tc:0.25, r:0.05, q:0, sig:0.25 };
+  const Kstar = P.K * Math.exp(-(P.r-P.q)*(P.T-P.tc));
+  const cVal  = bsCall(P.S, P.K,    P.T,  P.r, P.q, P.sig);
+  const pVal  = bsPut (P.S, Kstar,  P.tc, P.r, P.q, P.sig);
+  const v0    = cVal + pVal;
+
+  function fmt(v){ return '$' + v.toFixed(2); }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('s3-val-c').textContent     = fmt(cVal);
+    document.getElementById('s3-val-kstar').textContent = fmt(Kstar);
+    document.getElementById('s3-val-p').textContent     = fmt(pVal);
+    document.getElementById('s3-val-v0').textContent    = fmt(v0);
+  });
+
+  // ── Chart opts ────────────────────────────────────────────────────
+  const bOpts = {
+    responsive:true, maintainAspectRatio:false,
+    animation:{ duration:450, easing:'easeOutQuart' },
+    plugins:{
+      legend:{ display:true, labels:{ color:'rgba(241,250,238,.65)', font:{family:'DM Sans',size:9}, usePointStyle:true, padding:8, boxWidth:8 } },
+      tooltip:{ backgroundColor:'rgba(10,15,26,.9)', titleColor:'rgba(241,250,238,.9)', bodyColor:'rgba(241,250,238,.75)', borderColor:'rgba(255,255,255,.1)', borderWidth:1, titleFont:{family:'JetBrains Mono',size:9}, bodyFont:{family:'JetBrains Mono',size:9}, padding:7, callbacks:{ label: ctx => '$'+ctx.parsed.y.toFixed(2) } }
+    },
+    scales:{
+      x:{ grid:{color:'rgba(255,255,255,.05)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}} },
+      y:{ grid:{color:'rgba(255,255,255,.07)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}, callback:v=>'$'+v.toFixed(1)} }
+    }
+  };
+
+  const inited = {};
+  function initChart(id) {
+    if (inited[id]) return; inited[id] = true;
+    const spots = Array.from({length:17}, (_,i)=> 60+i*5);   // 60…140
+
+    if (id === 'call') {
+      const callPrices  = spots.map(s => bsCall(s, P.K,    P.T,  P.r, P.q, P.sig));
+      new Chart(document.getElementById('chart-s3-call'), {
+        type:'line',
+        data:{ labels: spots.map(s=>'$'+s), datasets:[
+          { label:'C_BS', data:callPrices, borderColor:'rgba(45,139,139,.85)', backgroundColor:'rgba(45,139,139,.08)', borderWidth:2.5, fill:true, tension:.3, pointRadius:0, pointHoverRadius:4 },
+          { label:'Intrínseco',  data:spots.map(s=>Math.max(s-P.K,0)), borderColor:'rgba(255,255,255,.2)', borderDash:[4,3], borderWidth:1.5, fill:false, tension:0, pointRadius:0 }
+        ]},
+        options:{...bOpts, scales:{...bOpts.scales, y:{...bOpts.scales.y, min:0, max:45}}}
+      });
+    } else if (id === 'put') {
+      const putK   = spots.map(s => bsPut(s, P.K,    P.tc, P.r, P.q, P.sig));
+      const putKst = spots.map(s => bsPut(s, Kstar,  P.tc, P.r, P.q, P.sig));
+      new Chart(document.getElementById('chart-s3-put'), {
+        type:'line',
+        data:{ labels: spots.map(s=>'$'+s), datasets:[
+          { label:'P_BS con K* (en la chooser)', data:putKst, borderColor:'rgba(74,158,187,.9)',  backgroundColor:'rgba(74,158,187,.07)', borderWidth:2.5, fill:true, tension:.3, pointRadius:0, pointHoverRadius:4 },
+          { label:'P_BS con K  (referencia)',     data:putK,  borderColor:'rgba(255,255,255,.3)', borderDash:[4,3], borderWidth:1.5, fill:false, tension:.3, pointRadius:0 }
+        ]},
+        options:{...bOpts, scales:{...bOpts.scales, y:{...bOpts.scales.y, min:0, max:45}}}
+      });
+    } else if (id === 'kstar') {
+      const tcs    = Array.from({length:20}, (_,i)=> i * P.T/19);
+      const kstars = tcs.map(tc => P.K * Math.exp(-(P.r-P.q)*(P.T-tc)));
+      new Chart(document.getElementById('chart-s3-kstar'), {
+        type:'line',
+        data:{ labels: tcs.map(tc=>(tc).toFixed(2)+'y'), datasets:[
+          { label:'K* = K·e^{-(r)(T−tc)}', data:kstars, borderColor:'rgba(201,155,69,.9)', backgroundColor:'rgba(201,155,69,.08)', borderWidth:2.5, fill:true, tension:.3, pointRadius:0, pointHoverRadius:4 },
+          { label:'K (strike original)',    data:tcs.map(()=>P.K), borderColor:'rgba(255,255,255,.2)', borderDash:[4,3], borderWidth:1.5, fill:false, tension:0, pointRadius:0 }
+        ]},
+        options:{...bOpts, scales:{...bOpts.scales,
+          x:{ ...bOpts.scales.x, title:{ display:true, text:'tc (años)', color:'rgba(241,250,238,.45)', font:{family:'DM Sans',size:8} } },
+          y:{ ...bOpts.scales.y, min:96, max:101, ticks:{...bOpts.scales.y.ticks, callback:v=>'$'+v.toFixed(1)} }
+        }}
+      });
+    }
+  }
+
+  window.s3Show = function(id) {
+    document.getElementById('s3-placeholder').style.display = 'none';
+    ['call','put','kstar'].forEach(k => {
+      document.getElementById('s3-panel-'+k).style.display = 'none';
+      const btn = document.getElementById('s3-btn-'+k);
+      if (btn) { btn.style.boxShadow=''; btn.style.opacity=''; }
+    });
+    document.getElementById('s3-panel-'+id).style.display = 'block';
+    const btn = document.getElementById('s3-btn-'+id);
+    if (btn) { btn.style.boxShadow='0 0 0 2px currentColor'; btn.style.opacity='1'; }
+    initChart(id);
+  };
+})();
+</script>
 
 <!-- ────────────────────────────────────────────────────────────────
   04  FÓRMULA — Componente 1: Call BS
