@@ -527,113 +527,287 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     <div class="lbl lbl-blue">Mecanismo</div>
     <h2 class="t-h">Cómo funciona</h2>
 
-    <!-- INTERACTIVE TIMELINE CHART -->
-    <div style="margin-top:1.5rem;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.5rem;position:relative;overflow:hidden;">
-      <svg id="timeline-chart" width="100%" height="280" viewBox="0 0 800 280" style="display:block;">
-        <!-- Eje horizontal -->
-        <line x1="60" y1="200" x2="750" y2="200" stroke="rgba(255,255,255,.15)" stroke-width="2"/>
+    <!-- INTERACTIVE TIMELINE -->
+    <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem 1.5rem;margin-top:1.4rem;">
+      <svg id="timeline-chart" width="100%" height="110" viewBox="0 0 800 110" style="display:block;overflow:visible;">
+        <!-- Eje horizontal con flecha -->
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="rgba(255,255,255,.2)"/>
+          </marker>
+        </defs>
+        <line x1="60" y1="55" x2="755" y2="55" stroke="rgba(255,255,255,.2)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
 
-        <!-- Punto t=0 -->
-        <g id="t0-group">
-          <circle cx="100" cy="200" r="12" fill="rgba(45,139,139,.3)" stroke="var(--teal)" stroke-width="2"/>
-          <text x="100" y="230" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="var(--teal)" font-weight="600">t = 0</text>
-          <text x="100" y="250" text-anchor="middle" font-family="DM Sans" font-size="12" fill="var(--ink3)">HOY</text>
+        <!-- Segmento t0 → tc -->
+        <line x1="100" y1="55" x2="400" y2="55" stroke="rgba(45,139,139,.4)" stroke-width="2" stroke-dasharray="6,3"/>
+        <!-- Segmento tc → T -->
+        <line x1="400" y1="55" x2="700" y2="55" stroke="rgba(74,158,187,.4)" stroke-width="2" stroke-dasharray="6,3"/>
 
-          <!-- Info box (hidden) -->
-          <rect id="t0-box" x="35" y="40" width="130" height="140" rx="6" fill="rgba(45,139,139,.1)" stroke="rgba(45,139,139,.4)" stroke-width="1" style="display:none;"/>
-          <text id="t0-label" x="100" y="65" text-anchor="middle" font-family="DM Sans" font-size="13" font-weight="600" fill="var(--teal)" style="display:none;">Compras la opción</text>
-          <text id="t0-v1" x="100" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">S₀ = $150</text>
-          <text id="t0-v2" x="100" y="108" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">K = $150</text>
-          <text id="t0-v3" x="100" y="126" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">Prima P = $8.50</text>
-          <text id="t0-v4" x="100" y="144" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">σ = 28%</text>
+        <!-- ── Punto t=0 ─────────────────────────────── -->
+        <g id="t0-group" style="cursor:pointer;">
+          <circle cx="100" cy="55" r="14" fill="rgba(45,139,139,.15)" stroke="var(--teal)" stroke-width="2"/>
+          <circle cx="100" cy="55" r="5" fill="var(--teal)"/>
+          <text x="100" y="82" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="var(--teal)" font-weight="700">t = 0</text>
+          <text x="100" y="97" text-anchor="middle" font-family="DM Sans" font-size="11" fill="var(--ink3)">HOY</text>
         </g>
 
-        <!-- Punto t=tc (chooser date) -->
-        <g id="tc-group">
-          <circle cx="400" cy="200" r="12" fill="rgba(74,158,187,.3)" stroke="var(--blue)" stroke-width="2"/>
-          <text x="400" y="230" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="var(--blue)" font-weight="600">t = t<tspan font-size="11">c</tspan></text>
-          <text x="400" y="250" text-anchor="middle" font-family="DM Sans" font-size="12" fill="var(--ink3)">DECISIÓN</text>
-
-          <!-- Info box (hidden) -->
-          <rect id="tc-box" x="335" y="40" width="130" height="140" rx="6" fill="rgba(74,158,187,.1)" stroke="rgba(74,158,187,.4)" stroke-width="1" style="display:none;"/>
-          <text id="tc-label" x="400" y="65" text-anchor="middle" font-family="DM Sans" font-size="13" font-weight="600" fill="var(--blue)" style="display:none;">Ves el mercado</text>
-          <text id="tc-v1" x="400" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">S<tspan font-size="9">tc</tspan> = $165</text>
-          <text id="tc-v2" x="400" y="108" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--blue)" style="display:none;">Call vale: $18.5</text>
-          <text id="tc-v3" x="400" y="126" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--blue)" style="display:none;">Put vale: $2.1</text>
-          <text id="tc-v4" x="400" y="144" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--teal)" font-weight="600" style="display:none;">→ Elige CALL</text>
+        <!-- ── Punto t=tc ─────────────────────────────── -->
+        <g id="tc-group" style="cursor:pointer;">
+          <circle cx="400" cy="55" r="14" fill="rgba(74,158,187,.15)" stroke="var(--blue)" stroke-width="2"/>
+          <circle cx="400" cy="55" r="5" fill="var(--blue)"/>
+          <text x="400" y="82" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="var(--blue)" font-weight="700">t = tc</text>
+          <text x="400" y="97" text-anchor="middle" font-family="DM Sans" font-size="11" fill="var(--ink3)">DECISIÓN</text>
         </g>
 
-        <!-- Punto t=T (vencimiento) -->
-        <g id="T-group">
-          <circle cx="700" cy="200" r="12" fill="rgba(201,155,69,.3)" stroke="var(--amber)" stroke-width="2"/>
-          <text x="700" y="230" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="var(--amber)" font-weight="600">t = T</text>
-          <text x="700" y="250" text-anchor="middle" font-family="DM Sans" font-size="12" fill="var(--ink3)">VENCIMIENTO</text>
-
-          <!-- Info box (hidden) -->
-          <rect id="T-box" x="635" y="40" width="130" height="140" rx="6" fill="rgba(201,155,69,.1)" stroke="rgba(201,155,69,.4)" stroke-width="1" style="display:none;"/>
-          <text id="T-label" x="700" y="65" text-anchor="middle" font-family="DM Sans" font-size="13" font-weight="600" fill="var(--amber)" style="display:none;">Se ejerce</text>
-          <text id="T-v1" x="700" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">S<tspan font-size="9">T</tspan> = $172</text>
-          <text id="T-v2" x="700" y="108" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink2)" style="display:none;">Elegiste: CALL</text>
-          <text id="T-v3" x="700" y="126" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--green)" font-weight="600" style="display:none;">Payoff = $22</text>
-          <text id="T-v4" x="700" y="144" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--green)" style="display:none;">Neto = +$13.5</text>
+        <!-- ── Punto t=T ─────────────────────────────── -->
+        <g id="T-group" style="cursor:pointer;">
+          <circle cx="700" cy="55" r="14" fill="rgba(201,155,69,.15)" stroke="var(--amber)" stroke-width="2"/>
+          <circle cx="700" cy="55" r="5" fill="var(--amber)"/>
+          <text x="700" y="82" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="var(--amber)" font-weight="700">t = T</text>
+          <text x="700" y="97" text-anchor="middle" font-family="DM Sans" font-size="11" fill="var(--ink3)">VENCIMIENTO</text>
         </g>
 
-        <!-- Connecting line labels -->
-        <text x="250" y="175" font-family="DM Sans" font-size="11" fill="var(--ink3)" text-anchor="middle">Observas</text>
-        <text x="550" y="175" font-family="DM Sans" font-size="11" fill="var(--ink3)" text-anchor="middle">Ejerces</text>
+        <!-- Label Tiempo -->
+        <text x="755" y="46" text-anchor="end" font-family="DM Sans" font-size="10" fill="var(--ink3)">tiempo</text>
       </svg>
-
-      <!-- Hover hints -->
-      <div style="margin-top:.8rem;text-align:center;font-size:.72rem;color:var(--ink3);">
-        Pasa el cursor sobre cada punto para ver detalles
+      <div style="text-align:center;font-size:.68rem;color:var(--ink3);margin-top:.3rem;">
+        Haz click en cada punto para ver qué sucede
       </div>
     </div>
 
-    <!-- Explicación de los pasos -->
-    <div style="margin-top:1.2rem;font-size:.78rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(74,158,187,.3);padding-left:.85rem;">
-      <strong style="color:var(--blue);">La clave está en t<sub>c</sub>:</strong>
-      Entre hoy y el vencimiento hay un momento crucial donde decides. El mercado ya se movió,
-      y puedes elegir la pierna que más valor tiene. Eso es el poder de la chooser.
+    <!-- DETAIL PANEL — relleno por JS al hacer click -->
+    <div id="s2-panel" style="margin-top:.9rem;min-height:160px;border-radius:var(--rx);overflow:hidden;transition:all .35s var(--ease);">
+      <!-- Estado inicial -->
+      <div id="s2-panel-placeholder" style="display:flex;align-items:center;justify-content:center;height:160px;border:1px dashed rgba(255,255,255,.1);border-radius:var(--rx);color:var(--ink3);font-size:.75rem;font-family:var(--mono);">
+        Selecciona un punto de la línea de tiempo
+      </div>
+
+      <!-- Panel t=0 -->
+      <div id="s2-panel-t0" style="display:none;background:rgba(45,139,139,.06);border:1px solid rgba(45,139,139,.25);border-radius:var(--rx);padding:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:1rem;align-items:center;">
+          <div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem;">t = 0 — Hoy</div>
+            <div style="font-size:.76rem;color:var(--ink2);line-height:1.7;">
+              <strong style="color:var(--ink);">Pagas la prima</strong> al vendedor.<br/>
+              Se fijan K y T. Aún no decides<br/>si quieres call o put.
+            </div>
+            <div style="margin-top:.8rem;display:grid;grid-template-columns:1fr 1fr;gap:.4rem;font-family:var(--mono);font-size:.68rem;">
+              <div style="background:rgba(45,139,139,.12);border-radius:6px;padding:.4rem .5rem;color:var(--teal);">S₀ = $150</div>
+              <div style="background:rgba(45,139,139,.12);border-radius:6px;padding:.4rem .5rem;color:var(--teal);">K = $150</div>
+              <div style="background:rgba(45,139,139,.12);border-radius:6px;padding:.4rem .5rem;color:var(--ink2);">P = $8.50</div>
+              <div style="background:rgba(45,139,139,.12);border-radius:6px;padding:.4rem .5rem;color:var(--ink2);">σ = 28%</div>
+            </div>
+          </div>
+          <div style="position:relative;height:140px;">
+            <canvas id="chart-t0" style="height:140px;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel t=tc -->
+      <div id="s2-panel-tc" style="display:none;background:rgba(74,158,187,.06);border:1px solid rgba(74,158,187,.25);border-radius:var(--rx);padding:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:1rem;align-items:center;">
+          <div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem;">t = tc — Decisión</div>
+            <div style="font-size:.76rem;color:var(--ink2);line-height:1.7;">
+              Precio <strong style="color:var(--blue);">subió a $165</strong>.<br/>
+              La call vale más que la put.<br/>
+              <strong style="color:var(--teal);">Eliges CALL</strong>.
+            </div>
+            <div style="margin-top:.8rem;font-size:.7rem;color:var(--ink3);border-left:2px solid rgba(74,158,187,.4);padding-left:.6rem;line-height:1.5;">
+              La chooser vale: max(C, P)<br/>= max($18.5, $2.1) = <strong style="color:var(--teal);">$18.5</strong>
+            </div>
+          </div>
+          <div style="position:relative;height:140px;">
+            <canvas id="chart-tc" style="height:140px;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel t=T -->
+      <div id="s2-panel-T" style="display:none;background:rgba(201,155,69,.06);border:1px solid rgba(201,155,69,.25);border-radius:var(--rx);padding:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:1rem;align-items:center;">
+          <div>
+            <div style="font-family:var(--mono);font-size:.6rem;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem;">t = T — Vencimiento</div>
+            <div style="font-size:.76rem;color:var(--ink2);line-height:1.7;">
+              Precio llegó a <strong style="color:var(--amber);">$172</strong>.<br/>
+              Call en dinero: $172 − $150 = $22.<br/>
+              <strong style="color:var(--green);">Ganancia neta: +$13.50</strong>
+            </div>
+            <div style="margin-top:.8rem;font-size:.7rem;color:var(--ink3);border-left:2px solid rgba(201,155,69,.4);padding-left:.6rem;line-height:1.5;">
+              Payoff = $22<br/>
+              Costo prima = −$8.50<br/>
+              <strong style="color:var(--green);">Resultado = +$13.50</strong>
+            </div>
+          </div>
+          <div style="position:relative;height:140px;">
+            <canvas id="chart-T" style="height:140px;"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <script>
 // Slide 02 interactive timeline
-document.addEventListener('DOMContentLoaded', function() {
-  const groups = ['t0', 'tc', 'T'];
-  groups.forEach(id => {
-    const group = document.getElementById(id + '-group');
-    if (!group) return;
+(function() {
+  let activeChart = null;
 
-    const circle = group.querySelector('circle');
-    const box = document.getElementById(id + '-box');
-    const labels = group.querySelectorAll('[id^="' + id + '-"]');
+  const panels = { t0: null, tc: null, T: null };
 
-    group.style.cursor = 'pointer';
-    group.addEventListener('mouseenter', () => {
-      circle.style.filter = 'drop-shadow(0 0 10px currentColor)';
-      box.style.display = 'block';
-      labels.forEach(el => {
-        if (el.id !== id + '-box' && el.id !== id + '-group') {
-          if (el.id.includes('-v') || el.id.includes('-label')) {
-            el.style.display = 'block';
+  function showPanel(id) {
+    const placeholder = document.getElementById('s2-panel-placeholder');
+    ['t0', 'tc', 'T'].forEach(k => {
+      const p = document.getElementById('s2-panel-' + k);
+      if (p) p.style.display = 'none';
+    });
+    if (placeholder) placeholder.style.display = 'none';
+
+    const panel = document.getElementById('s2-panel-' + id);
+    if (!panel) return;
+    panel.style.display = 'block';
+
+    if (panels[id]) return; // ya inicializado
+
+    // Destruir chart anterior si existía en otro canvas
+    if (activeChart) { activeChart.destroy(); activeChart = null; }
+
+    const colors = {
+      t0:  { border:'rgba(45,139,139,.8)',  bg:'rgba(45,139,139,.12)'  },
+      tc:  { border:'rgba(74,158,187,.8)',  bg:'rgba(74,158,187,.12)'  },
+      T:   { border:'rgba(201,155,69,.8)', bg:'rgba(201,155,69,.12)' },
+    };
+
+    if (id === 't0') {
+      // Gráfica: cono de posibilidades del precio (distribución futura)
+      const canvas = document.getElementById('chart-t0');
+      const labels = ['t=0','30d','60d','90d','T'];
+      const base = 150;
+      panels.t0 = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label:'Escenario +σ', data:[base,160,168,172,178], borderColor:'rgba(76,175,125,.7)', borderWidth:1.5, borderDash:[4,2], fill:false, pointRadius:2, tension:.35 },
+            { label:'Precio base', data:[base,150,152,156,160], borderColor:'rgba(241,250,238,.6)', borderWidth:2, fill:false, pointRadius:3, tension:.35 },
+            { label:'Escenario −σ', data:[base,140,132,128,124], borderColor:'rgba(224,92,92,.7)', borderWidth:1.5, borderDash:[4,2], fill:false, pointRadius:2, tension:.35 },
+          ]
+        },
+        options: chartOpts('Posibles trayectorias del precio', 110, 190)
+      });
+    } else if (id === 'tc') {
+      // Gráfico de barras: Call vs Put en tc
+      const canvas = document.getElementById('chart-tc');
+      panels.tc = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: ['Call', 'Put'],
+          datasets: [{
+            label: 'Valor en tc',
+            data: [18.5, 2.1],
+            backgroundColor: ['rgba(76,175,125,.55)', 'rgba(224,92,92,.35)'],
+            borderColor:     ['rgba(76,175,125,.9)',  'rgba(224,92,92,.7)'],
+            borderWidth: 2,
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          ...chartOpts('Valor de cada pierna en tc', 0, 22),
+          plugins: {
+            legend: { display:false },
+            tooltip: {
+              callbacks: { label: ctx => '$' + ctx.parsed.y.toFixed(1) }
+            },
+            annotation: {}
+          },
+          scales: {
+            x: { grid:{color:'rgba(255,255,255,.05)'}, ticks:{color:'rgba(241,250,238,.7)',font:{family:'var(--mono)',size:11}} },
+            y: { min:0, max:22, grid:{color:'rgba(255,255,255,.05)'}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'var(--mono)',size:10},callback:v=>'$'+v} }
           }
         }
       });
-    });
-
-    group.addEventListener('mouseleave', () => {
-      circle.style.filter = '';
-      box.style.display = 'none';
-      labels.forEach(el => {
-        if (el.id.includes('-v') || el.id.includes('-label')) {
-          el.style.display = 'none';
+    } else if (id === 'T') {
+      // Gráfico: precio histórico t0→tc→T con anotación de payoff
+      const canvas = document.getElementById('chart-T');
+      panels.T = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: ['t=0', 'tc', 'T'],
+          datasets: [{
+            label: 'Precio S',
+            data: [150, 165, 172],
+            borderColor: 'rgba(201,155,69,.9)',
+            backgroundColor: 'rgba(201,155,69,.08)',
+            borderWidth: 2.5,
+            fill: true,
+            tension: .35,
+            pointRadius: 5,
+            pointBackgroundColor: ['rgba(45,139,139,1)','rgba(74,158,187,1)','rgba(201,155,69,1)'],
+            pointBorderColor: '#fff', pointBorderWidth: 1.5,
+          }]
+        },
+        options: {
+          ...chartOpts('Precio vs Strike (K=$150)', 130, 185),
+          plugins: {
+            legend: { display:false },
+            tooltip: { callbacks: { label: ctx => 'S = $' + ctx.parsed.y } }
+          }
         }
       });
+    }
+  }
+
+  function chartOpts(label, yMin, yMax) {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color:'rgba(241,250,238,.65)', font:{family:'var(--mono)',size:9}, usePointStyle:true, padding:8, boxWidth:8 }
+        },
+        tooltip: {
+          backgroundColor:'rgba(10,15,26,.9)',
+          titleColor:'rgba(241,250,238,.92)',
+          bodyColor:'rgba(241,250,238,.8)',
+          borderColor:'rgba(255,255,255,.1)',
+          borderWidth:1,
+          titleFont:{family:'var(--mono)',size:10},
+          bodyFont:{family:'var(--mono)',size:10},
+          padding:8
+        }
+      },
+      scales: {
+        x: { grid:{color:'rgba(255,255,255,.05)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.55)',font:{family:'var(--mono)',size:9}} },
+        y: {
+          min: yMin, max: yMax,
+          grid:{color:'rgba(255,255,255,.07)',drawBorder:false},
+          ticks:{color:'rgba(241,250,238,.5)',font:{family:'var(--mono)',size:9},callback:v=>'$'+v}
+        }
+      },
+      animation: { duration: 500, easing: 'easeOutQuart' }
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    [['t0','var(--teal)'],['tc','var(--blue)'],['T','var(--amber)']].forEach(([id, color]) => {
+      const group = document.getElementById(id + '-group');
+      if (!group) return;
+      const ring = group.querySelector('circle');
+
+      group.addEventListener('mouseenter', () => {
+        ring.setAttribute('r', '17');
+        ring.style.filter = 'drop-shadow(0 0 8px ' + color + ')';
+      });
+      group.addEventListener('mouseleave', () => {
+        ring.setAttribute('r', '14');
+        ring.style.filter = '';
+      });
+      group.addEventListener('click', () => showPanel(id));
     });
   });
-});
+})();
 </script>
 
 <!-- ────────────────────────────────────────────────────────────────
