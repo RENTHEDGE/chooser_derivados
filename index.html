@@ -434,9 +434,9 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   <div class="inner">
     <div class="lbl lbl-teal">Introducción</div>
     <h2 class="t-h">¿Qué es una Chooser Option?</h2>
-    <div class="g2 mt5">
+    <div class="g2 mt4">
       <!-- Columna izquierda -->
-      <div>
+      <div style="display:flex;flex-direction:column;gap:.6rem;">
         <div class="co co-teal">
           <div class="co-mark cm-teal">Definición</div>
           <div class="co-text">
@@ -448,76 +448,240 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         <div class="co co-blue">
           <div class="co-mark cm-blue">¿Por qué exótica?</div>
           <div class="co-text">
-            A diferencia de una opción vanilla, la dirección <em>no se decide al comprar</em>.
-            La flexibilidad de elegir después tiene un valor propio que la hace "exótica plain"
-            con solución cerrada bajo Black-Scholes.
+            La dirección <em>no se decide al comprar</em>. Esa flexibilidad tiene valor
+            propio y tiene solución cerrada bajo Black-Scholes (Rubinstein, 1991).
           </div>
         </div>
-        <div class="co co-amber s1-expandable" onclick="s1Toggle(this)" style="cursor:pointer;">
-          <div class="co-mark cm-amber">El problema que resuelve</div>
+        <div class="co co-amber" id="s1-card-problema" onclick="s1ShowChart('problema')"
+          style="cursor:pointer;transition:transform .2s var(--ease-b),box-shadow .2s;">
+          <div class="co-mark cm-amber" style="display:flex;align-items:center;justify-content:space-between;">
+            El problema que resuelve
+            <span style="font-family:var(--mono);font-size:.58rem;color:var(--amber);opacity:.7;">haz click</span>
+          </div>
           <div class="co-text">
-            En eventos binarios (earnings, decisiones de banco central, referéndums),
-            la dirección del mercado es incierta. La chooser permite
-            <strong>comprar tiempo</strong> para observar y decidir mejor.
-            <div class="s1-extra" style="display:none;margin-top:.55rem;padding-top:.55rem;border-top:1px solid rgba(201,155,69,.2);font-size:.8rem;color:var(--amber);line-height:1.5;">
-              Ejemplos reales: reporte de ganancias de Apple (oct 2024), decision de tasas Fed (nov 2024), resultado electoral EE.UU. La incertidumbre de corto plazo es el terreno natural de la chooser.
-            </div>
+            En eventos binarios (earnings, banco central, referéndums),
+            la dirección es incierta. La chooser <strong>compra tiempo</strong> para observar y decidir.
           </div>
         </div>
       </div>
-      <!-- Columna derecha: contraste vanilla vs chooser -->
-      <div style="display:flex;flex-direction:column;gap:.7rem;justify-content:center;">
-        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.2rem;">Contraste rápido — haz click</div>
 
-        <div class="s1-contrast s1-expandable" onclick="s1Toggle(this)"
-          style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b);">
+      <!-- Columna derecha: contraste -->
+      <div style="display:flex;flex-direction:column;gap:.55rem;justify-content:center;">
+        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.1rem;">Contraste rápido — haz click</div>
+
+        <div id="s1-card-call" onclick="s1ShowChart('call')"
+          style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.8rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b),box-shadow .2s;">
           <div style="display:flex;align-items:center;gap:.6rem;">
             <div style="width:8px;height:8px;border-radius:50%;background:var(--ink3);flex-shrink:0;"></div>
             <div>
               <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.1rem;">Call vanilla</div>
-              <div style="font-size:.76rem;color:var(--ink3);">Decides hoy que el precio <em>subirá</em>.</div>
+              <div style="font-size:.74rem;color:var(--ink3);">Decides hoy que el precio <em>subirá</em>.</div>
             </div>
-          </div>
-          <div class="s1-extra" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.07);font-size:.76rem;color:var(--blue);line-height:1.5;">
-            Si S_T &gt; K + prima: ganas. Si S_T &lt; K: payoff = 0, pierdes la prima completa. Sin posibilidad de cambio.
+            <span style="margin-left:auto;font-family:var(--mono);font-size:.52rem;color:var(--ink3);">↗ ver payoff</span>
           </div>
         </div>
 
-        <div class="s1-contrast s1-expandable" onclick="s1Toggle(this)"
-          style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b);">
+        <div id="s1-card-put" onclick="s1ShowChart('put')"
+          style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.8rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b),box-shadow .2s;">
           <div style="display:flex;align-items:center;gap:.6rem;">
             <div style="width:8px;height:8px;border-radius:50%;background:var(--ink3);flex-shrink:0;"></div>
             <div>
               <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.1rem;">Put vanilla</div>
-              <div style="font-size:.76rem;color:var(--ink3);">Decides hoy que el precio <em>bajará</em>.</div>
+              <div style="font-size:.74rem;color:var(--ink3);">Decides hoy que el precio <em>bajará</em>.</div>
             </div>
-          </div>
-          <div class="s1-extra" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.07);font-size:.76rem;color:var(--blue);line-height:1.5;">
-            Si S_T &lt; K − prima: ganas. Si S_T &gt; K: payoff = 0, pierdes la prima completa. Sin posibilidad de cambio.
+            <span style="margin-left:auto;font-family:var(--mono);font-size:.52rem;color:var(--ink3);">↗ ver payoff</span>
           </div>
         </div>
 
-        <div class="s1-contrast s1-expandable" onclick="s1Toggle(this)"
-          style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.3);border-radius:var(--r);padding:.85rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b);">
+        <div id="s1-card-chooser" onclick="s1ShowChart('chooser')"
+          style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.3);border-radius:var(--r);padding:.8rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b),box-shadow .2s;">
           <div style="display:flex;align-items:center;gap:.6rem;">
             <div style="width:8px;height:8px;border-radius:50%;background:var(--teal);flex-shrink:0;"></div>
             <div>
               <div style="font-size:.78rem;font-weight:600;color:var(--teal);margin-bottom:.1rem;">Chooser Option</div>
-              <div style="font-size:.76rem;color:var(--ink2);">Pagas hoy. En t<sub>c</sub> ves y eliges.</div>
+              <div style="font-size:.74rem;color:var(--ink2);">Pagas hoy. En t<sub>c</sub> ves y eliges.</div>
             </div>
-          </div>
-          <div class="s1-extra" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(45,139,139,.2);font-size:.76rem;color:var(--teal);line-height:1.5;">
-            En t<sub>c</sub> eliges la mejor pierna: V = max(C, P). Si el mercado subio, tomas la call. Si bajó, tomas la put. El tiempo trabajó para ti.
+            <span style="margin-left:auto;font-family:var(--mono);font-size:.52rem;color:var(--teal);">↗ ver payoff</span>
           </div>
         </div>
 
-        <div style="font-size:.72rem;color:var(--ink3);border-left:2px solid rgba(45,139,139,.3);padding-left:.75rem;margin-top:.2rem;line-height:1.5;">
+        <div style="font-size:.7rem;color:var(--ink3);border-left:2px solid rgba(45,139,139,.3);padding-left:.7rem;line-height:1.5;">
           Payoff en t<sub>c</sub>: <strong style="color:var(--teal);">V = max(C, P)</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL DE GRÁFICO (aparece al hacer click) -->
+    <div id="s1-panel" style="margin-top:.8rem;border-radius:var(--rx);overflow:hidden;">
+      <div id="s1-panel-placeholder" style="display:flex;align-items:center;justify-content:center;height:130px;border:1px dashed rgba(255,255,255,.1);border-radius:var(--rx);color:var(--ink3);font-size:.74rem;font-family:var(--mono);">
+        Selecciona una tarjeta para ver su diagrama
+      </div>
+
+      <!-- Panel: El problema -->
+      <div id="s1-panel-problema" style="display:none;background:rgba(201,155,69,.05);border:1px solid rgba(201,155,69,.2);border-radius:var(--rx);padding:.9rem;">
+        <div style="display:grid;grid-template-columns:1.2fr 2fr;gap:1rem;align-items:center;">
+          <div>
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--amber);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">El problema que resuelve</div>
+            <div style="font-size:.73rem;color:var(--ink2);line-height:1.6;">
+              Antes de t<sub>c</sub>: no sabes si el precio sube o baja.<br/>
+              <strong style="color:var(--amber);">Con la chooser</strong>, en cualquier escenario capturas la mejor pierna.<br/>
+              Sin ella, elegir mal significa perder la prima completa.
+            </div>
+          </div>
+          <div style="height:120px;"><canvas id="chart-s1-problema"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Panel: Call -->
+      <div id="s1-panel-call" style="display:none;background:rgba(74,158,187,.05);border:1px solid rgba(74,158,187,.2);border-radius:var(--rx);padding:.9rem;">
+        <div style="display:grid;grid-template-columns:1.2fr 2fr;gap:1rem;align-items:center;">
+          <div>
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Call vanilla — payoff</div>
+            <div style="font-size:.73rem;color:var(--ink2);line-height:1.6;">
+              Ganas si S<sub>T</sub> &gt; K + prima.<br/>
+              Debajo de K: pierdes toda la prima.<br/>
+              <strong style="color:var(--red);">Riesgo: si el mercado baja, pierdes todo.</strong>
+            </div>
+          </div>
+          <div style="height:120px;"><canvas id="chart-s1-call"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Panel: Put -->
+      <div id="s1-panel-put" style="display:none;background:rgba(224,92,92,.05);border:1px solid rgba(224,92,92,.2);border-radius:var(--rx);padding:.9rem;">
+        <div style="display:grid;grid-template-columns:1.2fr 2fr;gap:1rem;align-items:center;">
+          <div>
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--red);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Put vanilla — payoff</div>
+            <div style="font-size:.73rem;color:var(--ink2);line-height:1.6;">
+              Ganas si S<sub>T</sub> &lt; K − prima.<br/>
+              Arriba de K: pierdes toda la prima.<br/>
+              <strong style="color:var(--red);">Riesgo: si el mercado sube, pierdes todo.</strong>
+            </div>
+          </div>
+          <div style="height:120px;"><canvas id="chart-s1-put"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Panel: Chooser -->
+      <div id="s1-panel-chooser" style="display:none;background:rgba(45,139,139,.05);border:1px solid rgba(45,139,139,.2);border-radius:var(--rx);padding:.9rem;">
+        <div style="display:grid;grid-template-columns:1.2fr 2fr;gap:1rem;align-items:center;">
+          <div>
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--teal);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Chooser — V = max(C, P)</div>
+            <div style="font-size:.73rem;color:var(--ink2);line-height:1.6;">
+              Elige la mejor pierna en t<sub>c</sub>.<br/>
+              Forma de V: ganas en <em>ambas</em> direcciones.<br/>
+              <strong style="color:var(--teal);">Prima ligeramente mayor, riesgo mucho menor.</strong>
+            </div>
+          </div>
+          <div style="height:120px;"><canvas id="chart-s1-chooser"></canvas></div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  const initialized = {};
+  const K = 150, pCall = 6, pPut = 5, pChooser = 9;
+  const STS = [120,125,130,135,140,145,150,155,160,165,170,175,180];
+
+  const baseOpts = {
+    responsive: true, maintainAspectRatio: false,
+    animation: { duration: 450, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: true, labels: { color:'rgba(241,250,238,.65)', font:{family:'DM Sans',size:9}, usePointStyle:true, padding:8, boxWidth:8 } },
+      tooltip: { backgroundColor:'rgba(10,15,26,.9)', titleColor:'rgba(241,250,238,.9)', bodyColor:'rgba(241,250,238,.75)', borderColor:'rgba(255,255,255,.1)', borderWidth:1, titleFont:{family:'JetBrains Mono',size:9}, bodyFont:{family:'JetBrains Mono',size:9}, padding:7 }
+    },
+    scales: {
+      x: { grid:{color:'rgba(255,255,255,.05)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}} },
+      y: { grid:{color:'rgba(255,255,255,.07)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}, callback: v => (v >= 0 ? '+' : '') + '$' + v} }
+    }
+  };
+
+  function makePayoffLine(fn, color, label) {
+    return { label, data: STS.map(fn), borderColor: color, backgroundColor: color.replace(/[\d.]+\)$/, '.08)'), borderWidth: 2, fill: true, tension: 0, pointRadius: 0, pointHoverRadius: 4 };
+  }
+
+  function zeroLine() {
+    return { label:'Punto de equilibrio', data: STS.map(()=>0), borderColor:'rgba(255,255,255,.2)', borderDash:[4,3], borderWidth:1, fill:false, pointRadius:0, tension:0 };
+  }
+
+  function initChart(id) {
+    if (initialized[id]) return;
+    initialized[id] = true;
+
+    if (id === 'problema') {
+      new Chart(document.getElementById('chart-s1-problema'), {
+        type: 'bar',
+        data: {
+          labels: ['Mercado sube\n+15%', 'Mercado plano\n0%', 'Mercado baja\n−15%'],
+          datasets: [
+            { label: 'Call vanilla', data: [16, -6, -6], backgroundColor: 'rgba(74,158,187,.4)', borderColor: 'rgba(74,158,187,.8)', borderWidth: 1.5, borderRadius: 4 },
+            { label: 'Put vanilla',  data: [-5, -5, 17], backgroundColor: 'rgba(224,92,92,.4)',  borderColor: 'rgba(224,92,92,.8)',  borderWidth: 1.5, borderRadius: 4 },
+            { label: 'Chooser',      data: [13, -9, 13], backgroundColor: 'rgba(45,139,139,.5)',  borderColor: 'rgba(45,139,139,.9)',  borderWidth: 1.5, borderRadius: 4 },
+          ]
+        },
+        options: { ...baseOpts,
+          scales: {
+            x: { ...baseOpts.scales.x, ticks:{...baseOpts.scales.x.ticks, font:{family:'DM Sans',size:8}} },
+            y: { ...baseOpts.scales.y, ticks:{...baseOpts.scales.y.ticks, callback: v=>(v>=0?'+':'')+v} }
+          }
+        }
+      });
+    } else if (id === 'call') {
+      new Chart(document.getElementById('chart-s1-call'), {
+        type: 'line',
+        data: { labels: STS, datasets: [
+          makePayoffLine(s => Math.max(s-K,0)-pCall, 'rgba(74,158,187,.85)', 'Payoff neto'),
+          zeroLine()
+        ]},
+        options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min:-10, max:30 } } }
+      });
+    } else if (id === 'put') {
+      new Chart(document.getElementById('chart-s1-put'), {
+        type: 'line',
+        data: { labels: STS, datasets: [
+          makePayoffLine(s => Math.max(K-s,0)-pPut, 'rgba(224,92,92,.85)', 'Payoff neto'),
+          zeroLine()
+        ]},
+        options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min:-10, max:30 } } }
+      });
+    } else if (id === 'chooser') {
+      new Chart(document.getElementById('chart-s1-chooser'), {
+        type: 'line',
+        data: { labels: STS, datasets: [
+          makePayoffLine(s => Math.max(s-K,0)-pCall,    'rgba(74,158,187,.5)',  'Call'),
+          makePayoffLine(s => Math.max(K-s,0)-pPut,     'rgba(224,92,92,.5)',   'Put'),
+          makePayoffLine(s => Math.max(Math.max(s-K,0), Math.max(K-s,0))-pChooser, 'rgba(45,139,139,.9)', 'Chooser'),
+          zeroLine()
+        ]},
+        options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min:-12, max:30 } } }
+      });
+    }
+  }
+
+  window.s1ShowChart = function(id) {
+    const placeholder = document.getElementById('s1-panel-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+
+    ['problema','call','put','chooser'].forEach(k => {
+      const p = document.getElementById('s1-panel-' + k);
+      if (p) p.style.display = 'none';
+      const c = document.getElementById('s1-card-' + k);
+      if (c) { c.style.transform = ''; c.style.boxShadow = ''; }
+    });
+
+    const panel = document.getElementById('s1-panel-' + id);
+    if (panel) panel.style.display = 'block';
+
+    const card = document.getElementById('s1-card-' + id);
+    if (card) { card.style.transform = 'translateY(-2px)'; card.style.boxShadow = '0 4px 16px rgba(0,0,0,.3)'; }
+
+    initChart(id);
+  };
+})();
+</script>
 
 <!-- ────────────────────────────────────────────────────────────────
   02  CÓMO FUNCIONA — mecanismo con timeline
