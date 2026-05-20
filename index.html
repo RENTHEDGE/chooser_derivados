@@ -435,7 +435,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     <div class="lbl lbl-teal">Introducción</div>
     <h2 class="t-h">¿Qué es una Chooser Option?</h2>
     <div class="g2 mt5">
-      <!-- Columna izquierda: definición + exótica -->
+      <!-- Columna izquierda -->
       <div>
         <div class="co co-teal">
           <div class="co-mark cm-teal">Definición</div>
@@ -453,39 +453,64 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
             con solución cerrada bajo Black-Scholes.
           </div>
         </div>
-        <div class="co co-amber">
+        <div class="co co-amber s1-expandable" onclick="s1Toggle(this)" style="cursor:pointer;">
           <div class="co-mark cm-amber">El problema que resuelve</div>
           <div class="co-text">
             En eventos binarios (earnings, decisiones de banco central, referéndums),
             la dirección del mercado es incierta. La chooser permite
             <strong>comprar tiempo</strong> para observar y decidir mejor.
+            <div class="s1-extra" style="display:none;margin-top:.55rem;padding-top:.55rem;border-top:1px solid rgba(201,155,69,.2);font-size:.8rem;color:var(--amber);line-height:1.5;">
+              Ejemplos reales: reporte de ganancias de Apple (oct 2024), decision de tasas Fed (nov 2024), resultado electoral EE.UU. La incertidumbre de corto plazo es el terreno natural de la chooser.
+            </div>
           </div>
         </div>
       </div>
       <!-- Columna derecha: contraste vanilla vs chooser -->
       <div style="display:flex;flex-direction:column;gap:.7rem;justify-content:center;">
-        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.2rem;">Contraste rápido</div>
-        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;">
-          <span style="font-size:1.1rem;flex-shrink:0;">📌</span>
-          <div>
-            <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;">Call vanilla</div>
-            <div style="font-size:.78rem;color:var(--ink3);">Decides hoy que el precio <em>subirá</em>. Si baja, pierdes la prima.</div>
+        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.2rem;">Contraste rápido — haz click</div>
+
+        <div class="s1-contrast s1-expandable" onclick="s1Toggle(this)"
+          style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b);">
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--ink3);flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.1rem;">Call vanilla</div>
+              <div style="font-size:.76rem;color:var(--ink3);">Decides hoy que el precio <em>subirá</em>.</div>
+            </div>
+          </div>
+          <div class="s1-extra" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.07);font-size:.76rem;color:var(--blue);line-height:1.5;">
+            Si S_T &gt; K + prima: ganas. Si S_T &lt; K: payoff = 0, pierdes la prima completa. Sin posibilidad de cambio.
           </div>
         </div>
-        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;">
-          <span style="font-size:1.1rem;flex-shrink:0;">📌</span>
-          <div>
-            <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;">Put vanilla</div>
-            <div style="font-size:.78rem;color:var(--ink3);">Decides hoy que el precio <em>bajará</em>. Si sube, pierdes la prima.</div>
+
+        <div class="s1-contrast s1-expandable" onclick="s1Toggle(this)"
+          style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:.85rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b);">
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--ink3);flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.1rem;">Put vanilla</div>
+              <div style="font-size:.76rem;color:var(--ink3);">Decides hoy que el precio <em>bajará</em>.</div>
+            </div>
+          </div>
+          <div class="s1-extra" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.07);font-size:.76rem;color:var(--blue);line-height:1.5;">
+            Si S_T &lt; K − prima: ganas. Si S_T &gt; K: payoff = 0, pierdes la prima completa. Sin posibilidad de cambio.
           </div>
         </div>
-        <div style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.3);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.75rem;">
-          <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
-          <div>
-            <div style="font-size:.78rem;font-weight:600;color:var(--teal);margin-bottom:.2rem;">Chooser Option</div>
-            <div style="font-size:.78rem;color:var(--ink2);">Pagas hoy. En <strong>t<sub>c</sub></strong> ves el mercado. <em>Entonces</em> eliges.</div>
+
+        <div class="s1-contrast s1-expandable" onclick="s1Toggle(this)"
+          style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.3);border-radius:var(--r);padding:.85rem 1rem;cursor:pointer;transition:background .2s,transform .2s var(--ease-b);">
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--teal);flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:.78rem;font-weight:600;color:var(--teal);margin-bottom:.1rem;">Chooser Option</div>
+              <div style="font-size:.76rem;color:var(--ink2);">Pagas hoy. En t<sub>c</sub> ves y eliges.</div>
+            </div>
+          </div>
+          <div class="s1-extra" style="display:none;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(45,139,139,.2);font-size:.76rem;color:var(--teal);line-height:1.5;">
+            En t<sub>c</sub> eliges la mejor pierna: V = max(C, P). Si el mercado subio, tomas la call. Si bajó, tomas la put. El tiempo trabajó para ti.
           </div>
         </div>
+
         <div style="font-size:.72rem;color:var(--ink3);border-left:2px solid rgba(45,139,139,.3);padding-left:.75rem;margin-top:.2rem;line-height:1.5;">
           Payoff en t<sub>c</sub>: <strong style="color:var(--teal);">V = max(C, P)</strong>
         </div>
@@ -564,8 +589,56 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   <div class="inner">
     <div class="lbl lbl-amber">Valoración</div>
     <h2 class="t-h">La fórmula de Rubinstein (1991)</h2>
-    <!-- PLACEHOLDER: fórmula completa, sin explicar aún cada parte -->
-    <p class="t-body mt5">[Contenido por completar — fórmula general V₀ = C_BS + P_BS(K*,tc)]</p>
+
+    <!-- Fórmula principal -->
+    <div class="formula-box hl-amber mt5 katex-lg">
+      \[V_0 = C_{BS}(S,\,K,\,T,\,r,\,q,\,\sigma) \;+\; P_{BS}(S,\,K^*,\,t_c,\,r,\,q,\,\sigma)\]
+      <div style="margin-top:.6rem;font-family:var(--mono);font-size:.62rem;color:var(--amber);opacity:.8;">
+        donde \(\;K^* = K \cdot e^{-(r-q)(T-t_c)}\)
+      </div>
+    </div>
+
+    <!-- Dos columnas: contexto + parámetros -->
+    <div class="g2 mt5">
+      <div>
+        <div class="co co-amber">
+          <div class="co-mark cm-amber">Contexto</div>
+          <div class="co-text">
+            Rubinstein (1991) demostró que la chooser tiene <strong>solución cerrada</strong>
+            directamente desde Black-Scholes. No requiere simulación ni métodos numéricos.
+            Es una de las opciones exóticas más elegantes matemáticamente.
+          </div>
+        </div>
+        <div class="co co-teal">
+          <div class="co-mark cm-teal">Intuición</div>
+          <div class="co-text">
+            La fórmula dice: la chooser vale lo mismo que
+            <strong>una call estándar</strong> más
+            <strong>una put con strike ajustado K*</strong>.
+            El ajuste K* refleja el costo de esperar a t<sub>c</sub>.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.6rem;">Parámetros</div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Símbolo</th><th>Significado</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--teal);font-family:var(--mono);">S</td><td>Precio spot del subyacente hoy</td></tr>
+              <tr><td style="color:var(--teal);font-family:var(--mono);">K</td><td>Strike de la opción</td></tr>
+              <tr><td style="color:var(--teal);font-family:var(--mono);">T</td><td>Vencimiento de la opción</td></tr>
+              <tr><td style="color:var(--blue);font-family:var(--mono);">t<sub>c</sub></td><td>Fecha de elección (chooser date)</td></tr>
+              <tr><td style="color:var(--amber);font-family:var(--mono);">K*</td><td>Strike ajustado de la pierna corta</td></tr>
+              <tr><td style="color:var(--ink2);font-family:var(--mono);">r, q, σ</td><td>Tasa libre de riesgo, dividendo, volatilidad</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:.7rem;font-size:.72rem;color:var(--ink3);border-left:2px solid rgba(201,155,69,.3);padding-left:.75rem;line-height:1.5;">
+          La explicaremos componente por componente en las siguientes diapositivas.
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -967,8 +1040,19 @@ styleTag.textContent = `
     to   { transform: scale(1.08); filter: drop-shadow(0 0 14px rgba(201,155,69,.9)); }
   }
   .lbl-red::before { background: var(--red); }
+  .s1-expandable:hover { transform: translateY(-2px); background: var(--sur2) !important; }
+  .s1-expandable.open  { transform: translateY(-2px); }
 `;
 document.head.appendChild(styleTag);
+
+/* ── SLIDE 01 — card toggle ─────────────────────────────────────── */
+function s1Toggle(el) {
+  const extra = el.querySelector('.s1-extra');
+  if (!extra) return;
+  const isOpen = el.classList.contains('open');
+  el.classList.toggle('open', !isOpen);
+  extra.style.display = isOpen ? 'none' : 'block';
+}
 </script>
 
 </body>
