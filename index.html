@@ -501,8 +501,59 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   <div class="inner">
     <div class="lbl lbl-blue">Mecanismo</div>
     <h2 class="t-h">Cómo funciona</h2>
-    <!-- PLACEHOLDER: timeline t=0 → tc → T -->
-    <p class="t-body mt5">[Contenido por completar — timeline visual con los 3 momentos clave]</p>
+
+    <!-- TIMELINE -->
+    <div class="timeline mt5">
+      <div class="tl-step">
+        <div class="tl-dot d-teal">t₀</div>
+        <div class="tl-title">Hoy</div>
+        <div class="tl-desc">Compras la opción y pagas la prima</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot d-blue">t<sub style="font-size:.6em">c</sub></div>
+        <div class="tl-title">Fecha chooser</div>
+        <div class="tl-desc">Observas el mercado y eliges: ¿call o put?</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot d-amber">T</div>
+        <div class="tl-title">Vencimiento</div>
+        <div class="tl-desc">Se ejerce la opción elegida</div>
+      </div>
+    </div>
+
+    <!-- DETALLE DE CADA PASO -->
+    <div class="g3 mt4">
+      <div class="co co-teal" style="flex-direction:column;gap:.4rem;">
+        <div class="co-mark cm-teal" style="padding-top:0;">① t = 0</div>
+        <div class="co-text">
+          Pagas la prima <strong>P</strong> al vendedor.<br/>
+          Se fijan <strong>K</strong> (strike) y <strong>T</strong> (vencimiento).<br/>
+          <span style="color:var(--ink3);font-size:.82rem;">Aún no decides si quieres call o put.</span>
+        </div>
+      </div>
+      <div class="co co-blue" style="flex-direction:column;gap:.4rem;">
+        <div class="co-mark cm-blue" style="padding-top:0;">② t = t<sub>c</sub> &lt; T</div>
+        <div class="co-text">
+          Observas el precio spot <strong>S<sub>t_c</sub></strong>.<br/>
+          Eliges si tu opción será <strong>call</strong> o <strong>put</strong>.<br/>
+          <span style="color:var(--ink3);font-size:.82rem;">Valor en este momento: max(C, P)</span>
+        </div>
+      </div>
+      <div class="co co-amber" style="flex-direction:column;gap:.4rem;">
+        <div class="co-mark cm-amber" style="padding-top:0;">③ t = T</div>
+        <div class="co-text">
+          Se ejerce la opción elegida en t<sub>c</sub>.<br/>
+          <strong>Si call:</strong> max(S<sub>T</sub> − K, 0)<br/>
+          <strong>Si put:</strong> max(K − S<sub>T</sub>, 0)
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:.9rem;font-size:.78rem;color:var(--ink3);border-left:2px solid rgba(74,158,187,.3);padding-left:.85rem;line-height:1.6;">
+      Condición fundamental: <strong style="color:var(--blue);">t<sub>c</sub> &lt; T</strong> —
+      la fecha de elección siempre ocurre <em>antes</em> del vencimiento.
+      Ahí radica el valor de "comprar tiempo".
+    </div>
   </div>
 </section>
 
