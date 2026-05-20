@@ -148,6 +148,18 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 }
 @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
 
+/* ── SLIDE ENTRY ANIMATIONS ─────────────────────────────────────── */
+@keyframes anim-up   { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:none} }
+@keyframes anim-right{ from{opacity:0;transform:translateX(28px)} to{opacity:1;transform:none} }
+@keyframes anim-pop  { 0%{opacity:0;transform:scale(.88)} 70%{transform:scale(1.04)} 100%{opacity:1;transform:scale(1)} }
+@keyframes anim-glow-amber{ 0%,100%{box-shadow:0 0 0 rgba(201,155,69,0)} 50%{box-shadow:0 0 28px rgba(201,155,69,.55),0 0 6px rgba(201,155,69,.3)} }
+@keyframes anim-glow-teal { 0%,100%{box-shadow:0 0 0 rgba(45,139,139,0)}  50%{box-shadow:0 0 24px rgba(45,139,139,.5)} }
+@keyframes anim-bar  { from{width:0} to{width:var(--bar-w)} }
+@keyframes anim-count{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.anim-up    { opacity:0; animation: anim-up    .55s var(--ease) forwards; }
+.anim-right { opacity:0; animation: anim-right .5s  var(--ease) forwards; }
+.anim-pop   { opacity:0; animation: anim-pop   .6s  var(--ease) forwards; }
+
 /* ── DECK & SLIDES ──────────────────────────────────────────────── */
 #deck { position: fixed; inset: 0; overflow: hidden; }
 .slide {
@@ -1494,95 +1506,270 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   06  FÓRMULA — ¿Por qué K*? Intuición de la paridad
 ────────────────────────────────────────────────────────────────── -->
+<!-- ──────────────────────────────────────────────────────────────────
+  06  K* — Derivación animada paso a paso
+────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark" data-i="6" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-amber">Intuición</div>
     <h2 class="t-h">¿Por qué existe K*?</h2>
 
-    <div style="margin-top:1.5rem;">
-      <div class="co co-amber">
-        <div class="co-mark cm-amber">La paridad put-call</div>
-        <div class="co-text" style="font-size:.82rem;">
-          En cualquier momento, existe una relación fundamental:
-          <div style="margin:0.8rem 0;text-align:center;">
-            \[C(K, T) - P(K, T) = S \cdot e^{-qT} - K \cdot e^{-rT}\]
+    <!-- 3 pasos animados + barra comparativa -->
+    <div style="margin-top:1.2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+
+      <!-- Columna izquierda: pasos -->
+      <div style="display:flex;flex-direction:column;gap:.75rem;">
+
+        <div class="s6-step" style="display:flex;gap:.75rem;align-items:flex-start;">
+          <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(45,139,139,.2);border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;color:var(--teal);font-weight:700;">1</div>
+          <div>
+            <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Paridad put-call</div>
+            <div style="font-size:.72rem;color:var(--ink3);line-height:1.6;">
+              En cualquier instante:<br/>
+              <span style="font-family:var(--mono);color:var(--teal);">C(K,T) − P(K,T) = Se<sup>−qT</sup> − Ke<sup>−rT</sup></span>
+            </div>
           </div>
-          Esta relación asegura que no haya arbitraje entre calls y puts.
         </div>
+
+        <div class="s6-step" style="display:flex;gap:.75rem;align-items:flex-start;">
+          <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(74,158,187,.2);border:1.5px solid var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;color:var(--blue);font-weight:700;">2</div>
+          <div>
+            <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">En t<sub>c</sub> la chooser vale max(C, P)</div>
+            <div style="font-size:.72rem;color:var(--ink3);line-height:1.6;">
+              max(C,P) = C + max(0, P−C)<br/>
+              Usando paridad: max(0, Ke<sup>−r·tc</sup> − Se<sup>−q·tc</sup> + C − C)
+            </div>
+          </div>
+        </div>
+
+        <div class="s6-step" style="display:flex;gap:.75rem;align-items:flex-start;">
+          <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(201,155,69,.2);border:1.5px solid var(--amber);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;color:var(--amber);font-weight:700;">3</div>
+          <div>
+            <div style="font-size:.75rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">Resultado: pierna put con K* reducido</div>
+            <div style="font-size:.72rem;color:var(--ink3);line-height:1.6;">
+              El término se puede escribir como<br/>
+              <span style="font-family:var(--mono);color:var(--amber);">P<sub>BS</sub>(S, K*, t<sub>c</sub>)</span> con el ajuste de abajo.
+            </div>
+          </div>
+        </div>
+
+        <!-- Fórmula K* con glow -->
+        <div class="s6-kstar" style="margin-top:.3rem;background:rgba(201,155,69,.08);border:1.5px solid rgba(201,155,69,.4);border-radius:var(--r);padding:.8rem 1rem;text-align:center;">
+          <div style="font-family:var(--mono);font-size:.85rem;color:var(--amber);font-weight:700;letter-spacing:.04em;">
+            K* = K · e<sup style="font-size:.65em;">−(r−q)(T−t<sub>c</sub>)</sup>
+          </div>
+          <div style="font-size:.67rem;color:var(--ink3);margin-top:.4rem;">exponente negativo → K* &lt; K siempre</div>
+        </div>
+
       </div>
 
-      <div style="margin-top:1.2rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div class="co co-teal" style="padding:.9rem;">
-          <div class="co-mark cm-teal" style="padding-top:0;">En t = 0</div>
-          <div class="co-text" style="font-size:.76rem;">
-            Call y Put vencen ambas en T con el mismo strike K.
-          </div>
-        </div>
-        <div class="co co-blue" style="padding:.9rem;">
-          <div class="co-mark cm-blue" style="padding-top:0;">En t = t<sub>c</sub></div>
-          <div class="co-text" style="font-size:.76rem;">
-            Si queremos que valgan "lo mismo" en t<sub>c</sub>, debemos ajustar el strike de la put a <strong>K*</strong>.
-          </div>
-        </div>
-      </div>
+      <!-- Columna derecha: barra comparativa animada + intuición -->
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:1rem;">
 
-      <div style="margin-top:1.5rem;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;">
-        <div style="font-family:var(--mono);font-size:.7rem;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem;">Fórmula de K*</div>
-        <div style="font-size:.9rem;text-align:center;">
-          \[K^* = K \cdot e^{-(r-q)(T-t_c)}\]
+        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Comparación numérica (r=5%, T−tc=0.25y)</div>
+
+        <!-- Barra K -->
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.68rem;margin-bottom:.3rem;">
+            <span style="color:var(--ink2);">K (strike original)</span>
+            <span style="color:var(--ink);">$100.00</span>
+          </div>
+          <div style="height:18px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;">
+            <div class="s6-bar-k" style="height:100%;width:0;background:rgba(255,255,255,.25);border-radius:4px;transition:width 1s var(--ease);"></div>
+          </div>
         </div>
-        <div style="font-size:.72rem;color:var(--ink3);margin-top:.8rem;line-height:1.5;">
-          El exponente \(-(r-q)(T-t_c)\) es negativo, por lo que <strong>K* < K</strong>. La put tiene strike más bajo porque vence antes.
+
+        <!-- Barra K* -->
+        <div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.68rem;margin-bottom:.3rem;">
+            <span style="color:var(--amber);">K* (strike ajustado)</span>
+            <span id="s6-kstar-val" style="color:var(--amber);">$—</span>
+          </div>
+          <div style="height:18px;border-radius:4px;background:rgba(201,155,69,.1);overflow:hidden;">
+            <div class="s6-bar-kstar" style="height:100%;width:0;background:linear-gradient(90deg,var(--amber),rgba(201,155,69,.6));border-radius:4px;transition:width 1.2s var(--ease);"></div>
+          </div>
         </div>
+
+        <!-- Ahorro -->
+        <div class="s6-saving" style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.25);border-radius:8px;padding:.7rem 1rem;">
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--green);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Ahorro de prima</div>
+          <div style="font-size:1.1rem;font-weight:700;font-family:var(--mono);color:var(--green);" id="s6-saving-val">$—</div>
+          <div style="font-size:.68rem;color:var(--ink3);margin-top:.2rem;">Prima de put más barata = chooser &lt; straddle</div>
+        </div>
+
+        <div style="font-size:.7rem;color:var(--ink3);line-height:1.5;border-left:2px solid rgba(201,155,69,.35);padding-left:.7rem;">
+          Cuanto más pequeño sea t<sub>c</sub>, más cae K* y más barata es la chooser — pero tienes menos tiempo para observar.
+        </div>
+
       </div>
     </div>
   </div>
 </section>
 
-<!-- ────────────────────────────────────────────────────────────────
-  07  FÓRMULA — Interpretación final: "la compra de tiempo"
+<script>
+(function(){
+  const r=0.05, q=0, T=0.5, tc=0.25;
+  const Kstar = 100*Math.exp(-(r-q)*(T-tc));
+  const saving = 100 - Kstar;
+
+  document.querySelector('[data-i="6"]').addEventListener('slideenter', function(){
+    // Reset
+    document.querySelectorAll('.s6-step,.s6-kstar,.s6-saving').forEach(el=>{
+      el.style.opacity='0'; el.style.transform='translateX(30px)';
+    });
+    document.querySelector('.s6-bar-k').style.width='0';
+    document.querySelector('.s6-bar-kstar').style.width='0';
+
+    const steps=[...document.querySelectorAll('.s6-step'), document.querySelector('.s6-kstar')];
+    steps.forEach((el,i)=>{
+      setTimeout(()=>{
+        el.style.transition='opacity .5s ease, transform .5s ease';
+        el.style.opacity='1'; el.style.transform='none';
+      }, 150 + i*380);
+    });
+
+    // Bars
+    setTimeout(()=>{
+      document.querySelector('.s6-bar-k').style.width='100%';
+    }, 500);
+    setTimeout(()=>{
+      document.querySelector('.s6-bar-kstar').style.width= (Kstar/100*100)+'%';
+      document.getElementById('s6-kstar-val').textContent='$'+Kstar.toFixed(2);
+    }, 700);
+
+    // Saving card
+    setTimeout(()=>{
+      const el=document.querySelector('.s6-saving');
+      el.style.transition='opacity .5s ease, transform .5s ease';
+      el.style.opacity='1'; el.style.transform='none';
+      document.getElementById('s6-saving-val').textContent='−$'+saving.toFixed(2);
+    }, 1500);
+
+    // K* glow loop
+    setTimeout(()=>{
+      const kstar=document.querySelector('.s6-kstar');
+      kstar.style.animation='anim-glow-amber 2s ease infinite';
+    }, 1800);
+  });
+})();
+</script>
+
+<!-- ──────────────────────────────────────────────────────────────────
+  07  INTERPRETACIÓN — El valor de esperar (animación narrativa)
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-alt" data-i="7" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-teal">Interpretación</div>
     <h2 class="t-h">El valor de esperar</h2>
 
-    <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
-      <div style="display:flex;flex-direction:column;gap:1rem;">
-        <div class="co co-teal">
-          <div class="co-mark cm-teal">Lo que obtienes</div>
-          <div class="co-text">
-            <strong>C<sub>BS</sub>:</strong> protección al alza (call completa).
-            <br/><strong>+ P<sub>BS</sub>:</strong> protección a la baja (put con strike reducido).
-            <br/>= Exposición a ambas direcciones.
-          </div>
-        </div>
-        <div class="co co-blue">
-          <div class="co-mark cm-blue">Lo que pagas</div>
-          <div class="co-text">
-            Una prima <strong>V₀</strong> que es menor que si compraras un <em>straddle</em> (call + put con el mismo strike).
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;justify-content:center;">
-        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1rem;text-align:center;">
-          <div style="font-family:var(--serif);font-size:1.1rem;color:var(--teal);margin-bottom:.6rem;font-weight:500;">La fórmula resume:</div>
-          <div style="background:rgba(45,139,139,.1);border:1px solid rgba(45,139,139,.3);border-radius:8px;padding:.8rem;margin-bottom:.6rem;">
-            <div style="font-family:var(--mono);font-size:.8rem;color:var(--ink2);line-height:1.8;">
-              V₀ = Upside<br/>+ Downside<br/>− (Esperar)
-            </div>
-          </div>
-          <div style="font-size:.7rem;color:var(--ink3);">Equals: flexibilidad direccional</div>
-        </div>
-      </div>
-    </div>
+    <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1.1fr;gap:1.2rem;align-items:start;">
 
-    <div style="margin-top:1.5rem;font-size:.78rem;color:var(--ink2);line-height:1.8;border-left:3px solid rgba(45,139,139,.4);padding-left:1rem;background:rgba(45,139,139,.05);border-radius:0 8px 8px 0;padding:.9rem .85rem .9rem 1rem;">
-      <strong style="color:var(--teal);">La intuición profunda:</strong>
-      La chooser te permite <strong>vender</strong> información (pagas K* reducida) a cambio de <strong>recibir</strong> optionalidad. En t<sub>c</sub>, el mercado reveló información. Ahora sabes si subió o bajó. Y puedes elegir la pierna que aprovecha ese escenario. Eso es lo que <strong>compra tiempo</strong>.
+      <!-- Izquierda: 3 insight cards que aparecen en secuencia -->
+      <div style="display:flex;flex-direction:column;gap:.7rem;">
+        <div class="s7-card" style="background:rgba(45,139,139,.08);border-left:3px solid var(--teal);border-radius:0 var(--r) var(--r) 0;padding:.8rem 1rem;">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--teal);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Sin chooser</div>
+          <div style="font-size:.76rem;color:var(--ink2);line-height:1.6;">Decides <strong>hoy</strong> call o put. Si el mercado te sorprende en la dirección equivocada, pierdes <strong>toda la prima</strong>.</div>
+        </div>
+
+        <div class="s7-card" style="background:rgba(74,158,187,.08);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:.8rem 1rem;">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">Con chooser — el tiempo trabaja</div>
+          <div style="font-size:.76rem;color:var(--ink2);line-height:1.6;">Esperas hasta t<sub>c</sub>. El mercado <strong>revela su dirección</strong>. Luego eliges la pierna ganadora: max(C, P).</div>
+        </div>
+
+        <div class="s7-card" style="background:rgba(201,155,69,.08);border-left:3px solid var(--amber);border-radius:0 var(--r) var(--r) 0;padding:.8rem 1rem;">
+          <div style="font-family:var(--mono);font-size:.58rem;color:var(--amber);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem;">El costo del tiempo</div>
+          <div style="font-size:.76rem;color:var(--ink2);line-height:1.6;">Pagas una prima <strong>V₀ = C<sub>BS</sub> + P<sub>BS</sub></strong>. Más cara que una vanilla, pero <strong>más barata que un straddle</strong> completo.</div>
+        </div>
+
+        <!-- Ecuación final animada -->
+        <div class="s7-equation" style="margin-top:.3rem;text-align:center;font-family:var(--mono);font-size:.82rem;padding:.7rem;background:rgba(45,139,139,.06);border:1px solid rgba(45,139,139,.25);border-radius:var(--r);">
+          <span style="color:var(--teal);">V₀</span>
+          <span style="color:var(--ink3);margin:0 .4rem;">&lt;</span>
+          <span style="color:var(--ink2);">Straddle</span>
+          <span style="color:var(--ink3);margin:0 .4rem;">&lt;&lt;</span>
+          <span style="color:var(--ink2);">Call + Put</span>
+        </div>
+      </div>
+
+      <!-- Derecha: gráfico animado de "precio revelándose" -->
+      <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1rem;">
+        <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.7rem;">Simulación: el precio se revela en t<sub>c</sub></div>
+        <div style="height:190px;"><canvas id="chart-s7"></canvas></div>
+        <div style="margin-top:.5rem;display:flex;gap:1rem;justify-content:center;font-size:.65rem;font-family:var(--mono);color:var(--ink3);">
+          <span style="display:flex;align-items:center;gap:.3rem;"><span style="display:inline-block;width:14px;height:2px;background:rgba(255,255,255,.3);vertical-align:middle;"></span>incertidumbre</span>
+          <span style="display:flex;align-items:center;gap:.3rem;"><span style="display:inline-block;width:14px;height:2px;background:var(--teal);vertical-align:middle;"></span>elegiste call</span>
+          <span style="display:flex;align-items:center;gap:.3rem;"><span style="display:inline-block;width:14px;height:2px;background:var(--amber);vertical-align:middle;"></span>t<sub>c</sub></span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
+
+<script>
+(function(){
+  let s7chart = null;
+
+  document.querySelector('[data-i="7"]').addEventListener('slideenter', function(){
+    // Reset & animate cards
+    const cards=[...document.querySelectorAll('.s7-card'), document.querySelector('.s7-equation')];
+    cards.forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(20px)'; });
+    cards.forEach((el,i)=>{
+      setTimeout(()=>{
+        el.style.transition='opacity .5s ease, transform .5s ease';
+        el.style.opacity='1'; el.style.transform='none';
+      }, 200 + i*350);
+    });
+
+    // Chart
+    const canvas=document.getElementById('chart-s7');
+    if(!canvas) return;
+    if(s7chart){ s7chart.destroy(); s7chart=null; }
+
+    // Build data: uncertainty paths before tc, then chosen path after
+    const labels=['t=0','','','tc','','','T'];
+    // Uncertainty band (multiple paths, shown as fill between high/low)
+    const base=100;
+    s7chart = new Chart(canvas, {
+      type:'line',
+      data:{
+        labels,
+        datasets:[
+          // Chosen path (call - goes up)
+          { label:'Camino elegido (call)', data:[base,null,null,112,118,126,134],
+            borderColor:'rgba(45,139,139,.9)', borderWidth:2.5, fill:false, tension:.4,
+            pointRadius:[4,0,0,6,0,0,6], pointBackgroundColor:'var(--teal)', pointBorderColor:'#fff', pointBorderWidth:1.5 },
+          // Path that was not chosen (put - goes down) - faded
+          { label:'Camino descartado', data:[base,null,null,112,106,98,90],
+            borderColor:'rgba(255,255,255,.2)', borderWidth:1.5, borderDash:[4,3], fill:false, tension:.4,
+            pointRadius:[0,0,0,0,0,0,4], pointBackgroundColor:'rgba(255,255,255,.3)' },
+          // Upper uncertainty band before tc
+          { label:'', data:[base,106,110,null,null,null,null],
+            borderColor:'rgba(255,255,255,.12)', borderWidth:1, fill:'+1', backgroundColor:'rgba(255,255,255,.04)', tension:.4, pointRadius:0 },
+          // Lower uncertainty band before tc
+          { label:'', data:[base,94,90,null,null,null,null],
+            borderColor:'rgba(255,255,255,.12)', borderWidth:1, fill:false, tension:.4, pointRadius:0 },
+          // tc vertical marker
+          { label:'t_c (decisión)', data:[null,null,null,84,null,null,null],
+            borderColor:'rgba(201,155,69,.8)', borderWidth:2, borderDash:[3,2], fill:false, pointRadius:0 },
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        animation:{ duration:1800, easing:'easeInOutQuart' },
+        plugins:{
+          legend:{ display:false },
+          tooltip:{ backgroundColor:'rgba(10,15,26,.9)', titleColor:'rgba(241,250,238,.9)', bodyColor:'rgba(241,250,238,.75)', borderColor:'rgba(255,255,255,.1)', borderWidth:1, titleFont:{family:'JetBrains Mono',size:9}, bodyFont:{family:'JetBrains Mono',size:9}, padding:7, filter: item => item.datasetIndex < 2 }
+        },
+        scales:{
+          x:{ grid:{color:'rgba(255,255,255,.05)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:9}} },
+          y:{ min:80, max:140, grid:{color:'rgba(255,255,255,.07)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:9},callback:v=>'$'+v} }
+        }
+      }
+    });
+  });
+})();
+</script>
 
 <!-- ────────────────────────────────────────────────────────────────
   08  PAYOFFS — Si termina siendo Call
@@ -2064,6 +2251,7 @@ function goTo(n) {
   SLIDES[cur].classList.remove('active');
   cur = n;
   SLIDES[cur].classList.add('active');
+  SLIDES[cur].dispatchEvent(new CustomEvent('slideenter'));
 
   // Progress bar
   const pct = TOTAL > 1 ? (cur / (TOTAL - 1)) * 100 : 0;
