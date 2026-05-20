@@ -1180,50 +1180,155 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     <div class="lbl lbl-teal">Componente 1</div>
     <h2 class="t-h">La pierna larga: C<sub>BS</sub>(S, K, T)</h2>
 
-    <div class="g2 mt5">
-      <div>
-        <div class="co co-teal">
-          <div class="co-mark cm-teal">¿Qué es?</div>
-          <div class="co-text">
-            Una <strong>call estándar de Black-Scholes</strong> que vence en <strong>T</strong> (el vencimiento final de la chooser). Tiene strike <strong>K</strong>.
-          </div>
-        </div>
-        <div class="co co-blue" style="margin-top:.8rem;">
-          <div class="co-mark cm-blue">Payoff en T</div>
-          <div class="co-text">
-            \(\max(S_T - K, 0)\)
-            <br/>Si el subyacente sube, la call imprime ganancia ilimitada.
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:1rem;justify-content:center;">
-        <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem;text-align:center;">
-          <svg width="100%" height="140" viewBox="0 0 200 140" style="max-width:180px;margin:0 auto;display:block;">
-            <!-- Ejes -->
-            <line x1="30" y1="110" x2="180" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
-            <line x1="30" y1="20" x2="30" y2="110" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
-            <!-- Línea de pérdida -->
-            <line x1="30" y1="110" x2="90" y2="110" stroke="var(--ink3)" stroke-width="2" opacity=".5"/>
-            <!-- Línea de ganancia -->
-            <line x1="90" y1="110" x2="180" y2="20" stroke="var(--teal)" stroke-width="2.5"/>
-            <!-- Strike -->
-            <circle cx="90" cy="110" r="3" fill="var(--amber)"/>
-            <text x="90" y="130" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink3)">K</text>
-            <!-- Etiquetas -->
-            <text x="10" y="25" font-family="var(--mono)" font-size="9" fill="var(--ink3)">Payoff</text>
-            <text x="175" y="120" font-family="var(--mono)" font-size="9" fill="var(--ink3)">S<tspan font-size="8">T</tspan></text>
-          </svg>
-          <div style="font-size:.7rem;color:var(--ink3);margin-top:.6rem;">Diagrama de payoff: Call</div>
-        </div>
-      </div>
-    </div>
+    <div style="margin-top:1.1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
 
-    <div style="margin-top:1.2rem;font-size:.78rem;color:var(--ink2);line-height:1.7;border-left:2px solid rgba(45,139,139,.3);padding-left:.85rem;">
-      <strong style="color:var(--teal);">¿Por qué en la chooser?</strong>
-      Esta call representa tu protección al alza. En <strong>t<sub>c</sub></strong>, si el mercado sube mucho y la call vale más que la put, elegirás ejercerla. Es la "opción A" en tu decisión binaria.
+      <!-- Columna izquierda: definición + botones -->
+      <div style="display:flex;flex-direction:column;gap:.7rem;">
+        <div class="co co-teal" style="padding:.75rem 1rem;">
+          <div class="co-mark cm-teal" style="padding-top:0;">¿Qué es?</div>
+          <div class="co-text" style="font-size:.76rem;">
+            Call estándar de Black-Scholes con vencimiento <strong>T</strong> y strike <strong>K</strong>.
+            Es la pierna que captura el alza ilimitada del subyacente.
+          </div>
+        </div>
+
+        <!-- 3 botones clicables -->
+        <div style="font-family:var(--mono);font-size:.54rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;">Explora — haz click</div>
+
+        <div id="s4-btn-payoff" onclick="s4Show('payoff')"
+          style="background:rgba(45,139,139,.08);border:1px solid rgba(45,139,139,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
+          <div style="font-size:.78rem;font-weight:600;color:var(--teal);margin-bottom:.2rem;">① Payoff en T</div>
+          <div style="font-size:.72rem;color:var(--ink3);">max(S<sub>T</sub> − K, 0) — la función de ganancia al vencimiento</div>
+        </div>
+
+        <div id="s4-btn-precio" onclick="s4Show('precio')"
+          style="background:rgba(74,158,187,.08);border:1px solid rgba(74,158,187,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
+          <div style="font-size:.78rem;font-weight:600;color:var(--blue);margin-bottom:.2rem;">② Precio BS hoy</div>
+          <div style="font-size:.72rem;color:var(--ink3);">C(S) = valor intrínseco + valor temporal</div>
+        </div>
+
+        <div id="s4-btn-delta" onclick="s4Show('delta')"
+          style="background:rgba(124,111,205,.08);border:1px solid rgba(124,111,205,.25);border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:all .2s;">
+          <div style="font-size:.78rem;font-weight:600;color:var(--violet);margin-bottom:.2rem;">③ Delta — sensibilidad</div>
+          <div style="font-size:.72rem;color:var(--ink3);">Δ = N(d₁): probabilidad risk-neutral de estar ITM</div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: panel de gráfico -->
+      <div id="s4-panel">
+        <div id="s4-placeholder" style="display:flex;align-items:center;justify-content:center;height:100%;min-height:220px;border:1px dashed rgba(255,255,255,.1);border-radius:var(--rx);color:var(--ink3);font-size:.74rem;font-family:var(--mono);">
+          Selecciona un concepto
+        </div>
+
+        <!-- Payoff -->
+        <div id="s4-panel-payoff" style="display:none;background:rgba(45,139,139,.05);border:1px solid rgba(45,139,139,.2);border-radius:var(--rx);padding:.9rem;height:100%;">
+          <div style="font-family:var(--mono);font-size:.56rem;color:var(--teal);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Payoff al vencimiento T</div>
+          <div style="height:175px;"><canvas id="chart-s4-payoff"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.68rem;color:var(--ink3);">Por debajo de K: pierdes solo la prima. Por encima: ganancia ilimitada.</div>
+        </div>
+
+        <!-- Precio BS -->
+        <div id="s4-panel-precio" style="display:none;background:rgba(74,158,187,.05);border:1px solid rgba(74,158,187,.2);border-radius:var(--rx);padding:.9rem;height:100%;">
+          <div style="font-family:var(--mono);font-size:.56rem;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Precio BS hoy — intrínseco + temporal</div>
+          <div style="height:175px;"><canvas id="chart-s4-precio"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.68rem;color:var(--ink3);">El área entre C(S) y el valor intrínseco es el <strong style="color:var(--blue);">valor temporal</strong>: lo que pagas por la optionalidad.</div>
+        </div>
+
+        <!-- Delta -->
+        <div id="s4-panel-delta" style="display:none;background:rgba(124,111,205,.05);border:1px solid rgba(124,111,205,.2);border-radius:var(--rx);padding:.9rem;height:100%;">
+          <div style="font-family:var(--mono);font-size:.56rem;color:var(--violet);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem;">Delta Δ = N(d₁) vs precio spot S</div>
+          <div style="height:175px;"><canvas id="chart-s4-delta"></canvas></div>
+          <div style="margin-top:.5rem;font-size:.68rem;color:var(--ink3);">ATM (S=K): Δ≈0.5. Deep ITM: Δ→1. Deep OTM: Δ→0. Sirve para cubrir (hedge) la posición.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  function norm(x) {
+    const a=[0.319381530,-0.356563782,1.781477937,-1.821255978,1.330274429];
+    const t=1/(1+0.2316419*Math.abs(x));
+    const poly=t*(a[0]+t*(a[1]+t*(a[2]+t*(a[3]+t*a[4]))));
+    const pdf=Math.exp(-x*x/2)/Math.sqrt(2*Math.PI);
+    const c=1-pdf*poly;
+    return x>=0?c:1-c;
+  }
+  function d1(S,K,T,r,sig){ return (Math.log(S/K)+(r+sig*sig/2)*T)/(sig*Math.sqrt(T)); }
+  function bsCall(S,K,T,r,sig){ const sq=sig*Math.sqrt(T); const _d1=d1(S,K,T,r,sig); return S*norm(_d1)-K*Math.exp(-r*T)*norm(_d1-sq); }
+  function delta(S,K,T,r,sig){ return norm(d1(S,K,T,r,sig)); }
+
+  const K=100, T=0.5, r=0.05, sig=0.25;
+  const SPOTS = Array.from({length:17},(_,i)=>60+i*5);
+  const prima = bsCall(K,K,T,r,sig);
+
+  const bOpts = {
+    responsive:true, maintainAspectRatio:false,
+    animation:{duration:420,easing:'easeOutQuart'},
+    plugins:{
+      legend:{display:true,labels:{color:'rgba(241,250,238,.65)',font:{family:'DM Sans',size:9},usePointStyle:true,padding:8,boxWidth:8}},
+      tooltip:{backgroundColor:'rgba(10,15,26,.9)',titleColor:'rgba(241,250,238,.9)',bodyColor:'rgba(241,250,238,.75)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleFont:{family:'JetBrains Mono',size:9},bodyFont:{family:'JetBrains Mono',size:9},padding:7}
+    },
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)',drawBorder:false},ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}}},
+      y:{grid:{color:'rgba(255,255,255,.07)',drawBorder:false},ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}}}
+    }
+  };
+
+  const inited={};
+  function initChart(id){
+    if(inited[id])return; inited[id]=true;
+    const labels=SPOTS.map(s=>'$'+s);
+
+    if(id==='payoff'){
+      new Chart(document.getElementById('chart-s4-payoff'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Payoff bruto',data:SPOTS.map(s=>Math.max(s-K,0)),borderColor:'rgba(45,139,139,.9)',backgroundColor:'rgba(45,139,139,.1)',borderWidth:2.5,fill:true,tension:0,pointRadius:0,pointHoverRadius:4},
+          {label:'Payoff neto (−prima)',data:SPOTS.map(s=>Math.max(s-K,0)-prima),borderColor:'rgba(76,175,125,.7)',borderDash:[5,3],borderWidth:2,fill:false,tension:0,pointRadius:0,pointHoverRadius:4},
+          {label:'Punto de equilibrio',data:SPOTS.map(()=>0),borderColor:'rgba(255,255,255,.15)',borderDash:[3,3],borderWidth:1,fill:false,pointRadius:0}
+        ]},
+        options:{...bOpts,scales:{...bOpts.scales,y:{...bOpts.scales.y,ticks:{...bOpts.scales.y.ticks,callback:v=>'$'+v}}}}
+      });
+    } else if(id==='precio'){
+      const callPrices=SPOTS.map(s=>bsCall(s,K,T,r,sig));
+      const intrinsic =SPOTS.map(s=>Math.max(s-K,0));
+      new Chart(document.getElementById('chart-s4-precio'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Precio BS C(S)',data:callPrices,borderColor:'rgba(74,158,187,.9)',backgroundColor:'rgba(74,158,187,.12)',borderWidth:2.5,fill:true,tension:.35,pointRadius:0,pointHoverRadius:4},
+          {label:'Valor intrínseco',data:intrinsic,borderColor:'rgba(255,255,255,.25)',borderDash:[5,3],backgroundColor:'rgba(45,139,139,.08)',borderWidth:1.5,fill:true,tension:0,pointRadius:0}
+        ]},
+        options:{...bOpts,scales:{...bOpts.scales,y:{...bOpts.scales.y,min:0,max:45,ticks:{...bOpts.scales.y.ticks,callback:v=>'$'+v}}}}
+      });
+    } else if(id==='delta'){
+      const deltas=SPOTS.map(s=>delta(s,K,T,r,sig));
+      new Chart(document.getElementById('chart-s4-delta'),{
+        type:'line',
+        data:{labels,datasets:[
+          {label:'Delta Δ = N(d₁)',data:deltas,borderColor:'rgba(124,111,205,.9)',backgroundColor:'rgba(124,111,205,.1)',borderWidth:2.5,fill:true,tension:.4,pointRadius:0,pointHoverRadius:4},
+          {label:'Δ = 0.5 (ATM)',data:SPOTS.map(()=>0.5),borderColor:'rgba(255,255,255,.2)',borderDash:[4,3],borderWidth:1,fill:false,pointRadius:0}
+        ]},
+        options:{...bOpts,scales:{...bOpts.scales,y:{...bOpts.scales.y,min:0,max:1,ticks:{...bOpts.scales.y.ticks,callback:v=>v.toFixed(1)}}}}
+      });
+    }
+  }
+
+  window.s4Show=function(id){
+    document.getElementById('s4-placeholder').style.display='none';
+    ['payoff','precio','delta'].forEach(k=>{
+      document.getElementById('s4-panel-'+k).style.display='none';
+      const btn=document.getElementById('s4-btn-'+k);
+      if(btn){btn.style.transform='';btn.style.boxShadow='';}
+    });
+    document.getElementById('s4-panel-'+id).style.display='block';
+    const btn=document.getElementById('s4-btn-'+id);
+    if(btn){btn.style.transform='translateX(4px)';btn.style.boxShadow='inset 3px 0 0 var(--teal)';}
+    initChart(id);
+  };
+})();
+</script>
 
 <!-- ────────────────────────────────────────────────────────────────
   05  FÓRMULA — Componente 2: Put con K*
