@@ -1750,10 +1750,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
       <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1rem;">
         <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.7rem;">Simulación: el precio se revela en t<sub>c</sub></div>
         <div style="height:190px;"><canvas id="chart-s7"></canvas></div>
-        <div style="margin-top:.5rem;display:flex;gap:1rem;justify-content:center;font-size:.65rem;font-family:var(--mono);color:var(--ink3);">
-          <span style="display:flex;align-items:center;gap:.3rem;"><span style="display:inline-block;width:14px;height:2px;background:rgba(255,255,255,.3);vertical-align:middle;"></span>incertidumbre</span>
-          <span style="display:flex;align-items:center;gap:.3rem;"><span style="display:inline-block;width:14px;height:2px;background:var(--teal);vertical-align:middle;"></span>elegiste call</span>
-          <span style="display:flex;align-items:center;gap:.3rem;"><span style="display:inline-block;width:14px;height:2px;background:var(--amber);vertical-align:middle;"></span>t<sub>c</sub></span>
+        <div style="margin-top:.5rem;display:flex;gap:1.2rem;justify-content:center;font-size:.65rem;font-family:var(--mono);color:var(--ink3);">
+          <span style="display:flex;align-items:center;gap:.35rem;"><span style="display:inline-block;width:16px;height:2.5px;background:var(--teal);border-radius:2px;"></span>Elegiste Call ↑ $134</span>
+          <span style="display:flex;align-items:center;gap:.35rem;"><span style="display:inline-block;width:16px;height:2px;background:rgba(255,255,255,.3);border-radius:2px;"></span>Escenario bajista ↓ $70</span>
+          <span style="display:flex;align-items:center;gap:.35rem;"><span style="display:inline-block;width:2px;height:12px;background:var(--amber);border-radius:2px;vertical-align:middle;"></span>t<sub>c</sub> = decisión</span>
         </div>
       </div>
 
@@ -1781,32 +1781,30 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     if(!canvas) return;
     if(s7chart){ s7chart.destroy(); s7chart=null; }
 
-    // Build data: uncertainty paths before tc, then chosen path after
+    // Narrative: two diverging futures from t=0.
+    // At tc, price is REVEALED → you choose the winning leg.
+    // Upper path (price rises → choose call) shown in teal.
+    // Lower counterfactual (price falls → would choose put) shown faded, stops at T.
     const labels=['t=0','','','tc','','','T'];
-    // Uncertainty band (multiple paths, shown as fill between high/low)
-    const base=100;
     s7chart = new Chart(canvas, {
       type:'line',
       data:{
         labels,
         datasets:[
-          // Chosen path (call - goes up)
-          { label:'Camino elegido (call)', data:[base,null,null,112,118,126,134],
-            borderColor:'rgba(45,139,139,.9)', borderWidth:2.5, fill:false, tension:.4,
-            pointRadius:[4,0,0,6,0,0,6], pointBackgroundColor:'var(--teal)', pointBorderColor:'#fff', pointBorderWidth:1.5 },
-          // Path that was not chosen (put - goes down) - faded
-          { label:'Camino descartado', data:[base,null,null,112,106,98,90],
-            borderColor:'rgba(255,255,255,.2)', borderWidth:1.5, borderDash:[4,3], fill:false, tension:.4,
-            pointRadius:[0,0,0,0,0,0,4], pointBackgroundColor:'rgba(255,255,255,.3)' },
-          // Upper uncertainty band before tc
-          { label:'', data:[base,106,110,null,null,null,null],
-            borderColor:'rgba(255,255,255,.12)', borderWidth:1, fill:'+1', backgroundColor:'rgba(255,255,255,.04)', tension:.4, pointRadius:0 },
-          // Lower uncertainty band before tc
-          { label:'', data:[base,94,90,null,null,null,null],
-            borderColor:'rgba(255,255,255,.12)', borderWidth:1, fill:false, tension:.4, pointRadius:0 },
-          // tc vertical marker
-          { label:'t_c (decisión)', data:[null,null,null,84,null,null,null],
-            borderColor:'rgba(201,155,69,.8)', borderWidth:2, borderDash:[3,2], fill:false, pointRadius:0 },
+          // ① Actual path: price rises → choose CALL → continues up to T
+          { label:'Elegiste Call',
+            data:[100, 104, 108, 112, 118, 126, 134],
+            borderColor:'rgba(45,139,139,.9)', borderWidth:2.5, fill:false, tension:.35,
+            pointRadius:[5,0,0,7,0,0,7],
+            pointBackgroundColor:['rgba(45,139,139,.9)','','','rgba(201,155,69,1)','','','rgba(45,139,139,1)'],
+            pointBorderColor:'#fff', pointBorderWidth:2 },
+          // ② Counterfactual: price falls → would have chosen PUT
+          { label:'Escenario bajista (put)',
+            data:[100, 96, 92, 88, 82, 76, 70],
+            borderColor:'rgba(255,255,255,.22)', borderWidth:1.5, borderDash:[5,3],
+            fill:false, tension:.35,
+            pointRadius:[0,0,0,5,0,0,5],
+            pointBackgroundColor:'rgba(255,255,255,.35)', pointBorderColor:'rgba(255,255,255,.5)', pointBorderWidth:1.5 },
         ]
       },
       options:{
@@ -1814,13 +1812,40 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         animation:{ duration:1800, easing:'easeInOutQuart' },
         plugins:{
           legend:{ display:false },
-          tooltip:{ backgroundColor:'rgba(10,15,26,.9)', titleColor:'rgba(241,250,238,.9)', bodyColor:'rgba(241,250,238,.75)', borderColor:'rgba(255,255,255,.1)', borderWidth:1, titleFont:{family:'JetBrains Mono',size:9}, bodyFont:{family:'JetBrains Mono',size:9}, padding:7, filter: item => item.datasetIndex < 2 }
+          tooltip:{
+            backgroundColor:'rgba(10,15,26,.9)', titleColor:'rgba(241,250,238,.9)',
+            bodyColor:'rgba(241,250,238,.75)', borderColor:'rgba(255,255,255,.1)', borderWidth:1,
+            titleFont:{family:'JetBrains Mono',size:9}, bodyFont:{family:'JetBrains Mono',size:9}, padding:7,
+            callbacks:{ label: ctx => ctx.dataset.label + ': $' + ctx.parsed.y }
+          }
         },
         scales:{
-          x:{ grid:{color:'rgba(255,255,255,.05)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:9}} },
-          y:{ min:80, max:140, grid:{color:'rgba(255,255,255,.07)',drawBorder:false}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:9},callback:v=>'$'+v} }
+          x:{ grid:{color:'rgba(255,255,255,.05)',drawBorder:false},
+              ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:9}} },
+          y:{ min:62, max:142,
+              grid:{color:'rgba(255,255,255,.07)',drawBorder:false},
+              ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:9},callback:v=>'$'+v} }
         }
-      }
+      },
+      plugins:[{
+        afterDraw(chart){
+          const c=chart.ctx, xs=chart.scales.x, ys=chart.scales.y;
+          c.save();
+          // K=$100 horizontal reference
+          const yK=ys.getPixelForValue(100);
+          c.setLineDash([5,4]); c.strokeStyle='rgba(201,155,69,.38)'; c.lineWidth=1.2;
+          c.beginPath(); c.moveTo(xs.left,yK); c.lineTo(xs.right,yK); c.stroke();
+          c.fillStyle='rgba(201,155,69,.6)'; c.font='8px JetBrains Mono'; c.textAlign='left';
+          c.fillText('K=$100',xs.left+4,yK-4);
+          // tc vertical line
+          const xTc=xs.getPixelForValue(3);
+          c.setLineDash([4,3]); c.strokeStyle='rgba(201,155,69,.75)'; c.lineWidth=1.5;
+          c.beginPath(); c.moveTo(xTc,ys.top); c.lineTo(xTc,ys.bottom); c.stroke();
+          c.fillStyle='rgba(201,155,69,.9)'; c.font='bold 8px JetBrains Mono'; c.textAlign='center';
+          c.fillText('ELIGE AQUÍ',xTc,ys.top+11);
+          c.restore();
+        }
+      }]
     });
   });
 })();
