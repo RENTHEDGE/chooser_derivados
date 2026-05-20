@@ -217,6 +217,48 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; }
 @media (max-width: 720px) { .g2, .g3 { grid-template-columns: 1fr; } }
 
+/* ── RESPONSIVE — tablet / small laptop ─────────────────────────── */
+@media (max-width: 900px) {
+  .slide { padding: 4.5rem 4vw 3.5rem; }
+  .t-xl  { font-size: clamp(2rem, 6vw, 3.2rem); }
+  .t-h   { font-size: clamp(1.3rem, 3.5vw, 1.9rem); }
+
+  /* Collapse inline 2-col grids inside slides */
+  [data-i="4"] .inner > div,
+  [data-i="5"] .inner > div,
+  [data-i="8"] .inner > div,
+  [data-i="9"] .inner > div,
+  [data-i="10"] .inner > div,
+  [data-i="12"] .inner > div,
+  [data-i="13"] .inner > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Panel de gráficos en slides 04/05: altura reducida */
+  #s4-panel, #s5-panel { min-height: 180px !important; }
+  [data-i="4"] [style*="height:175px"],
+  [data-i="5"] [style*="height:175px"] { height: 130px !important; }
+
+  /* Choice buttons en slide 14 */
+  .choice-row { flex-direction: column; align-items: center; gap: 1rem; }
+  .choice-btn { width: 100%; max-width: 280px; }
+
+  /* Topbar phases: hide on very small */
+  #tb-phases { display: none; }
+
+  /* Cover ghost number: smaller */
+  .cover-ghost { font-size: 28vw !important; }
+}
+
+@media (max-width: 580px) {
+  .slide { padding: 4rem 3.5vw 3rem; }
+  [data-i="6"] .inner > div,
+  [data-i="7"] .inner > div,
+  [data-i="11"] .inner > div,
+  [data-i="15"] .inner > div { grid-template-columns: 1fr !important; }
+  .s15-card, .s11-card { transform: none !important; }
+}
+
 /* Content cards */
 .co {
   border-radius: var(--r); padding: .9rem 1rem;
@@ -600,7 +642,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
   const baseOpts = {
     responsive: true, maintainAspectRatio: false,
-    animation: { duration: 450, easing: 'easeOutQuart' },
+    animation: { duration: 900, easing: 'easeOutQuart' },
     plugins: {
       legend: { display: true, labels: { color:'rgba(241,250,238,.65)', font:{family:'DM Sans',size:9}, usePointStyle:true, padding:8, boxWidth:8 } },
       tooltip: { backgroundColor:'rgba(10,15,26,.9)', titleColor:'rgba(241,250,238,.9)', bodyColor:'rgba(241,250,238,.75)', borderColor:'rgba(255,255,255,.1)', borderWidth:1, titleFont:{family:'JetBrains Mono',size:9}, bodyFont:{family:'JetBrains Mono',size:9}, padding:7 }
@@ -620,8 +662,9 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   }
 
   function initChart(id) {
-    if (initialized[id]) return;
-    initialized[id] = true;
+    const canvasIds = { problema:'chart-s1-problema', call:'chart-s1-call', put:'chart-s1-put', chooser:'chart-s1-chooser' };
+    const existing = Chart.getChart(document.getElementById(canvasIds[id]));
+    if (existing) existing.destroy();
 
     if (id === 'problema') {
       new Chart(document.getElementById('chart-s1-problema'), {
@@ -844,10 +887,9 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     if (!panel) return;
     panel.style.display = 'block';
 
-    if (panels[id]) return; // ya inicializado
-
-    // Destruir chart anterior si existía en otro canvas
-    if (activeChart) { activeChart.destroy(); activeChart = null; }
+    // Destruir chart anterior de este panel si ya existe
+    if (panels[id]) { panels[id].destroy(); panels[id] = null; }
+    if (activeChart && activeChart !== panels[id]) { activeChart.destroy(); activeChart = null; }
 
     const colors = {
       t0:  { border:'rgba(45,139,139,.8)',  bg:'rgba(45,139,139,.12)'  },
@@ -962,7 +1004,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
           ticks:{color:'rgba(241,250,238,.5)',font:{family:'var(--mono)',size:9},callback:v=>'$'+v}
         }
       },
-      animation: { duration: 500, easing: 'easeOutQuart' }
+      animation: { duration: 900, easing: 'easeOutQuart' }
     };
   }
 
@@ -1280,7 +1322,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
   const bOpts = {
     responsive:true, maintainAspectRatio:false,
-    animation:{duration:420,easing:'easeOutQuart'},
+    animation:{duration:900,easing:'easeOutQuart'},
     plugins:{
       legend:{display:true,labels:{color:'rgba(241,250,238,.65)',font:{family:'DM Sans',size:9},usePointStyle:true,padding:8,boxWidth:8}},
       tooltip:{backgroundColor:'rgba(10,15,26,.9)',titleColor:'rgba(241,250,238,.9)',bodyColor:'rgba(241,250,238,.75)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleFont:{family:'JetBrains Mono',size:9},bodyFont:{family:'JetBrains Mono',size:9},padding:7}
@@ -1291,9 +1333,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     }
   };
 
-  const inited={};
+  const canvasMap4={payoff:'chart-s4-payoff',precio:'chart-s4-precio',delta:'chart-s4-delta'};
   function initChart(id){
-    if(inited[id])return; inited[id]=true;
+    const existing=Chart.getChart(document.getElementById(canvasMap4[id]));
+    if(existing)existing.destroy();
     const labels=SPOTS.map(s=>'$'+s);
 
     if(id==='payoff'){
@@ -1341,6 +1384,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     const btn=document.getElementById('s4-btn-'+id);
     if(btn){btn.style.transform='translateX(4px)';btn.style.boxShadow='inset 3px 0 0 var(--teal)';}
     initChart(id);
+    requestAnimationFrame(()=>{
+      const c=Chart.getChart(document.getElementById(canvasMap4[id]));
+      if(c)c.resize();
+    });
   };
 })();
 </script>
@@ -1442,7 +1489,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
   const bOpts = {
     responsive:true, maintainAspectRatio:false,
-    animation:{duration:420,easing:'easeOutQuart'},
+    animation:{duration:900,easing:'easeOutQuart'},
     plugins:{
       legend:{display:true,labels:{color:'rgba(241,250,238,.65)',font:{family:'DM Sans',size:9},usePointStyle:true,padding:8,boxWidth:8}},
       tooltip:{backgroundColor:'rgba(10,15,26,.9)',titleColor:'rgba(241,250,238,.9)',bodyColor:'rgba(241,250,238,.75)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleFont:{family:'JetBrains Mono',size:9},bodyFont:{family:'JetBrains Mono',size:9},padding:7}
@@ -1453,9 +1500,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     }
   };
 
-  const inited={};
+  const canvasMap5={payoff:'chart-s5-payoff',precio:'chart-s5-precio',vega:'chart-s5-vega'};
   function initChart(id){
-    if(inited[id])return; inited[id]=true;
+    const existing=Chart.getChart(document.getElementById(canvasMap5[id]));
+    if(existing)existing.destroy();
     const labels=SPOTS.map(s=>'$'+s);
 
     if(id==='payoff'){
@@ -1502,6 +1550,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     const btn=document.getElementById('s5-btn-'+id);
     if(btn){btn.style.transform='translateX(4px)';btn.style.boxShadow='inset 3px 0 0 var(--blue)';}
     initChart(id);
+    requestAnimationFrame(()=>{
+      const c=Chart.getChart(document.getElementById(canvasMap5[id]));
+      if(c)c.resize();
+    });
   };
 })();
 </script>
