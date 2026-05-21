@@ -2237,7 +2237,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
           var grp = document.getElementById(id + '-group');
           if (grp) grp.dispatchEvent(new MouseEvent('click'));
         }
-      }, 800 + i * 1600);
+      }, 800 + i * 4000);
     });
   });
 
@@ -3214,8 +3214,8 @@ function initParticles(canvas, opts) {
   if (!canvas) return;
   opts = opts || {};
   const ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth || canvas.parentElement.offsetWidth || 1280;
-  canvas.height = canvas.offsetHeight || canvas.parentElement.offsetHeight || 800;
+  canvas.width = canvas.offsetWidth || window.innerWidth;
+  canvas.height = canvas.offsetHeight || window.innerHeight;
   const count = opts.count || 40;
   const r = 45, g = 139, b = 139;
   const particles = Array.from({ length: count }, () => ({
