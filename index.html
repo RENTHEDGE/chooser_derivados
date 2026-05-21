@@ -2226,19 +2226,6 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         ph.style.opacity = '1';
       }, 400);
     }
-    /* Auto-reveal each panel in sequence: t=0 → tc → T */
-    var panels = ['t0','tc','T'];
-    panels.forEach(function(id, i) {
-      setTimeout(function() {
-        if (window.s2ShowPanel) {
-          window.s2ShowPanel(id);
-        } else {
-          /* fallback — call internal showPanel via click simulation */
-          var grp = document.getElementById(id + '-group');
-          if (grp) grp.dispatchEvent(new MouseEvent('click'));
-        }
-      }, 800 + i * 4000);
-    });
   });
 
   /* ── Slide 03 — Fórmula ── */
