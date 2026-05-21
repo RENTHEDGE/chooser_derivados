@@ -2734,14 +2734,9 @@ function updatePhases() {
       ctx.moveTo(CX-hw,N1-th);ctx.lineTo(CX+hw,N1-th);
       ctx.lineTo(CX,N1);ctx.closePath();ctx.fill();
     }
-    // arena inferior
-    const bh=(B2-N2)*fill;
-    if(bh>.5){
-      const hw=(CX-M)*(1-fill);
-      ctx.fillStyle=sbc;ctx.beginPath();
-      ctx.moveTo(CX-hw,B2-bh);ctx.lineTo(CX+hw,B2-bh);
-      ctx.lineTo(W-M,B2);ctx.lineTo(M,B2);ctx.closePath();ctx.fill();
-    }
+    // fondo del triángulo inferior — siempre del color de la arena (sin partículas)
+    ctx.fillStyle=sbc;ctx.beginPath();
+    ctx.moveTo(CX,N2);ctx.lineTo(M,B2);ctx.lineTo(W-M,B2);ctx.closePath();ctx.fill();
 
     // spawn
     if(burstQ>0){const n=Math.min(burstQ,5);for(let i=0;i<n;i++)spawn(true);burstQ-=n;}
