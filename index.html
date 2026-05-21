@@ -27,6 +27,9 @@
   --sans   : "DM Sans", system-ui, sans-serif;
   --mono   : "JetBrains Mono", monospace;
 
+  /* Glow RGB for spotlight & effects */
+  --glow-rgb: 45,139,139;
+
   /* Brand colors */
   --teal   : #2d8b8b;  --teal-s : rgba(45,139,139,.13);  --teal-d : rgba(45,139,139,.07);
   --blue   : #4a9ebb;  --blue-s : rgba(74,158,187,.13);  --blue-d : rgba(74,158,187,.07);
@@ -383,6 +386,36 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 .fp-blue  { background: rgba(74,158,187,.18);  box-shadow: 0 0 0 1px rgba(74,158,187,.4);  }
 .fp-amber { background: rgba(201,155,69,.18);  box-shadow: 0 0 0 1px rgba(201,155,69,.4);  }
 .fp-dim   { opacity: .35; }
+
+/* ── GRADIENT MESH (animated blobs) ────────────────────────────── */
+@keyframes blob-float  { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(60px,-50px) scale(1.12)} 66%{transform:translate(-40px,40px) scale(0.9)} }
+@keyframes blob-drift  { 0%,100%{transform:translate(0,0) scale(1) rotate(0deg)} 33%{transform:translate(-50px,-60px) scale(1.15) rotate(3deg)} 66%{transform:translate(40px,30px) scale(.88) rotate(-2deg)} }
+.gradient-mesh { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.blob {
+  position:absolute; border-radius:50%; filter:blur(80px);
+  animation: blob-float 12s ease-in-out infinite;
+}
+.blob:nth-child(2) { animation: blob-drift 16s ease-in-out infinite; }
+.blob:nth-child(3) { animation: blob-float 20s ease-in-out infinite reverse; }
+
+/* ── VIGNETTE — cinematic depth ────────────────────────────────── */
+.slide::after {
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,.4) 100%);
+}
+
+/* ── MOUSE SPOTLIGHT ────────────────────────────────────────────── */
+.mouse-spotlight { position:fixed; inset:0; z-index:99; pointer-events:none; }
+
+/* ── REVEAL ENTRANCE ────────────────────────────────────────────── */
+.reveal { opacity:0; transform:translateY(18px); transition:opacity .55s var(--ease), transform .55s var(--ease); }
+.reveal.in { opacity:1; transform:none; }
+
+/* ── DECO SHAPES (parallax) ─────────────────────────────────────── */
+.deco-shape { position:absolute; pointer-events:none; will-change:transform; opacity:.06; }
+
+/* ── PARTICLE CANVAS ────────────────────────────────────────────── */
+.particle-canvas { position:absolute; inset:0; z-index:1; pointer-events:none; }
 </style>
 </head>
 <body>
@@ -446,6 +479,9 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   <div class="keybadge">&#8592;</div><div class="keybadge">&#8594;</div><span>flechas</span>
 </div>
 
+<!-- Mouse spotlight -->
+<div class="mouse-spotlight"></div>
+
 <!-- ══════════════════════════════════════════════════════════════
      DECK — ALL SLIDES
      ══════════════════════════════════════════════════════════════ -->
@@ -455,6 +491,16 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   00  PORTADA
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark active" data-i="0" data-phase="Portada">
+  <!-- Gradient mesh blobs -->
+  <div class="gradient-mesh">
+    <div class="blob" style="width:520px;height:520px;top:-80px;left:-120px;background:rgba(45,139,139,.18);"></div>
+    <div class="blob" style="width:380px;height:380px;bottom:-60px;right:-80px;background:rgba(74,158,187,.14);"></div>
+    <div class="blob" style="width:280px;height:280px;top:40%;left:55%;background:rgba(201,155,69,.1);"></div>
+  </div>
+  <!-- Particle canvas -->
+  <canvas class="particle-canvas" id="particles-s0"></canvas>
+  <!-- Deco shape -->
+  <svg class="deco-shape" data-speed="0.035" style="width:340px;right:3vw;bottom:8vh;" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="98" stroke="rgba(45,139,139,1)" stroke-width="1"/><circle cx="100" cy="100" r="72" stroke="rgba(45,139,139,1)" stroke-width=".5" stroke-dasharray="4 6"/></svg>
   <div class="inner">
     <div class="lbl lbl-teal s0-el" style="opacity:0;transform:translateY(-16px);">Derivados Exóticos · Finanzas Cuantitativas</div>
     <h1 class="t-xl s0-el" style="opacity:0;transform:translateY(20px);">La opción que<br/><em>compra tiempo</em></h1>
@@ -479,8 +525,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-alt" data-i="1" data-phase="Introducción">
   <div class="inner">
-    <div class="lbl lbl-teal">Introducción</div>
-    <h2 class="t-h">¿Qué es una Chooser Option?</h2>
+    <div class="lbl lbl-teal reveal">Introducción</div>
+    <h2 class="t-h reveal">¿Qué es una Chooser Option?</h2>
     <div class="g2 mt4">
       <!-- Columna izquierda -->
       <div style="display:flex;flex-direction:column;gap:.6rem;">
@@ -735,9 +781,13 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   02  CÓMO FUNCIONA — mecanismo con timeline
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark" data-i="2" data-phase="Mecanismo">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:400px;height:400px;top:-80px;right:-80px;background:rgba(74,158,187,.12);"></div>
+    <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:rgba(45,139,139,.1);"></div>
+  </div>
   <div class="inner">
-    <div class="lbl lbl-blue">Mecanismo</div>
-    <h2 class="t-h">Cómo funciona</h2>
+    <div class="lbl lbl-blue reveal">Mecanismo</div>
+    <h2 class="t-h reveal">Cómo funciona</h2>
 
     <!-- INTERACTIVE TIMELINE -->
     <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1.2rem 1.5rem;margin-top:1.4rem;">
@@ -1029,8 +1079,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-alt" data-i="3" data-phase="Fórmula">
   <div class="inner">
-    <div class="lbl lbl-amber">Valoración</div>
-    <h2 class="t-h">La fórmula de Rubinstein (1991)</h2>
+    <div class="lbl lbl-amber reveal">Valoración</div>
+    <h2 class="t-h reveal">La fórmula de Rubinstein (1991)</h2>
 
     <!-- FÓRMULA COLOR-CODED -->
     <div style="margin-top:1.2rem;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rx);padding:1rem 1.4rem;text-align:center;">
@@ -1706,9 +1756,13 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   07  INTERPRETACIÓN — El valor de esperar (animación narrativa)
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-alt" data-i="7" data-phase="Fórmula">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:450px;height:450px;top:-100px;right:-100px;background:rgba(45,139,139,.13);"></div>
+    <div class="blob" style="width:300px;height:300px;bottom:-50px;left:-60px;background:rgba(74,158,187,.1);"></div>
+  </div>
   <div class="inner">
-    <div class="lbl lbl-teal">Interpretación</div>
-    <h2 class="t-h">El valor de esperar</h2>
+    <div class="lbl lbl-teal reveal">Interpretación</div>
+    <h2 class="t-h reveal">El valor de esperar</h2>
 
     <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1.1fr;gap:1.2rem;align-items:start;">
 
@@ -1852,8 +1906,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark" data-i="8" data-phase="Payoffs">
   <div class="inner">
-    <div class="lbl lbl-green">Payoffs</div>
-    <h2 class="t-h">Escenario 1: eleges Call</h2>
+    <div class="lbl lbl-green reveal">Payoffs</div>
+    <h2 class="t-h reveal">Escenario 1: eleges Call</h2>
 
     <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1.15fr;gap:1.1rem;align-items:start;">
 
@@ -2273,9 +2327,13 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   10  PRECIO Y VALORACIÓN — vs vanilla
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark" data-i="10" data-phase="Valoración">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:420px;height:420px;top:-60px;left:-80px;background:rgba(201,155,69,.1);"></div>
+    <div class="blob" style="width:300px;height:300px;bottom:-80px;right:-60px;background:rgba(76,175,125,.1);"></div>
+  </div>
   <div class="inner">
-    <div class="lbl lbl-amber">Valoración</div>
-    <h2 class="t-h">¿Por qué es más cara que una vanilla?</h2>
+    <div class="lbl lbl-amber reveal">Valoración</div>
+    <h2 class="t-h reveal">¿Por qué es más cara que una vanilla?</h2>
 
     <div style="margin-top:.8rem;display:grid;grid-template-columns:1.35fr 1fr;gap:1.2rem;align-items:start;">
       <!-- Animated bar chart -->
@@ -2312,8 +2370,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-alt" data-i="11" data-phase="Usos">
   <div class="inner">
-    <div class="lbl lbl-blue">Aplicaciones</div>
-    <h2 class="t-h">Usos, ventajas y riesgos</h2>
+    <div class="lbl lbl-blue reveal">Aplicaciones</div>
+    <h2 class="t-h reveal">Usos, ventajas y riesgos</h2>
 
     <div style="margin-top:1.2rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
       <div class="co co-blue s11-card" style="opacity:0;transform:translateY(20px);">
@@ -2434,6 +2492,12 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   14  DECISIÓN — Call o Put (clímax narrativo)
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-dark" data-i="14" data-phase="Decisión" id="s14-decision">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(201,155,69,.1);"></div>
+    <div class="blob" style="width:320px;height:320px;top:-80px;left:-60px;background:rgba(76,175,125,.12);"></div>
+    <div class="blob" style="width:280px;height:280px;bottom:-60px;right:-40px;background:rgba(224,92,92,.12);"></div>
+  </div>
+  <canvas class="particle-canvas" id="particles-s14"></canvas>
   <div class="inner" style="text-align:center;">
     <div class="s14-intro" style="opacity:0;transform:translateY(-18px);">
       <div class="lbl lbl-amber" style="justify-content:center;">Se acabó el tiempo — ¡Elige ahora!</div>
@@ -2463,9 +2527,13 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   15  CONCLUSIONES
 ────────────────────────────────────────────────────────────────── -->
 <section class="slide th-alt" data-i="15" data-phase="Conclusión">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:480px;height:480px;bottom:-120px;right:-80px;background:rgba(45,139,139,.15);"></div>
+    <div class="blob" style="width:260px;height:260px;top:-40px;left:-40px;background:rgba(74,158,187,.1);"></div>
+  </div>
   <div class="inner">
-    <div class="lbl lbl-teal">Conclusión</div>
-    <h2 class="t-h">Cuatro lecciones de la Chooser Option</h2>
+    <div class="lbl lbl-teal reveal">Conclusión</div>
+    <h2 class="t-h reveal">Cuatro lecciones de la Chooser Option</h2>
 
     <div style="margin-top:1.2rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
       <div class="co co-teal s15-card" style="opacity:0;transform:translateX(-20px) translateY(12px);">
@@ -3035,6 +3103,87 @@ function chooseOutcome(choice) {
   // Disable buttons after choice
   document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
 }
+</script>
+
+<script>
+/* ── MOUSE SPOTLIGHT ─────────────────────────────────────────────── */
+(function() {
+  const sp = document.querySelector('.mouse-spotlight');
+  if (!sp) return;
+  document.addEventListener('mousemove', e => {
+    sp.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(45,139,139,.06), transparent 40%)`;
+  });
+})();
+
+/* ── PARALLAX DECO-SHAPES ────────────────────────────────────────── */
+(function() {
+  let mx = innerWidth / 2, my = innerHeight / 2;
+  const cx = innerWidth / 2, cy = innerHeight / 2;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function tick() {
+    const ox = (mx - cx) / cx, oy = (my - cy) / cy;
+    document.querySelectorAll('.deco-shape').forEach(s => {
+      const sp = parseFloat(s.dataset.speed) || 0.03;
+      s.style.transform = `translate(${ox * sp * 100}px, ${oy * sp * 100}px)`;
+    });
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* ── PARTICLE CANVAS ─────────────────────────────────────────────── */
+function initParticles(canvas, opts) {
+  if (!canvas) return;
+  opts = opts || {};
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || canvas.parentElement.offsetWidth || 1280;
+  canvas.height = canvas.offsetHeight || canvas.parentElement.offsetHeight || 800;
+  const count = opts.count || 40;
+  const r = 45, g = 139, b = 139;
+  const particles = Array.from({ length: count }, () => ({
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+    size: Math.random() * 2 + 0.6, alpha: Math.random() * 0.28 + 0.06
+  }));
+  (function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.vx *= 0.99; p.vy *= 0.99;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+}
+
+// Initialize particles on cover and decision slides
+initParticles(document.getElementById('particles-s0'), { count: 55 });
+initParticles(document.getElementById('particles-s14'), { count: 30 });
+
+/* ── REVEAL CLASS ANIMATION ──────────────────────────────────────── */
+function triggerReveal(slide) {
+  slide.querySelectorAll('.reveal:not(.in)').forEach((el, i) => {
+    setTimeout(() => el.classList.add('in'), i * 90 + 80);
+  });
+}
+// Patch into the existing goTo function to also trigger reveals
+const _origGoTo = window.goTo;
+if (_origGoTo) {
+  const SLIDES_REF = document.querySelectorAll('.slide');
+  document.addEventListener('slideenter_reveal', e => triggerReveal(e.target), true);
+}
+// Also listen to slideenter on each slide to trigger reveals
+document.querySelectorAll('.slide').forEach(s => {
+  s.addEventListener('slideenter', () => triggerReveal(s));
+});
+// Trigger on initial active slide
+triggerReveal(document.querySelector('.slide.active'));
 </script>
 
 </body>
