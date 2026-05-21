@@ -2517,13 +2517,12 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
       </div>
       <div class="s13-card" style="background:rgba(201,155,69,.08);border:1px solid rgba(201,155,69,.3);border-radius:8px;padding:.7rem;text-align:center;opacity:0;transform:translateY(16px);">
         <div style="font-family:var(--mono);font-size:.7rem;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;">t = T · Vencimiento</div>
-        <div style="font-family:var(--mono);font-size:.88rem;color:var(--ink);">S = $255 <span style="color:var(--green);font-size:.75rem;">+10.9%</span></div>
+        <div style="font-family:var(--mono);font-size:1.1rem;color:var(--ink3);letter-spacing:.18em;">S = ???</div>
       </div>
     </div>
 
     <div class="s13-quote" style="margin-top:.8rem;font-size:.74rem;color:var(--ink2);line-height:1.7;border-left:2.5px solid rgba(74,158,187,.4);padding:.55rem .9rem;background:rgba(74,158,187,.04);border-radius:0 6px 6px 0;opacity:0;transform:translateY(12px);">
-      <strong style="color:var(--blue);">¿Qué pasó?</strong>
-      Apple superó proyecciones. Elegiste CALL en t<sub>c</sub>. En T tu chooser vale $25 bruto; neto: <strong style="color:var(--green);">+$15.18 (+154% ROI)</strong>.
+      <strong style="color:var(--blue);">En t<sub>c</sub> = 14 Ene</strong> el precio es $248. ¿Qué habrá pasado después? &nbsp;<strong style="color:var(--amber);letter-spacing:.1em;">¿Subió? ¿Bajó?</strong> &nbsp;Tu decisión ahora definirá si tu chooser vale algo.
     </div>
   </div>
 </section>
@@ -2941,20 +2940,45 @@ function initCaseChart() {
   new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['7 Ene\n(t=0)', '10 Ene', '12 Ene', '14 Ene\n(tc)', '16 Ene', '21 Ene\n(T)'],
-      datasets: [{
-        label: 'AAPL',
-        data: [230, 236, 244, 248, 252, 255],
-        borderColor: 'rgba(76,175,125,.85)',
-        backgroundColor: 'rgba(76,175,125,.07)',
-        borderWidth: 2.5,
-        fill: true,
-        tension: .3,
-        pointRadius: [5,3,3,6,3,6],
-        pointBackgroundColor: ['rgba(45,139,139,.9)','rgba(76,175,125,.7)','rgba(76,175,125,.7)','rgba(74,158,187,1)','rgba(76,175,125,.7)','rgba(201,155,69,1)'],
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2
-      }]
+      labels: ['7 Ene\n(t=0)', '10 Ene', '12 Ene', '14 Ene\n(tᶜ)', '16 Ene', '21 Ene\n(T)'],
+      datasets: [
+        {
+          label: 'AAPL',
+          data: [230, 236, 244, 248, null, null],
+          borderColor: 'rgba(76,175,125,.85)',
+          backgroundColor: 'rgba(76,175,125,.07)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: .3,
+          pointRadius: [5,3,3,7,0,0],
+          pointBackgroundColor: ['rgba(45,139,139,.9)','rgba(76,175,125,.7)','rgba(76,175,125,.7)','rgba(74,158,187,1)','transparent','transparent'],
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          spanGaps: false
+        },
+        {
+          label: 'Escenario ↑',
+          data: [null, null, null, 248, 252, 258],
+          borderColor: 'rgba(74,222,128,.32)',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: .3,
+          spanGaps: false
+        },
+        {
+          label: 'Escenario ↓',
+          data: [null, null, null, 248, 242, 236],
+          borderColor: 'rgba(248,113,113,.32)',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: .3,
+          spanGaps: false
+        }
+      ]
     },
     options: {
       responsive: true,
@@ -2962,19 +2986,33 @@ function initCaseChart() {
       animation: { duration: 1400, easing: 'easeInOutQuart' },
       plugins: {
         legend: { display: false },
-        tooltip: { backgroundColor: 'rgba(10,15,26,.9)', titleColor: 'rgba(241,250,238,.9)', bodyColor: 'rgba(241,250,238,.75)', borderColor: 'rgba(255,255,255,.1)', borderWidth: 1, titleFont: { family: 'JetBrains Mono', size: 10 }, bodyFont: { family: 'JetBrains Mono', size: 10 }, padding: 8, callbacks: { label: ctx => '$' + ctx.parsed.y } }
+        tooltip: { backgroundColor: 'rgba(10,15,26,.9)', titleColor: 'rgba(241,250,238,.9)', bodyColor: 'rgba(241,250,238,.75)', borderColor: 'rgba(255,255,255,.1)', borderWidth: 1, titleFont: { family: 'JetBrains Mono', size: 10 }, bodyFont: { family: 'JetBrains Mono', size: 10 }, padding: 8, callbacks: { label: ctx => ctx.parsed.y != null ? '$' + ctx.parsed.y : '???', filter: item => item.datasetIndex === 0 } }
       },
       scales: {
         x: { grid: { color: 'rgba(255,255,255,.05)', drawBorder: false }, ticks: { color: 'rgba(241,250,238,.55)', font: { family: 'JetBrains Mono', size: 9 } } },
-        y: { min: 220, max: 265, grid: { color: 'rgba(255,255,255,.07)', drawBorder: false }, ticks: { color: 'rgba(241,250,238,.55)', font: { family: 'JetBrains Mono', size: 9 }, callback: v => '$' + v },
+        y: { min: 220, max: 270, grid: { color: 'rgba(255,255,255,.07)', drawBorder: false }, ticks: { color: 'rgba(241,250,238,.55)', font: { family: 'JetBrains Mono', size: 9 }, callback: v => '$' + v },
           afterDraw(chart) {
             const c = chart.ctx, ys = chart.scales.y, xs = chart.scales.x;
+            // K line
             const y = ys.getPixelForValue(230);
             c.save(); c.setLineDash([5,4]); c.strokeStyle = 'rgba(201,155,69,.45)'; c.lineWidth = 1.5;
-            c.beginPath(); c.moveTo(xs.left, y); c.lineTo(xs.right, y); c.stroke();
-            c.restore();
+            c.beginPath(); c.moveTo(xs.left, y); c.lineTo(xs.right, y); c.stroke(); c.restore();
             c.fillStyle = 'rgba(201,155,69,.7)'; c.font = '9px JetBrains Mono';
             c.fillText('K=$230', xs.left + 4, y - 4);
+            // vertical dashed line at tc (index 3)
+            const xTc = xs.getPixelForValue(3);
+            c.save(); c.setLineDash([4,3]); c.strokeStyle = 'rgba(74,158,187,.5)'; c.lineWidth = 1.5;
+            c.beginPath(); c.moveTo(xTc, ys.top); c.lineTo(xTc, ys.bottom); c.stroke(); c.restore();
+            // "???" label in the future zone
+            const midX = (xTc + xs.right) / 2;
+            const midY = (ys.top + ys.bottom) / 2;
+            c.save();
+            c.fillStyle = 'rgba(201,155,69,.22)';
+            c.fillRect(xTc + 1, ys.top, xs.right - xTc - 1, ys.bottom - ys.top);
+            c.restore();
+            c.fillStyle = 'rgba(201,155,69,.65)'; c.font = 'bold 18px JetBrains Mono';
+            c.textAlign = 'center'; c.textBaseline = 'middle';
+            c.fillText('???', midX, midY);
           }
         }
       }
