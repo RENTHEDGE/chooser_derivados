@@ -231,20 +231,20 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   .t-h   { font-size: clamp(1.3rem, 3.5vw, 1.9rem); }
 
   /* Collapse inline 2-col grids inside slides */
-  [data-i="5"] .inner > div,
   [data-i="6"] .inner > div,
-  [data-i="9"] .inner > div,
+  [data-i="7"] .inner > div,
   [data-i="10"] .inner > div,
   [data-i="11"] .inner > div,
-  [data-i="13"] .inner > div,
-  [data-i="14"] .inner > div {
+  [data-i="12"] .inner > div,
+  [data-i="14"] .inner > div,
+  [data-i="15"] .inner > div {
     grid-template-columns: 1fr !important;
   }
 
   /* Panel de gráficos en slides 04/05: altura reducida */
   #s4-panel, #s5-panel { min-height: 180px !important; }
-  [data-i="5"] [style*="height:175px"],
-  [data-i="6"] [style*="height:175px"] { height: 130px !important; }
+  [data-i="6"] [style*="height:175px"],
+  [data-i="7"] [style*="height:175px"] { height: 130px !important; }
 
   /* Choice buttons en slide 14 */
   .choice-row { flex-direction: column; align-items: center; gap: 1rem; }
@@ -259,11 +259,11 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
 @media (max-width: 580px) {
   .slide { padding: 4rem 3.5vw 3rem; }
-  [data-i="7"] .inner > div,
   [data-i="8"] .inner > div,
-  [data-i="12"] .inner > div,
-  [data-i="16"] .inner > div,
-  [data-i="17"] .inner > div { grid-template-columns: 1fr !important; }
+  [data-i="9"] .inner > div,
+  [data-i="13"] .inner > div,
+  [data-i="17"] .inner > div,
+  [data-i="18"] .inner > div { grid-template-columns: 1fr !important; }
   .s15-card, .s11-card { transform: none !important; }
 }
 
@@ -494,6 +494,24 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   text-transform:uppercase; letter-spacing:.06em;
   padding:.28rem .75rem; border-radius:20px; border:1px solid currentColor;
 }
+
+/* ── INDEX SLIDE (s-idx) ────────────────────────────────────────── */
+.idx-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.85rem; margin-top:1.1rem; }
+.idx-card {
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+  border-radius:14px; padding:.9rem 1rem .85rem;
+  display:flex; align-items:flex-start; gap:.65rem;
+  opacity:0; transform:translateY(16px);
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.idx-card:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(0,0,0,.25); }
+.idx-num {
+  font-family:var(--mono); font-size:1.3rem; font-weight:700; line-height:1;
+  min-width:2rem; padding-top:.05rem;
+}
+.idx-text {}
+.idx-title { font-family:var(--serif); font-size:.82rem; font-weight:600; color:var(--ink); margin-bottom:.18rem; }
+.idx-sub   { font-family:var(--mono); font-size:.55rem; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; }
 </style>
 </head>
 <body>
@@ -657,9 +675,64 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 </section>
 
 <!-- ────────────────────────────────────────────────────────────────
+  02  ÍNDICE
+────────────────────────────────────────────────────────────────── -->
+<section class="slide th-alt" data-i="2" data-phase="Índice">
+  <div class="inner" style="position:relative;z-index:2;">
+    <div class="lbl lbl-teal s-idx-lbl" style="opacity:0;transform:translateY(-12px);">Contenido</div>
+    <h2 class="t-h s-idx-lbl" style="opacity:0;transform:translateY(14px);">Agenda</h2>
+
+    <div class="idx-grid">
+      <div class="idx-card" style="border-left:3px solid rgba(45,139,139,.5);">
+        <div class="idx-num" style="color:rgba(45,139,139,.7);">01</div>
+        <div class="idx-text">
+          <div class="idx-title">¿Qué es un Chooser?</div>
+          <div class="idx-sub">Concepto e intuición</div>
+        </div>
+      </div>
+      <div class="idx-card" style="border-left:3px solid rgba(74,158,187,.5);">
+        <div class="idx-num" style="color:rgba(74,158,187,.7);">02</div>
+        <div class="idx-text">
+          <div class="idx-title">Cómo funciona</div>
+          <div class="idx-sub">Mecanismo y timeline</div>
+        </div>
+      </div>
+      <div class="idx-card" style="border-left:3px solid rgba(124,112,200,.5);">
+        <div class="idx-num" style="color:rgba(124,112,200,.7);">03</div>
+        <div class="idx-text">
+          <div class="idx-title">La Fórmula</div>
+          <div class="idx-sub">Rubinstein (1991)</div>
+        </div>
+      </div>
+      <div class="idx-card" style="border-left:3px solid rgba(76,175,125,.5);">
+        <div class="idx-num" style="color:rgba(76,175,125,.7);">04</div>
+        <div class="idx-text">
+          <div class="idx-title">Payoffs</div>
+          <div class="idx-sub">Escenarios posibles</div>
+        </div>
+      </div>
+      <div class="idx-card" style="border-left:3px solid rgba(201,155,69,.5);">
+        <div class="idx-num" style="color:rgba(201,155,69,.7);">05</div>
+        <div class="idx-text">
+          <div class="idx-title">Valoración &amp; Usos</div>
+          <div class="idx-sub">Precio, ventajas y riesgos</div>
+        </div>
+      </div>
+      <div class="idx-card" style="border-left:3px solid rgba(248,113,113,.5);">
+        <div class="idx-num" style="color:rgba(248,113,113,.7);">06</div>
+        <div class="idx-text">
+          <div class="idx-title">Caso Real — Apple</div>
+          <div class="idx-sub">Earnings + decisión</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────────
   01  INTRODUCCIÓN — ¿Qué es una Chooser Option?
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="2" data-phase="Introducción">
+<section class="slide th-alt" data-i="3" data-phase="Introducción">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,10,20,.90) 0%,rgba(8,14,26,.80) 100%);"></div>
@@ -920,7 +993,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   02  CÓMO FUNCIONA — mecanismo con timeline
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="3" data-phase="Mecanismo">
+<section class="slide th-dark" data-i="4" data-phase="Mecanismo">
   <div class="gradient-mesh">
     <div class="blob" style="width:400px;height:400px;top:-80px;right:-80px;background:rgba(74,158,187,.12);"></div>
     <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:rgba(45,139,139,.1);"></div>
@@ -1217,7 +1290,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   03  FÓRMULA — presentación general
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="4" data-phase="Fórmula">
+<section class="slide th-alt" data-i="5" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-amber reveal">Valoración</div>
     <h2 class="t-h reveal">La fórmula de Rubinstein (1991)</h2>
@@ -1415,7 +1488,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   04  FÓRMULA — Componente 1: Call BS
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="5" data-phase="Fórmula">
+<section class="slide th-dark" data-i="6" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-teal">Componente 1</div>
     <h2 class="t-h">La pierna larga: C<sub>BS</sub>(S, K, T)</h2>
@@ -1578,7 +1651,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   05  FÓRMULA — Componente 2: Put con K*
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="6" data-phase="Fórmula">
+<section class="slide th-alt" data-i="7" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-blue">Componente 2</div>
     <h2 class="t-h">La pierna corta: P<sub>BS</sub>(S, K*, t<sub>c</sub>)</h2>
@@ -1747,7 +1820,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ──────────────────────────────────────────────────────────────────
   06  K* — Intuición simplificada
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="7" data-phase="Fórmula">
+<section class="slide th-dark" data-i="8" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-amber">Intuición</div>
     <h2 class="t-h">¿Por qué existe K*?</h2>
@@ -1818,7 +1891,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   const Kstar = 100*Math.exp(-(r-q)*(T-tc));
   const saving = 100 - Kstar;
 
-  document.querySelector('[data-i="7"]').addEventListener('slideenter', function(){
+  document.querySelector('[data-i="8"]').addEventListener('slideenter', function(){
     // Reset
     document.querySelectorAll('.s6-step,.s6-kstar,.s6-saving').forEach(el=>{
       el.style.opacity='0'; el.style.transform='translateX(30px)';
@@ -1863,7 +1936,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ──────────────────────────────────────────────────────────────────
   07  INTERPRETACIÓN — El valor de esperar (animación narrativa)
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="8" data-phase="Fórmula">
+<section class="slide th-alt" data-i="9" data-phase="Fórmula">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1642790551116-18e150f248e3?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,10,20,.90) 0%,rgba(8,14,26,.80) 100%);"></div>
@@ -1924,7 +1997,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 (function(){
   let s7chart = null;
 
-  document.querySelector('[data-i="8"]').addEventListener('slideenter', function(){
+  document.querySelector('[data-i="9"]').addEventListener('slideenter', function(){
     // Reset & animate cards
     const cards=[...document.querySelectorAll('.s7-card'), document.querySelector('.s7-equation')];
     cards.forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(20px)'; });
@@ -2016,7 +2089,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- 08 ─────────────────────────────────────────────────────────────
   PAYOFFS — Escenario 1: Call
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="9" data-phase="Payoffs">
+<section class="slide th-dark" data-i="10" data-phase="Payoffs">
   <div class="inner">
     <div class="lbl lbl-green reveal">Payoffs</div>
     <h2 class="t-h reveal">Escenario 1: eliges Call</h2>
@@ -2071,7 +2144,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- 09 ─────────────────────────────────────────────────────────────
   PAYOFFS — Escenario 2: Put
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="10" data-phase="Payoffs">
+<section class="slide th-alt" data-i="11" data-phase="Payoffs">
   <div class="inner">
     <div class="lbl lbl-blue">Payoffs</div>
     <h2 class="t-h">Escenario 2: eliges Put</h2>
@@ -2183,7 +2256,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   }
 
   // Slide 08 — Call
-  document.querySelector('[data-i="9"]').addEventListener('slideenter',function(){
+  document.querySelector('[data-i="10"]').addEventListener('slideenter',function(){
     document.querySelectorAll('.s8-step,.s8-result').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';});
     document.querySelectorAll('#s8-v1,#s8-v2,#s8-v3').forEach(el=>{el.textContent='$0';});
 
@@ -2208,7 +2281,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   // Slide 09 — Put
-  document.querySelector('[data-i="10"]').addEventListener('slideenter',function(){
+  document.querySelector('[data-i="11"]').addEventListener('slideenter',function(){
     document.querySelectorAll('.s9-step,.s9-result').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';});
     document.querySelectorAll('#s9-v1,#s9-v2,#s9-v3').forEach(el=>{el.textContent='$0';});
 
@@ -2275,10 +2348,20 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     }, 80);
   });
 
-  /* ── Slide 01 — Introducción ── */
+  /* ── Slide 02 — Índice ── */
   document.querySelector('[data-i="2"]').addEventListener('slideenter', function() {
+    var lbls = document.querySelectorAll('.s-idx-lbl');
+    lbls.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateY(14px)'; });
+    setTimeout(function() { cascade(lbls, 0, 150, 550); }, 60);
+    var cards = document.querySelectorAll('[data-i="2"] .idx-card');
+    cards.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateY(16px)'; });
+    setTimeout(function() { cascade(cards, 200, 90, 480); }, 60);
+  });
+
+  /* ── Slide 01 — Introducción ── */
+  document.querySelector('[data-i="3"]').addEventListener('slideenter', function() {
     /* Cards on left column */
-    var leftCards = document.querySelectorAll('[data-i="2"] .co');
+    var leftCards = document.querySelectorAll('[data-i="3"] .co');
     leftCards.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateX(-18px)'; });
     /* Right-column items */
     var rightItems = [
@@ -2305,7 +2388,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 02 — Mecanismo (timeline) ── */
-  document.querySelector('[data-i="3"]').addEventListener('slideenter', function() {
+  document.querySelector('[data-i="4"]').addEventListener('slideenter', function() {
     /* Reset panels */
     var ph = document.getElementById('s2-panel-placeholder');
     if (ph) { ph.style.display = 'flex'; ph.style.opacity = '0'; }
@@ -2315,7 +2398,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     });
 
     /* Animate timeline container */
-    var timelineBox = document.querySelector('[data-i="3"] .inner > div:first-of-type');
+    var timelineBox = document.querySelector('[data-i="4"] .inner > div:first-of-type');
     if (timelineBox) {
       timelineBox.style.opacity = '0';
       timelineBox.style.transform = 'translateY(20px)';
@@ -2335,10 +2418,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 03 — Fórmula ── */
-  document.querySelector('[data-i="4"]').addEventListener('slideenter', function() {
+  document.querySelector('[data-i="5"]').addEventListener('slideenter', function() {
     /* Animate formula box */
-    var formulaBox = document.querySelector('[data-i="4"] .inner > div:nth-child(3)');
-    var paramsCol  = document.querySelector('[data-i="4"] .inner > div:nth-child(4)');
+    var formulaBox = document.querySelector('[data-i="5"] .inner > div:nth-child(3)');
+    var paramsCol  = document.querySelector('[data-i="5"] .inner > div:nth-child(4)');
 
     if (formulaBox) {
       formulaBox.style.opacity = '0';
@@ -2365,8 +2448,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 04 — Pierna larga ── */
-  document.querySelector('[data-i="5"]').addEventListener('slideenter', function() {
-    var def = document.querySelector('[data-i="5"] .co');
+  document.querySelector('[data-i="6"]').addEventListener('slideenter', function() {
+    var def = document.querySelector('[data-i="6"] .co');
     var btns = [
       document.getElementById('s4-btn-payoff'),
       document.getElementById('s4-btn-precio'),
@@ -2395,8 +2478,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 05 — Pierna corta ── */
-  document.querySelector('[data-i="6"]').addEventListener('slideenter', function() {
-    var def = document.querySelector('[data-i="6"] .co');
+  document.querySelector('[data-i="7"]').addEventListener('slideenter', function() {
+    var def = document.querySelector('[data-i="7"] .co');
     var btns = [
       document.getElementById('s5-btn-payoff'),
       document.getElementById('s5-btn-precio'),
@@ -2434,7 +2517,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   10  PRECIO Y VALORACIÓN — vs vanilla
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="11" data-phase="Valoración">
+<section class="slide th-dark" data-i="12" data-phase="Valoración">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1640340434855-6084b1f4901c?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,16,.90) 0%,rgba(6,10,18,.80) 100%);"></div>
@@ -2480,7 +2563,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   11  USOS, VENTAJAS Y RIESGOS
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="12" data-phase="Usos">
+<section class="slide th-alt" data-i="13" data-phase="Usos">
   <div class="inner">
     <div class="lbl lbl-blue reveal">Aplicaciones</div>
     <h2 class="t-h reveal">Usos, ventajas y riesgos</h2>
@@ -2520,7 +2603,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   12  CASO PRÁCTICO — Contexto
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="13" data-phase="Caso">
+<section class="slide th-dark" data-i="14" data-phase="Caso">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,16,.90) 0%,rgba(6,10,18,.80) 100%);"></div>
@@ -2573,7 +2656,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   13  CASO PRÁCTICO — Gráfica del movimiento
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="14" data-phase="Caso">
+<section class="slide th-alt" data-i="15" data-phase="Caso">
   <div class="inner">
     <div class="lbl lbl-amber">Caso práctico</div>
     <h2 class="t-h">El movimiento del precio</h2>
@@ -2606,7 +2689,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   14  DECISIÓN — Call o Put (clímax narrativo)
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="15" data-phase="Decisión" id="s14-decision">
+<section class="slide th-dark" data-i="16" data-phase="Decisión" id="s14-decision">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,16,.88) 0%,rgba(6,10,18,.78) 100%);"></div>
@@ -2670,7 +2753,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   15  CONCLUSIONES
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="16" data-phase="Conclusión">
+<section class="slide th-alt" data-i="17" data-phase="Conclusión">
   <div class="gradient-mesh">
     <div class="blob" style="width:480px;height:480px;bottom:-120px;right:-80px;background:rgba(45,139,139,.15);"></div>
     <div class="blob" style="width:260px;height:260px;top:-40px;left:-40px;background:rgba(74,158,187,.1);"></div>
@@ -2716,7 +2799,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   16  REFERENCIAS
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="17" data-phase="Referencias">
+<section class="slide th-dark" data-i="18" data-phase="Referencias">
   <div class="gradient-mesh">
     <div class="blob" style="width:460px;height:460px;top:-100px;right:-80px;background:rgba(45,139,139,.1);"></div>
     <div class="blob" style="width:300px;height:300px;bottom:-60px;left:-50px;background:rgba(74,158,187,.08);"></div>
@@ -2783,7 +2866,8 @@ const PHASES = [...new Set([...SLIDES].map(s => s.dataset.phase))];
 const SAND_LEVELS = [
   0.00,  // 00 presentadores — reloj oculto
   0.02,  // 01 portada     — casi lleno arriba
-  0.10,  // 02 intro
+  0.06,  // 02 índice
+  0.10,  // 03 intro
   0.20,  // 02 mecanismo
   0.30,  // 03 fórmula general
   0.38,  // 04 componente 1
@@ -2804,6 +2888,7 @@ const SAND_LEVELS = [
 const TIMER_LABELS = [
   'PRESENTACIÓN',
   'EL TIEMPO\nES NUESTRO',
+  'ÍNDICE',
   'CONTEXTO',
   'MECANISMO',
   'FÓRMULA',
@@ -2933,7 +3018,7 @@ function updatePhases() {
 function updateTimer(idx) {
   const fill = SAND_LEVELS[idx] ?? 0;
   const prev = SAND_LEVELS[Math.max(0, idx - 1)] ?? 0;
-  const isDecision = idx === 15;
+  const isDecision = idx === 16;
 
   window.setSandFill && window.setSandFill(fill);
   const burst = Math.round(12 + (fill - prev) * 100);
@@ -2946,7 +3031,7 @@ function updateTimer(idx) {
   // Glow + pulse en slide de decisión; ocultar en últimas diapositivas
   const wrap = document.getElementById('timer-wrap');
   if (wrap) {
-    wrap.style.display   = idx === 0 || idx >= 16 ? 'none' : '';
+    wrap.style.display   = idx === 0 || idx >= 17 ? 'none' : '';
     wrap.style.filter    = isDecision ? 'drop-shadow(0 0 10px rgba(255,190,80,.7))' : '';
     wrap.style.animation = isDecision ? 'timerPulse .8s ease-in-out infinite alternate' : '';
   }
@@ -2977,7 +3062,7 @@ function goTo(n) {
   updatePhases();
 
   // Lazy chart init
-  if (cur === 14 && !window._caseChartInited) { window._caseChartInited = true; initCaseChart(); }
+  if (cur === 15 && !window._caseChartInited) { window._caseChartInited = true; initCaseChart(); }
 }
 
 document.getElementById('nav-prev').addEventListener('click', () => goTo(cur - 1));
@@ -3145,7 +3230,7 @@ function s1Toggle(el) {
 /* ── SLIDES 10–15 — Animated Entrances ─────────────────────────────── */
 
 // Slide 10 — Valoración (bar chart + cascading insight cards)
-document.querySelector('[data-i="11"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="12"]').addEventListener('slideenter', function() {
   document.querySelector('.s10-chart').style.opacity = '0';
   document.querySelector('.s10-chart').style.transform = 'translateX(-22px)';
   document.querySelectorAll('.s10-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateX(22px)'; });
@@ -3212,7 +3297,7 @@ document.querySelector('[data-i="11"]').addEventListener('slideenter', function(
 });
 
 // Slide 11 — Usos (cards cascade from different directions)
-document.querySelector('[data-i="12"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="13"]').addEventListener('slideenter', function() {
   document.querySelectorAll('.s11-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; });
 
   document.querySelectorAll('.s11-card').forEach((el, i) => {
@@ -3225,7 +3310,7 @@ document.querySelector('[data-i="12"]').addEventListener('slideenter', function(
 });
 
 // Slide 12 — Caso Práctico (left/right stagger + price pop)
-document.querySelector('[data-i="13"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="14"]').addEventListener('slideenter', function() {
   const left = document.querySelector('.s12-left');
   const right = document.querySelector('.s12-right');
   const quote = document.querySelector('.s12-quote');
@@ -3271,7 +3356,7 @@ document.querySelector('[data-i="13"]').addEventListener('slideenter', function(
 });
 
 // Slide 13 — Caso Gráfica (chart + cards pop in)
-document.querySelector('[data-i="14"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="15"]').addEventListener('slideenter', function() {
   const chart = document.querySelector('.s13-chart');
   chart.style.opacity = '0';
   chart.style.transform = 'translateY(18px)';
@@ -3302,7 +3387,7 @@ document.querySelector('[data-i="14"]').addEventListener('slideenter', function(
 });
 
 // Slide 14 — Decisión (flashcard reset on enter)
-document.querySelector('[data-i="15"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="16"]').addEventListener('slideenter', function() {
   resetChoice14();
   const hdr = document.querySelector('.s14-header');
   hdr.style.transition = 'none';
@@ -3323,7 +3408,7 @@ document.querySelector('[data-i="15"]').addEventListener('slideenter', function(
 });
 
 // Slide 15 — Conclusión (4 cards cascade, then summary)
-document.querySelector('[data-i="16"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="17"]').addEventListener('slideenter', function() {
   document.querySelectorAll('.s15-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateX(-20px) translateY(12px)'; });
   document.querySelector('.s15-summary').style.opacity = '0';
   document.querySelector('.s15-summary').style.transform = 'translateY(18px)';
@@ -3346,12 +3431,12 @@ document.querySelector('[data-i="16"]').addEventListener('slideenter', function(
 });
 
 // Slide 16 — Referencias (cascade left/right)
-document.querySelector('[data-i="17"]').addEventListener('slideenter', function() {
-  document.querySelectorAll('[data-i="17"] .ref-el').forEach(el => {
+document.querySelector('[data-i="18"]').addEventListener('slideenter', function() {
+  document.querySelectorAll('[data-i="18"] .ref-el').forEach(el => {
     el.style.transition = 'none';
     el.style.opacity = '0';
   });
-  document.querySelectorAll('[data-i="17"] .ref-el').forEach((el, i) => {
+  document.querySelectorAll('[data-i="18"] .ref-el').forEach((el, i) => {
     setTimeout(() => {
       el.style.transition = 'opacity .45s ease, transform .45s ease';
       el.style.opacity = '1';
