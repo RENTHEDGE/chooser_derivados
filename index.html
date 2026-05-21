@@ -3747,16 +3747,22 @@ triggerReveal(document.querySelector('.slide.active'));
 </script>
 
 <script>
-// Auto-enable zoom/tooltips on all Chart.js instances
-window.addEventListener('load', () => {
+// Patch Chart constructor to auto-enable zoom/tooltips
+const OrigChart = window.Chart;
+window.Chart = function(...args) {
+  const chart = new OrigChart(...args);
+  // Enable zoom on next tick after chart is fully initialized
   setTimeout(() => {
-    Object.values(Chart.instances).forEach(chart => {
-      if (window.enableChartZoom && chart && chart.canvas) {
-        window.enableChartZoom(chart);
-      }
-    });
-  }, 100);
-});
+    if (window.enableChartZoom && chart && chart.canvas) {
+      window.enableChartZoom(chart);
+    }
+  }, 50);
+  return chart;
+};
+// Copy static methods and properties
+Object.setPrototypeOf(window.Chart, OrigChart);
+Object.setPrototypeOf(window.Chart.prototype, OrigChart.prototype);
+Object.assign(window.Chart, OrigChart);
 </script>
 
 </body>
