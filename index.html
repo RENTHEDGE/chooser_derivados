@@ -117,12 +117,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 600;
   display: flex; flex-direction: column; align-items: center; gap: 5px;
 }
-#timer-svg { width: 54px; height: 80px; transition: filter .6s var(--ease); }
-#timer-canvas {
-  position: absolute; pointer-events: none;
-  width: 54px; height: 80px;
-}
-#timer-container { position: relative; width: 54px; height: 80px; }
+#timer-canvas { display: block; }
 #timer-label {
   font-family: var(--mono); font-size: .46rem;
   color: var(--ink3); text-align: center; letter-spacing: .08em;
@@ -422,6 +417,31 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
 /* ── PARTICLE CANVAS ────────────────────────────────────────────── */
 .particle-canvas { position:absolute; inset:0; z-index:1; pointer-events:none; }
+
+/* ── STOCK TICKER ───────────────────────────────────────────────── */
+#stock-bar {
+  position:fixed; top:52px; left:0; right:0; z-index:499;
+  height:22px; overflow:hidden;
+  background:rgba(6,10,18,.94);
+  border-bottom:1px solid rgba(45,139,139,.2);
+  font-family:var(--mono); font-size:.5rem; letter-spacing:.04em;
+}
+#stock-track {
+  display:inline-flex; align-items:center; white-space:nowrap; height:22px;
+  animation:ticker-run 50s linear infinite;
+}
+#stock-track:hover { animation-play-state:paused; }
+@keyframes ticker-run {
+  from { transform:translateX(0); }
+  to   { transform:translateX(-50%); }
+}
+.sk { display:inline-flex; align-items:center; gap:.3rem; padding:0 1.2rem;
+      border-right:1px solid rgba(255,255,255,.05); height:22px; }
+.sk-sym { color:rgba(168,218,220,.7); font-weight:700; }
+.sk-val { color:var(--ink2); }
+.sk-up  { color:#4ade80; }
+.sk-dn  { color:var(--red); }
+.sk-neu { color:var(--ink3); }
 </style>
 </head>
 <body>
@@ -439,6 +459,39 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
+     STOCK TICKER
+     ══════════════════════════════════════════════════════════════ -->
+<div id="stock-bar"><div id="stock-track">
+  <span class="sk"><span class="sk-sym">AAPL</span><span class="sk-val">234.50</span><span class="sk-up">▲1.2%</span></span>
+  <span class="sk"><span class="sk-sym">GOOG</span><span class="sk-val">178.20</span><span class="sk-dn">▼0.4%</span></span>
+  <span class="sk"><span class="sk-sym">NVDA</span><span class="sk-val">1,052.8</span><span class="sk-up">▲2.8%</span></span>
+  <span class="sk"><span class="sk-sym">SPX</span><span class="sk-val">5,284</span><span class="sk-up">▲0.8%</span></span>
+  <span class="sk"><span class="sk-sym">VIX</span><span class="sk-val">14.23</span><span class="sk-dn">▼2.1%</span></span>
+  <span class="sk"><span class="sk-sym">GLD</span><span class="sk-val">198.30</span><span class="sk-up">▲0.4%</span></span>
+  <span class="sk"><span class="sk-sym">BTC</span><span class="sk-val">67,450</span><span class="sk-up">▲3.5%</span></span>
+  <span class="sk"><span class="sk-sym">IV·30D</span><span class="sk-val">28.4%</span><span class="sk-neu">——</span></span>
+  <span class="sk"><span class="sk-sym">CHOOSER</span><span class="sk-val">max(C,P)</span><span class="sk-up">▲12.3%</span></span>
+  <span class="sk"><span class="sk-sym">tc=30D</span><span class="sk-val">→ T·exp</span><span class="sk-neu">——</span></span>
+  <span class="sk"><span class="sk-sym">MSFT</span><span class="sk-val">415.80</span><span class="sk-up">▲0.6%</span></span>
+  <span class="sk"><span class="sk-sym">AMZN</span><span class="sk-val">192.40</span><span class="sk-dn">▼0.9%</span></span>
+  <span class="sk"><span class="sk-sym">TSLA</span><span class="sk-val">245.60</span><span class="sk-up">▲1.8%</span></span>
+  <!-- set 2 — copia exacta para loop continuo sin corte -->
+  <span class="sk"><span class="sk-sym">AAPL</span><span class="sk-val">234.50</span><span class="sk-up">▲1.2%</span></span>
+  <span class="sk"><span class="sk-sym">GOOG</span><span class="sk-val">178.20</span><span class="sk-dn">▼0.4%</span></span>
+  <span class="sk"><span class="sk-sym">NVDA</span><span class="sk-val">1,052.8</span><span class="sk-up">▲2.8%</span></span>
+  <span class="sk"><span class="sk-sym">SPX</span><span class="sk-val">5,284</span><span class="sk-up">▲0.8%</span></span>
+  <span class="sk"><span class="sk-sym">VIX</span><span class="sk-val">14.23</span><span class="sk-dn">▼2.1%</span></span>
+  <span class="sk"><span class="sk-sym">GLD</span><span class="sk-val">198.30</span><span class="sk-up">▲0.4%</span></span>
+  <span class="sk"><span class="sk-sym">BTC</span><span class="sk-val">67,450</span><span class="sk-up">▲3.5%</span></span>
+  <span class="sk"><span class="sk-sym">IV·30D</span><span class="sk-val">28.4%</span><span class="sk-neu">——</span></span>
+  <span class="sk"><span class="sk-sym">CHOOSER</span><span class="sk-val">max(C,P)</span><span class="sk-up">▲12.3%</span></span>
+  <span class="sk"><span class="sk-sym">tc=30D</span><span class="sk-val">→ T·exp</span><span class="sk-neu">——</span></span>
+  <span class="sk"><span class="sk-sym">MSFT</span><span class="sk-val">415.80</span><span class="sk-up">▲0.6%</span></span>
+  <span class="sk"><span class="sk-sym">AMZN</span><span class="sk-val">192.40</span><span class="sk-dn">▼0.9%</span></span>
+  <span class="sk"><span class="sk-sym">TSLA</span><span class="sk-val">245.60</span><span class="sk-up">▲1.8%</span></span>
+</div></div>
+
+<!-- ══════════════════════════════════════════════════════════════
      LOGO PONTIFICIA UNIVERSIDAD JAVERIANA
      ══════════════════════════════════════════════════════════════ -->
 <div id="logo-puj" title="Pontificia Universidad Javeriana">
@@ -446,49 +499,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     HOURGLASS TIMER  (symbolic — not a real clock)
+     HOURGLASS TIMER  (canvas puro)
      ══════════════════════════════════════════════════════════════ -->
 <div id="timer-wrap">
-  <div id="timer-container">
-    <svg id="timer-svg" viewBox="0 0 54 80" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="hg-glow">
-          <feGaussianBlur stdDeviation="2" result="blur"/>
-          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-        </filter>
-        <linearGradient id="sand-top-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="rgba(45,139,139,.7)"/>
-          <stop offset="100%" stop-color="rgba(45,139,139,.2)"/>
-        </linearGradient>
-        <linearGradient id="sand-bot-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="rgba(45,139,139,.3)"/>
-          <stop offset="100%" stop-color="rgba(45,139,139,.8)"/>
-        </linearGradient>
-        <clipPath id="clip-top">
-          <rect id="sand-top-clip" x="8" y="10" width="38" height="24"/>
-        </clipPath>
-        <clipPath id="clip-bot">
-          <rect id="sand-bot-clip" x="8" y="46" width="38" height="24"/>
-        </clipPath>
-      </defs>
-      <!-- glass body fill -->
-      <path d="M8 4 h38 v8 l-19 22 19 22 v8 H8 v-8 l19-22 L8 12 Z"
-            fill="rgba(45,139,139,.04)" stroke="none"/>
-      <!-- sand top -->
-      <path d="M8 10 l19 24 l19-24 Z" fill="url(#sand-top-grad)" clip-path="url(#clip-top)" id="sand-top"/>
-      <!-- sand bottom -->
-      <path d="M8 70 l19-24 l19 24 Z" fill="url(#sand-bot-grad)" clip-path="url(#clip-bot)" id="sand-bot"/>
-      <!-- outer frame — drawn on top of sand -->
-      <path d="M8 4 h38 v8 l-19 22 19 22 v8 H8 v-8 l19-22 L8 12 Z"
-            fill="none" stroke="rgba(45,139,139,.55)" stroke-width="1.8" stroke-linejoin="round" filter="url(#hg-glow)"/>
-      <!-- top / bottom caps -->
-      <line x1="5"  y1="4"  x2="49" y2="4"  stroke="rgba(45,139,139,.8)" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="5"  y1="76" x2="49" y2="76" stroke="rgba(45,139,139,.8)" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- neck glow dot -->
-      <circle id="sand-neck" cx="27" cy="34" r="1.5" fill="rgba(45,139,139,.0)"/>
-    </svg>
-    <canvas id="timer-canvas" width="54" height="80"></canvas>
-  </div>
+  <canvas id="timer-canvas" width="58" height="86"></canvas>
   <div id="timer-label">EL TIEMPO&#10;ES NUESTRO</div>
 </div>
 
@@ -2671,142 +2685,112 @@ function updatePhases() {
   });
 }
 
-/* ── HOURGLASS SAND PARTICLES ───────────────────────────────────── */
+/* ── HOURGLASS — canvas puro ────────────────────────────────────── */
 (function() {
-  const SCALE = 2; // HiDPI
-  let grains = [];
-  let currentFill = 0;
-  let raf;
+  const W=58,H=86,CX=29,M=5,B1=9,N1=42,N2=44,B2=77;
+  let grains=[],fill=0,burstQ=0,raf;
 
-  // SVG viewBox is 54×80; canvas is also 54×80 CSS px → 108×160 device px
-  const NX = 27 * SCALE; // neck X center in device px
-  const NY = 34 * SCALE; // neck Y center in device px
-  const BOT_Y = 70 * SCALE; // bottom of lower triangle in device px
-  const W = 54 * SCALE;
-  const H = 80 * SCALE;
-
-  // Lower triangle boundary: apex at (NX, NY), base at y=BOT_Y, half-width grows as (y-NY)/(BOT_Y-NY)*19*SCALE
-  function inLowerTriangle(x, y) {
-    if (y < NY || y > BOT_Y) return false;
-    const t = (y - NY) / (BOT_Y - NY);
-    const halfW = t * 19 * SCALE;
-    return Math.abs(x - NX) < halfW;
+  function spawn(bright){
+    grains.push({x:CX+(Math.random()-.5)*1.5,y:N1-1,
+      vx:(Math.random()-.5)*.5,vy:.5+Math.random()*.8,
+      r:.9+Math.random()*.6,a:bright?1:.75+Math.random()*.25,
+      bright,age:0});
   }
 
-  function spawnGrain() {
-    const angle = (Math.random() - 0.5) * 0.6;
-    grains.push({
-      x: NX + (Math.random() - 0.5) * 2,
-      y: NY,
-      vx: Math.sin(angle) * (0.3 + Math.random() * 0.4) * SCALE,
-      vy: (0.8 + Math.random() * 0.6) * SCALE,
-      r: (0.7 + Math.random() * 0.7) * SCALE,
-      alpha: 0.7 + Math.random() * 0.3,
-      settled: false,
-      life: 0,
-    });
-  }
+  function frame(){
+    const cv=document.getElementById('timer-canvas');
+    if(!cv){raf=requestAnimationFrame(frame);return;}
+    const ctx=cv.getContext('2d');
+    const d=window.devicePixelRatio||1;
+    if(cv.width!==W*d){cv.width=W*d;cv.height=H*d;ctx.scale(d,d);}
+    ctx.clearRect(0,0,W,H);
 
-  function tick() {
-    const canvas = document.getElementById('timer-canvas');
-    if (!canvas) { raf = requestAnimationFrame(tick); return; }
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, W, H);
+    const dec=fill>=1;
+    const gc =dec?'rgba(255,190,80,':'rgba(45,180,180,';
+    const stc=dec?'rgba(255,190,80,.45)':'rgba(45,139,139,.4)';
+    const sbc=dec?'rgba(255,190,80,.7)' :'rgba(45,139,139,.65)';
 
-    // Spawn: rate proportional to how much sand is still flowing (fill < 1)
-    const flowing = currentFill > 0 && currentFill < 1;
-    if (flowing && Math.random() < 0.55) spawnGrain();
-    // Even at extremes, spawn a rare trickle for liveliness
-    if (!flowing && Math.random() < 0.04) spawnGrain();
+    // contorno
+    ctx.save();ctx.strokeStyle=gc+'.6)';ctx.lineWidth=1.7;ctx.lineJoin='round';ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(M,B1);ctx.lineTo(W-M,B1);ctx.lineTo(CX,N1);ctx.closePath();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,N2);ctx.lineTo(M,B2);ctx.lineTo(W-M,B2);ctx.closePath();ctx.stroke();
+    ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(M-2,3); ctx.lineTo(W-M+2,3); ctx.stroke();
+    ctx.beginPath();ctx.moveTo(M-2,83);ctx.lineTo(W-M+2,83);ctx.stroke();
+    ctx.restore();
 
-    grains = grains.filter(g => g.life < 220);
-
-    for (const g of grains) {
-      g.life++;
-      if (!g.settled) {
-        g.vy += 0.08 * SCALE; // gravity
-        g.x += g.vx;
-        g.y += g.vy;
-        // Settle when it hits the bottom triangle fill level or the base
-        const settleY = NY + (BOT_Y - NY) * Math.min(1, currentFill) - g.r;
-        if (g.y >= settleY || g.y >= BOT_Y - g.r) {
-          g.y = Math.min(settleY, BOT_Y - g.r);
-          g.settled = true;
-          g.vx = 0; g.vy = 0;
-        }
-        // Wall bounce inside lower triangle
-        if (inLowerTriangle(g.x, g.y)) {
-          const t = (g.y - NY) / (BOT_Y - NY);
-          const halfW = t * 19 * SCALE;
-          if (g.x - NX > halfW - g.r)  { g.x = NX + halfW - g.r;  g.vx *= -0.3; }
-          if (g.x - NX < -halfW + g.r) { g.x = NX - halfW + g.r; g.vx *= -0.3; }
-        }
-      }
-
-      // Fade out settled grains over time
-      const a = g.settled ? g.alpha * Math.max(0, 1 - (g.life - 80) / 140) : g.alpha;
-      if (a <= 0) continue;
-
-      const isDecision = currentFill >= 1;
-      const color = isDecision ? `255,190,80` : `45,180,180`;
-      ctx.beginPath();
-      ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color},${a})`;
-      ctx.fill();
+    // arena superior
+    const th=(N1-B1)*(1-fill);
+    if(th>.5){
+      const hw=(CX-M)*th/(N1-B1);
+      ctx.fillStyle=stc;ctx.beginPath();
+      ctx.moveTo(CX-hw,N1-th);ctx.lineTo(CX+hw,N1-th);
+      ctx.lineTo(CX,N1);ctx.closePath();ctx.fill();
+    }
+    // arena inferior
+    const bh=(B2-N2)*fill;
+    if(bh>.5){
+      const hw=(CX-M)*bh/(B2-N2);
+      ctx.fillStyle=sbc;ctx.beginPath();
+      ctx.moveTo(CX-hw,B2-bh);ctx.lineTo(CX+hw,B2-bh);
+      ctx.lineTo(W-M,B2);ctx.lineTo(M,B2);ctx.closePath();ctx.fill();
     }
 
-    raf = requestAnimationFrame(tick);
+    // spawn
+    if(burstQ>0){const n=Math.min(burstQ,5);for(let i=0;i<n;i++)spawn(true);burstQ-=n;}
+    else if(fill>.01&&fill<.99&&Math.random()<.28)spawn(false);
+
+    // física + render
+    grains=grains.filter(g=>g.age<160);
+    for(const g of grains){
+      g.age++;g.vy+=.13;g.x+=g.vx;g.y+=g.vy;
+      if(g.y>N2){
+        const frac=Math.min(1,(g.y-N2)/(B2-N2));
+        const hw=Math.max(1,(CX-M)*frac);
+        if(g.x<CX-hw){g.x=CX-hw;g.vx=Math.abs(g.vx)*.35;}
+        if(g.x>CX+hw){g.x=CX+hw;g.vx=-Math.abs(g.vx)*.35;}
+        if(g.y>B2-1){g.y=B2-1;g.vy*=-.08;}
+      }
+      const fade=g.age>110?Math.max(0,1-(g.age-110)/50):1;
+      const a=(g.a*fade).toFixed(2);
+      if(+a<.01)continue;
+      const col=g.bright?(dec?'255,220,80':'80,220,220'):(dec?'255,190,60':'45,170,170');
+      ctx.beginPath();ctx.arc(g.x,g.y,g.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${col},${a})`;ctx.fill();
+    }
+    raf=requestAnimationFrame(frame);
   }
 
-  window.initSandParticles = function() {
-    const canvas = document.getElementById('timer-canvas');
-    if (!canvas) return;
-    canvas.width  = W;
-    canvas.height = H;
-    cancelAnimationFrame(raf);
-    grains = [];
-    tick();
+  window.initSandParticles=()=>{
+    const cv=document.getElementById('timer-canvas');if(!cv)return;
+    const d=window.devicePixelRatio||1;
+    cv.width=W*d;cv.height=H*d;
+    cv.getContext('2d').scale(d,d);
+    cancelAnimationFrame(raf);grains=[];frame();
   };
+  window.setSandFill=f=>{fill=f;};
+  window.sandBurst =n=>{burstQ+=n;};
 
-  window.setSandFill = function(fill) { currentFill = fill; };
 })();
 
 /* ── HOURGLASS TIMER ────────────────────────────────────────────── */
 function updateTimer(idx) {
   const fill = SAND_LEVELS[idx] ?? 0;
+  const prev = SAND_LEVELS[Math.max(0, idx - 1)] ?? 0;
   const isDecision = idx === 14;
 
   window.setSandFill && window.setSandFill(fill);
-
-  // SVG clip rects — viewBox 54×80
-  // Upper triangle: apex at y=34, base at y=10, height=24
-  const topH = Math.max(0, 24 * (1 - fill));
-  // Lower triangle: apex at y=34, base at y=70, height=24 (clip from bottom up)
-  const botH = Math.min(24, 24 * fill);
-
-  const sandTop = document.getElementById('sand-top-clip');
-  const sandBot = document.getElementById('sand-bot-clip');
-  if (sandTop) sandTop.setAttribute('height', topH);
-  if (sandBot) {
-    sandBot.setAttribute('y', 70 - botH);
-    sandBot.setAttribute('height', botH);
-  }
-
-  // Color shift at decision
-  const svg = document.getElementById('timer-svg');
-  if (svg) {
-    svg.style.filter = isDecision
-      ? 'drop-shadow(0 0 10px rgba(255,190,80,.8))'
-      : 'drop-shadow(0 0 4px rgba(45,139,139,.25))';
-  }
+  const burst = Math.round(12 + (fill - prev) * 100);
+  window.sandBurst && window.sandBurst(Math.max(12, Math.min(35, burst)));
 
   // Label
   const lbl = document.getElementById('timer-label');
   if (lbl) lbl.textContent = TIMER_LABELS[idx] || 'TIEMPO';
 
-  // Pulse on decision slide
+  // Glow + pulse en slide de decisión
   const wrap = document.getElementById('timer-wrap');
   if (wrap) {
+    wrap.style.filter    = isDecision ? 'drop-shadow(0 0 10px rgba(255,190,80,.7))' : '';
     wrap.style.animation = isDecision ? 'timerPulse .8s ease-in-out infinite alternate' : '';
   }
 }
