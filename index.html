@@ -160,6 +160,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 @keyframes anim-glow-teal { 0%,100%{box-shadow:0 0 0 rgba(45,139,139,0)}  50%{box-shadow:0 0 24px rgba(45,139,139,.5)} }
 @keyframes anim-bar  { from{width:0} to{width:var(--bar-w)} }
 @keyframes anim-count{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+@keyframes timerPulse { from{opacity:.8} to{opacity:1} }
 .anim-up    { opacity:0; animation: anim-up    .55s var(--ease) forwards; }
 .anim-right { opacity:0; animation: anim-right .5s  var(--ease) forwards; }
 .anim-pop   { opacity:0; animation: anim-pop   .6s  var(--ease) forwards; }
@@ -3047,57 +3048,66 @@ function updatePhases() {
 }
 
 /* ── HOURGLASS — canvas puro ────────────────────────────────────── */
-(function() {
+(function(){
   const W=58,H=86,CX=29,M=5,B1=9,N1=42,N2=44,B2=77;
-  let grains=[],fill=0,burstQ=0,raf;
+  let dpr=1, grains=[], fill=0, burstQ=0, raf;
 
-  function spawn(){
-    grains.push({x:CX+(Math.random()-.5)*1.5,y:N1-1,
-      vx:(Math.random()-.5)*.5,vy:.5+Math.random()*.8,
-      r:.9+Math.random()*.6,a:.6+Math.random()*.4,age:0});
+  function spawn(bright){
+    grains.push({ x:CX+(Math.random()-.5)*1.5, y:N1-1,
+      vx:(Math.random()-.5)*.5, vy:.5+Math.random()*.8,
+      r:.9+Math.random()*.6, a: bright?1:.75+Math.random()*.25,
+      bright, age:0 });
   }
 
   function frame(){
     const cv=document.getElementById('timer-canvas');
     if(!cv){raf=requestAnimationFrame(frame);return;}
     const ctx=cv.getContext('2d');
+    // HiDPI resize
     const d=window.devicePixelRatio||1;
-    if(cv.width!==W*d){cv.width=W*d;cv.height=H*d;cv.style.width=W+'px';cv.style.height=H+'px';ctx.scale(d,d);}
+    if(cv.width!==W*d){cv.width=W*d;cv.height=H*d;ctx.scale(d,d);}
     ctx.clearRect(0,0,W,H);
 
     const dec=fill>=1;
-    const gc =dec?'rgba(255,190,80,':'rgba(45,180,180,';
-    const stc=dec?'255,190,80':'45,139,139';
-    const sbc=dec?'rgba(255,190,80,.7)':'rgba(45,139,139,.65)';
+    const gc  = dec?'rgba(255,190,80,':  'rgba(45,180,180,';
+    const stc = dec?'rgba(255,190,80,.45)':  'rgba(45,139,139,.4)';
+    const sbc = dec?'rgba(255,190,80,.7)' :'rgba(45,139,139,.65)';
 
-    // contorno
-    ctx.save();ctx.strokeStyle=gc+'.6)';ctx.lineWidth=1.7;ctx.lineJoin='round';ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(M,B1);ctx.lineTo(W-M,B1);ctx.lineTo(CX,N1);ctx.closePath();ctx.stroke();
-    ctx.beginPath();ctx.moveTo(CX,N2);ctx.lineTo(M,B2);ctx.lineTo(W-M,B2);ctx.closePath();ctx.stroke();
+    /* contorno */
+    ctx.save(); ctx.strokeStyle=gc+'.55)'; ctx.lineWidth=1.7; ctx.lineJoin='round'; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(M,B1); ctx.lineTo(W-M,B1); ctx.lineTo(CX,N1); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(CX,N2); ctx.lineTo(M,B2); ctx.lineTo(W-M,B2); ctx.closePath(); ctx.stroke();
     ctx.lineWidth=2.5;
-    ctx.beginPath();ctx.moveTo(M-2,3); ctx.lineTo(W-M+2,3); ctx.stroke();
-    ctx.beginPath();ctx.moveTo(M-2,83);ctx.lineTo(W-M+2,83);ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(M-2,3);  ctx.lineTo(W-M+2,3);  ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(M-2,83); ctx.lineTo(W-M+2,83); ctx.stroke();
     ctx.restore();
 
-    // arena superior
+    /* arena superior — trapecio que se vacía */
     const th=(N1-B1)*(1-fill);
     if(th>.5){
       const hw=(CX-M)*th/(N1-B1);
-      ctx.fillStyle=`rgba(${stc},.42)`;ctx.beginPath();
-      ctx.moveTo(CX-hw,N1-th);ctx.lineTo(CX+hw,N1-th);
-      ctx.lineTo(CX,N1);ctx.closePath();ctx.fill();
+      ctx.fillStyle=stc; ctx.beginPath();
+      ctx.moveTo(CX-hw,N1-th); ctx.lineTo(CX+hw,N1-th);
+      ctx.lineTo(CX,N1); ctx.closePath(); ctx.fill();
     }
-    // fondo del triángulo inferior
-    ctx.fillStyle=sbc;ctx.beginPath();
-    ctx.moveTo(CX,N2);ctx.lineTo(M,B2);ctx.lineTo(W-M,B2);ctx.closePath();ctx.fill();
+    /* arena inferior — trapecio que crece */
+    const bh=(B2-N2)*fill;
+    if(bh>.5){
+      const hw=(CX-M)*bh/(B2-N2);
+      ctx.fillStyle=sbc; ctx.beginPath();
+      ctx.moveTo(CX-hw,B2-bh); ctx.lineTo(CX+hw,B2-bh);
+      ctx.lineTo(W-M,B2); ctx.lineTo(M,B2); ctx.closePath(); ctx.fill();
+    }
 
-    // spawn
-    if(burstQ>0){const n=Math.min(burstQ,5);for(let i=0;i<n;i++)spawn();burstQ-=n;}
-    else if(fill>.01&&fill<.99&&Math.random()<.28)spawn();
+    /* spawn granos */
+    if(burstQ>0){ const n=Math.min(burstQ,5); for(let i=0;i<n;i++)spawn(true); burstQ-=n; }
+    else if(fill>.01&&fill<.99&&Math.random()<.28) spawn(false);
 
-    // física + render — partículas del mismo color que la arena
-    grains=grains.filter(g=>{
-      g.age++;g.vy+=.13;g.x+=g.vx;g.y+=g.vy;
+    /* física + render */
+    grains=grains.filter(g=>g.age<160);
+    for(const g of grains){
+      g.age++;
+      g.vy+=.13; g.x+=g.vx; g.y+=g.vy;
       if(g.y>N2){
         const frac=Math.min(1,(g.y-N2)/(B2-N2));
         const hw=Math.max(1,(CX-M)*frac);
@@ -3105,29 +3115,25 @@ function updatePhases() {
         if(g.x>CX+hw){g.x=CX+hw;g.vx=-Math.abs(g.vx)*.35;}
         if(g.y>B2-1){g.y=B2-1;g.vy*=-.08;}
       }
-      const fade=g.age>100?Math.max(0,1-(g.age-100)/50):1;
+      const fade=g.age>110?Math.max(0,1-(g.age-110)/50):1;
       const a=(g.a*fade).toFixed(2);
-      if(+a>=.01){
-        ctx.beginPath();ctx.arc(g.x,g.y,g.r,0,Math.PI*2);
-        ctx.fillStyle=`rgba(${stc},${a})`;ctx.fill();
-      }
-      return g.age<150;
-    });
-
+      if(+a<.01)continue;
+      const col=g.bright?(dec?'255,220,80':'80,220,220'):(dec?'255,190,60':'45,170,170');
+      ctx.beginPath(); ctx.arc(g.x,g.y,g.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${col},${a})`; ctx.fill();
+    }
     raf=requestAnimationFrame(frame);
   }
 
   window.initSandParticles=()=>{
-    const cv=document.getElementById('timer-canvas');if(!cv)return;
-    const d=window.devicePixelRatio||1;
-    cv.width=W*d;cv.height=H*d;
-    cv.style.width=W+'px';cv.style.height=H+'px';
-    cv.getContext('2d').scale(d,d);
-    cancelAnimationFrame(raf);grains=[];frame();
+    const cv=document.getElementById('timer-canvas'); if(!cv)return;
+    dpr=window.devicePixelRatio||1;
+    cv.width=W*dpr; cv.height=H*dpr;
+    cv.getContext('2d').scale(dpr,dpr);
+    cancelAnimationFrame(raf); grains=[]; frame();
   };
-  window.setSandFill=f=>{fill=f;};
-  window.sandBurst =n=>{burstQ+=n;};
-
+  window.setSandFill =f=>{ fill=f; };
+  window.sandBurst   =n=>{ burstQ+=n; };
 })();
 
 /* ── HOURGLASS TIMER ────────────────────────────────────────────── */
