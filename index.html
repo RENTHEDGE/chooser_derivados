@@ -512,6 +512,17 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 .idx-text {}
 .idx-title { font-family:var(--serif); font-size:.82rem; font-weight:600; color:var(--ink); margin-bottom:.18rem; }
 .idx-sub   { font-family:var(--mono); font-size:.55rem; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; }
+
+/* ── CHART TOOLTIP (sigue al mouse) ──────────────────────────────── */
+.chart-tooltip{
+  position:fixed; z-index:1000; pointer-events:none;
+  background:rgba(10,15,26,.92); backdrop-filter:blur(8px);
+  border:1px solid rgba(45,139,139,.4); border-radius:6px;
+  padding:.4rem .6rem; font-family:var(--mono); font-size:.56rem;
+  color:var(--teal); white-space:nowrap; display:none;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+}
+.chart-tooltip.visible { display:block; }
 </style>
 </head>
 <body>
@@ -888,6 +899,111 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
 <script>
 (function() {
+  /* ── Interactive chart zoom/pan + tooltips ── */
+  window.enableChartZoom = function(chart) {
+    const cv = chart.canvas;
+    let drag = null;
+    cv.style.cursor = 'crosshair';
+    let tt = document.querySelector('[data-chart-tt="' + chart.canvas.id + '"]');
+    if (!tt) {
+      tt = document.createElement('div');
+      tt.className = 'chart-tooltip';
+      tt.setAttribute('data-chart-tt', chart.canvas.id);
+      document.body.appendChild(tt);
+    }
+    function range(sc) {
+      return {
+        min: sc.options.min !== undefined ? sc.options.min : sc.min,
+        max: sc.options.max !== undefined ? sc.options.max : sc.max
+      };
+    }
+    function dataAt(px, py) {
+      const ca = chart.chartArea;
+      const xs = chart.scales.x, ys = chart.scales.y;
+      if (!xs || !ys) return null;
+      const xf = Math.max(0, Math.min(1, (px - ca.left) / (ca.right - ca.left)));
+      const yf = Math.max(0, Math.min(1, 1 - (py - ca.top) / (ca.bottom - ca.top)));
+      const xr = range(xs), yr = range(ys);
+      return { x: (xr.min + xf * (xr.max - xr.min)).toFixed(2), y: (yr.min + yf * (yr.max - yr.min)).toFixed(2) };
+    }
+    cv.addEventListener('wheel', e => {
+      e.preventDefault(); e.stopPropagation();
+      const factor = e.deltaY > 0 ? 1.15 : 0.87;
+      const rect = cv.getBoundingClientRect();
+      const ca = chart.chartArea;
+      const xs = chart.scales.x, ys = chart.scales.y;
+      if (xs) {
+        const r = range(xs);
+        const f = Math.max(0, Math.min(1, (e.clientX - rect.left - ca.left) / (ca.right - ca.left)));
+        const p = r.min + f * (r.max - r.min);
+        xs.options.min = p - (p - r.min) * factor;
+        xs.options.max = p + (r.max - p) * factor;
+      }
+      if (ys) {
+        const r = range(ys);
+        const f = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top - ca.top) / (ca.bottom - ca.top)));
+        const p = r.min + f * (r.max - r.min);
+        ys.options.min = p - (p - r.min) * factor;
+        ys.options.max = p + (r.max - p) * factor;
+      }
+      chart.update('none');
+    }, { passive: false });
+    cv.addEventListener('mousedown', e => {
+      const xs = chart.scales.x, ys = chart.scales.y;
+      drag = { x0: e.clientX, y0: e.clientY, xr: xs ? range(xs) : null, yr: ys ? range(ys) : null };
+      cv.style.cursor = 'grabbing';
+      tt.classList.remove('visible');
+    });
+    cv.addEventListener('mousemove', e => {
+      const rect = cv.getBoundingClientRect();
+      const ca = chart.chartArea;
+      const px = e.clientX - rect.left;
+      const py = e.clientY - rect.top;
+      const inChart = px >= ca.left && px <= ca.right && py >= ca.top && py <= ca.bottom;
+      if (drag) {
+        const xs = chart.scales.x, ys = chart.scales.y;
+        const dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+        if (xs && drag.xr) {
+          const s = (drag.xr.max - drag.xr.min) / (ca.right - ca.left);
+          xs.options.min = drag.xr.min - dx * s;
+          xs.options.max = drag.xr.max - dx * s;
+        }
+        if (ys && drag.yr) {
+          const s = (drag.yr.max - drag.yr.min) / (ca.bottom - ca.top);
+          ys.options.min = drag.yr.min + dy * s;
+          ys.options.max = drag.yr.max + dy * s;
+        }
+        chart.update('none');
+      } else if (inChart) {
+        const d = dataAt(px, py);
+        if (d) {
+          tt.textContent = `X: ${d.x}  Y: ${d.y}`;
+          tt.classList.add('visible');
+          tt.style.left = (e.clientX + 12) + 'px';
+          tt.style.top = (e.clientY - 24) + 'px';
+        }
+      } else {
+        tt.classList.remove('visible');
+      }
+    });
+    cv.addEventListener('mouseleave', () => {
+      tt.classList.remove('visible');
+      if (!drag) cv.style.cursor = 'crosshair';
+    });
+    window.addEventListener('mouseup', () => {
+      if (drag) { drag = null; cv.style.cursor = 'crosshair'; }
+    });
+    cv.addEventListener('dblclick', () => {
+      ['x','y'].forEach(k => {
+        if (chart.scales[k]) {
+          chart.scales[k].options.min = undefined;
+          chart.scales[k].options.max = undefined;
+        }
+      });
+      chart.update();
+    });
+  };
+
   const initialized = {};
   const K = 150, pCall = 6, pPut = 5, pChooser = 9;
   const STS = [120,125,130,135,140,145,150,155,160,165,170,175,180];
@@ -3628,6 +3744,19 @@ document.querySelectorAll('.slide').forEach(s => {
 });
 // Trigger on initial active slide
 triggerReveal(document.querySelector('.slide.active'));
+</script>
+
+<script>
+// Auto-enable zoom/tooltips on all Chart.js instances
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    Object.values(Chart.instances).forEach(chart => {
+      if (window.enableChartZoom && chart && chart.canvas) {
+        window.enableChartZoom(chart);
+      }
+    });
+  }, 100);
+});
 </script>
 
 </body>
