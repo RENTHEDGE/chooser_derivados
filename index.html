@@ -517,11 +517,13 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 /* ── CHART TOOLTIP (sigue al mouse) ──────────────────────────────── */
 .chart-tooltip{
   position:fixed; z-index:1000; pointer-events:none;
-  background:rgba(10,15,26,.92); backdrop-filter:blur(8px);
-  border:1px solid rgba(45,139,139,.4); border-radius:6px;
-  padding:.4rem .6rem; font-family:var(--mono); font-size:.56rem;
-  color:var(--teal); white-space:nowrap; display:none;
-  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  background:rgba(8,12,22,.95); backdrop-filter:blur(10px);
+  border:1px solid rgba(45,139,139,.45); border-radius:8px;
+  padding:.45rem .7rem; font-family:var(--mono); font-size:.56rem;
+  color:rgba(241,250,238,.75); display:none;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
+  min-width:120px; max-width:230px;
+  line-height:1.6;
 }
 .chart-tooltip.visible { display:block; }
 </style>
@@ -918,14 +920,53 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         max: sc.options.max !== undefined ? sc.options.max : sc.max
       };
     }
-    function dataAt(px, py) {
+    function fmtY(num, ys) {
+      const cb = ys && ys.options && ys.options.ticks && ys.options.ticks.callback;
+      if (cb) { try { return String(cb(num, 0, [])); } catch(e){} }
+      return (num >= 0 ? '+' : '') + num.toFixed(2);
+    }
+    function showTooltip(px, py, clientX, clientY) {
       const ca = chart.chartArea;
       const xs = chart.scales.x, ys = chart.scales.y;
-      if (!xs || !ys) return null;
-      const xf = Math.max(0, Math.min(1, (px - ca.left) / (ca.right - ca.left)));
-      const yf = Math.max(0, Math.min(1, 1 - (py - ca.top) / (ca.bottom - ca.top)));
-      const xr = range(xs), yr = range(ys);
-      return { x: (xr.min + xf * (xr.max - xr.min)).toFixed(2), y: (yr.min + yf * (yr.max - yr.min)).toFixed(2) };
+      if (!xs || !ys) return false;
+      const labels = chart.data.labels;
+      if (!labels || !labels.length) return false;
+      // Snap to nearest label index
+      const xf = (px - ca.left) / (ca.right - ca.left);
+      const idx = Math.max(0, Math.min(labels.length - 1, Math.round(xf * (labels.length - 1))));
+      const rawLabel = String(labels[idx]).replace(/\n/g, ' ');
+      const numX = parseFloat(rawLabel);
+      const isPriceX = !isNaN(numX) && /^\d/.test(rawLabel.trim());
+      const xHtml = isPriceX
+        ? 'S&nbsp;=&nbsp;<span style="color:var(--teal);font-weight:700;">$' + numX + '</span>'
+        : '<span style="color:var(--teal);font-weight:700;">' + rawLabel + '</span>';
+      let rows = '';
+      let count = 0;
+      chart.data.datasets.forEach(ds => {
+        if (!ds.label || ds.label === '') return;
+        const val = ds.data[idx];
+        if (val == null || isNaN(+val)) return;
+        const num = +val;
+        const fmt = fmtY(num, ys);
+        const col = num > 0 ? '#4ade80' : num < 0 ? '#f06060' : 'rgba(241,250,238,.55)';
+        rows += '<div style="display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-top:2px;">';
+        rows += '<span style="color:rgba(241,250,238,.48);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px;">' + ds.label + '</span>';
+        rows += '<span style="color:' + col + ';font-weight:700;white-space:nowrap;">' + fmt + '</span>';
+        rows += '</div>';
+        count++;
+      });
+      if (!count) return false;
+      // Smart positioning: flip left if near right edge
+      const margin = 16;
+      const ttW = 200;
+      let left = clientX + 14;
+      if (left + ttW > window.innerWidth - margin) left = clientX - ttW - 8;
+      let top = clientY - 14 - count * 20;
+      if (top < margin) top = clientY + 14;
+      tt.innerHTML = '<div style="border-bottom:1px solid rgba(45,139,139,.2);padding-bottom:3px;margin-bottom:2px;">' + xHtml + '</div>' + rows;
+      tt.style.left = left + 'px';
+      tt.style.top  = top  + 'px';
+      return true;
     }
     cv.addEventListener('wheel', e => {
       e.preventDefault(); e.stopPropagation();
@@ -976,12 +1017,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
         }
         chart.update('none');
       } else if (inChart) {
-        const d = dataAt(px, py);
-        if (d) {
-          tt.textContent = `X: ${d.x}  Y: ${d.y}`;
+        if (showTooltip(px, py, e.clientX, e.clientY)) {
           tt.classList.add('visible');
-          tt.style.left = (e.clientX + 12) + 'px';
-          tt.style.top = (e.clientY - 24) + 'px';
+        } else {
+          tt.classList.remove('visible');
         }
       } else {
         tt.classList.remove('visible');
