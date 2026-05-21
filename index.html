@@ -325,28 +325,41 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 .tl-title { font-size: .72rem; font-weight: 700; text-align: center; color: var(--ink2); }
 .tl-desc  { font-size: .65rem; text-align: center; color: var(--ink3); max-width: 100px; line-height: 1.4; }
 
-/* Choice buttons (slide 14) */
-.choice-row { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1.5rem; }
+/* ── FLASHCARD (slide 14) ────────────────────────────────────────── */
+.fc-scene { perspective: 1100px; width: 100%; margin-top: .8rem; }
+.fc-card {
+  position: relative; min-height: 300px;
+  transform-style: preserve-3d;
+  transition: transform .72s cubic-bezier(.16,1,.3,1);
+}
+.fc-card.flipped { transform: rotateY(180deg); }
+.fc-face {
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
+  border-radius: 18px; padding: 1.4rem;
+}
+.fc-back {
+  transform: rotateY(180deg);
+  position: absolute; top: 0; left: 0; width: 100%;
+}
+
+/* Choice buttons */
+.choice-row { display: flex; gap: 1.4rem; justify-content: center; margin-top: 1.1rem; }
 .choice-btn {
-  flex: 1; max-width: 280px; padding: 1.5rem; border-radius: var(--rx);
+  flex: 1; max-width: 240px; padding: 1.3rem; border-radius: var(--rx);
   border: 2px solid transparent; background: var(--sur);
   text-align: center; cursor: pointer;
   transition: all .3s var(--ease-b);
-  display: flex; flex-direction: column; align-items: center; gap: .6rem;
+  display: flex; flex-direction: column; align-items: center; gap: .55rem;
 }
-.choice-btn:hover { transform: translateY(-6px); }
+.choice-btn:hover { transform: translateY(-5px); }
 .choice-call { border-color: rgba(76,175,125,.4); }
-.choice-call:hover { background: rgba(76,175,125,.12); border-color: var(--green); box-shadow: 0 16px 40px rgba(76,175,125,.25); }
-.choice-put  { border-color: rgba(224,92,92,.4);   }
-.choice-put:hover  { background: rgba(224,92,92,.12);  border-color: var(--red);   box-shadow: 0 16px 40px rgba(224,92,92,.25); }
-.choice-icon { font-size: 2.5rem; }
-.choice-label { font-family: var(--serif); font-size: 1.6rem; }
-.choice-desc  { font-size: .82rem; color: var(--ink3); }
-
-/* Outcome panel */
-.outcome { display: none; }
-.outcome.show { display: block; animation: slideUp .5s var(--ease) forwards; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.choice-call:hover { background: rgba(76,175,125,.12); border-color: var(--green); box-shadow: 0 14px 36px rgba(76,175,125,.22); }
+.choice-put  { border-color: rgba(224,92,92,.4); }
+.choice-put:hover  { background: rgba(224,92,92,.12);  border-color: var(--red);   box-shadow: 0 14px 36px rgba(224,92,92,.22); }
+.choice-icon { font-size: 2.2rem; }
+.choice-label { font-family: var(--serif); font-size: 1.5rem; }
+.choice-desc  { font-size: .78rem; color: var(--ink3); }
 
 /* Table */
 .tbl-wrap { background: var(--sur); border: 1px solid var(--brd); border-radius: var(--rx); overflow: hidden; }
@@ -2529,27 +2542,52 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   </div>
   <canvas class="particle-canvas" id="particles-s14"></canvas>
   <div class="inner" style="text-align:center;">
-    <div class="s14-intro" style="opacity:0;transform:translateY(-18px);">
+
+    <!-- Header (siempre visible) -->
+    <div class="s14-header" style="opacity:0;transform:translateY(-18px);">
       <div class="lbl lbl-amber" style="justify-content:center;">Se acabó el tiempo — ¡Elige ahora!</div>
-      <h2 class="t-h" style="font-size:1.6rem;">¿Call o Put?</h2>
-      <p class="t-sub mt4" style="max-width:50ch;margin:.7rem auto;font-size:.82rem;">
-        El earnings report sale mañana. Ya no puedes esperar más. Tienes que decidir.
-      </p>
+      <h2 class="t-h" style="font-size:1.55rem;margin-bottom:.2rem;">¿Call o Put?</h2>
     </div>
-    <div class="s14-choices choice-row" style="opacity:0;transform:scale(.9);">
-      <button class="choice-btn choice-call" onclick="chooseOutcome('call')">
-        <div class="choice-icon" style="font-size:2rem;font-weight:700;color:var(--green);">↑</div>
-        <div class="choice-label" style="color:var(--green);">CALL</div>
-        <div class="choice-desc">Creo que Apple superará<br/>las expectativas</div>
-      </button>
-      <button class="choice-btn choice-put" onclick="chooseOutcome('put')">
-        <div class="choice-icon" style="font-size:2rem;font-weight:700;color:var(--red);">↓</div>
-        <div class="choice-label" style="color:var(--red);">PUT</div>
-        <div class="choice-desc">Creo que Apple decepcionará<br/>al mercado</div>
-      </button>
+
+    <!-- Flashcard -->
+    <div class="fc-scene">
+      <div class="fc-card" id="fc-card14">
+
+        <!-- CARA FRONT: elección -->
+        <div class="fc-face fc-front">
+          <p style="font-size:.8rem;color:var(--ink2);margin-bottom:1rem;max-width:54ch;margin-left:auto;margin-right:auto;line-height:1.6;">
+            Estás en <strong style="color:var(--blue);">t = t<sub>c</sub></strong> · Apple acaba de reportar earnings.<br/>
+            <strong style="color:var(--teal);">S = $248</strong> <span style="color:var(--green);font-size:.75rem;">+7.8%</span>
+            &nbsp;·&nbsp; Strike <strong style="color:var(--amber);">K = $230</strong>
+            &nbsp;·&nbsp; Vence en T = 6 meses
+          </p>
+          <div class="choice-row">
+            <button class="choice-btn choice-call" onclick="chooseOutcome('call')">
+              <div class="choice-icon" style="color:var(--green);">↑</div>
+              <div class="choice-label" style="color:var(--green);">CALL</div>
+              <div class="choice-desc">S &gt; K · la call vale más<br/>ya</div>
+            </button>
+            <button class="choice-btn choice-put" onclick="chooseOutcome('put')">
+              <div class="choice-icon" style="color:var(--red);">↓</div>
+              <div class="choice-label" style="color:var(--red);">PUT</div>
+              <div class="choice-desc">Creo que caerá antes<br/>de T</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARA BACK: resultado + gráfico -->
+        <div class="fc-face fc-back">
+          <div id="s14-result-header" style="margin-bottom:.8rem;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1.9fr;gap:1.2rem;align-items:start;text-align:left;">
+            <div id="s14-result-metrics"></div>
+            <div style="height:195px;"><canvas id="chart-s14"></canvas></div>
+          </div>
+          <button onclick="resetChoice14()" style="margin-top:.8rem;font-family:var(--mono);font-size:.63rem;color:var(--ink3);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.3rem .85rem;cursor:pointer;transition:color .2s,border-color .2s;">↩ volver a elegir</button>
+        </div>
+
+      </div>
     </div>
-    <div class="outcome" id="outcome-call" style="margin-top:1.2rem;display:none;"></div>
-    <div class="outcome" id="outcome-put" style="margin-top:1.2rem;display:none;"></div>
+
   </div>
 </section>
 
@@ -3091,33 +3129,25 @@ document.querySelector('[data-i="13"]').addEventListener('slideenter', function(
   }, 100);
 });
 
-// Slide 14 — Decisión (intro + buttons with glow)
+// Slide 14 — Decisión (flashcard reset on enter)
 document.querySelector('[data-i="14"]').addEventListener('slideenter', function() {
-  document.querySelector('.s14-intro').style.opacity = '0';
-  document.querySelector('.s14-intro').style.transform = 'translateY(-18px)';
-  document.querySelector('.s14-choices').style.opacity = '0';
-  document.querySelector('.s14-choices').style.transform = 'scale(.9)';
-  document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = false);
-  document.querySelectorAll('.outcome').forEach(el => el.style.display = 'none');
-
-  const intro = document.querySelector('.s14-intro');
-  intro.style.transition = 'opacity .6s ease, transform .6s ease';
-  intro.style.opacity = '1';
-  intro.style.transform = 'none';
-
+  resetChoice14();
+  const hdr = document.querySelector('.s14-header');
+  hdr.style.transition = 'none';
+  hdr.style.opacity = '0';
+  hdr.style.transform = 'translateY(-18px)';
   setTimeout(() => {
-    const choices = document.querySelector('.s14-choices');
-    choices.style.transition = 'opacity .55s ease, transform .55s ease';
-    choices.style.opacity = '1';
-    choices.style.transform = 'scale(1)';
-
-    document.querySelectorAll('.choice-btn').forEach(btn => {
-      btn.style.animation = 'none';
-      setTimeout(() => {
+    hdr.style.transition = 'opacity .6s ease, transform .6s ease';
+    hdr.style.opacity = '1';
+    hdr.style.transform = 'none';
+    setTimeout(() => {
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.style.animation = 'none';
+        void btn.offsetWidth;
         btn.style.animation = 'choicePulse .7s ease-in-out infinite';
-      }, 100);
-    });
-  }, 450);
+      });
+    }, 300);
+  }, 60);
 });
 
 // Slide 15 — Conclusión (4 cards cascade, then summary)
@@ -3143,63 +3173,107 @@ document.querySelector('[data-i="15"]').addEventListener('slideenter', function(
   }, 1150);
 });
 
-/* ── SLIDE 14 — Decision Outcomes ───────────────────────────────────── */
+/* ── SLIDE 14 — Flashcard decision ──────────────────────────────────── */
+let s14Chart = null;
+
 function chooseOutcome(choice) {
-  const outcomeCall = document.getElementById('outcome-call');
-  const outcomePut = document.getElementById('outcome-put');
+  const isCall = choice === 'call';
 
-  if (choice === 'call') {
-    outcomeCall.innerHTML = `
-      <div style="background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3);border-radius:8px;padding:1.2rem;">
-        <div style="font-size:.85rem;color:var(--green);font-weight:600;margin-bottom:.8rem;">✓ CALL — DECISIÓN CORRECTA</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.77rem;color:var(--ink2);line-height:1.6;">
-          <div>
-            <strong style="color:var(--green);">En t<sub>c</sub>:</strong>
-            S = $248 > K = $230<br/>
-            Call vale: $18.50<br/>
-            Put vale: $2.10<br/>
-            <strong style="color:var(--green);">→ Eliges CALL</strong>
-          </div>
-          <div>
-            <strong style="color:var(--green);">En T:</strong>
-            S<sub>T</sub> = $255 > K<br/>
-            Payoff Call = $255 − $230 = $25<br/>
-            Menos prima: $25 − $9.82 = <strong style="color:var(--green);font-size:.95rem;">+$15.18</strong><br/>
-            <strong style="color:var(--green);">ROI: +154%</strong>
-          </div>
-        </div>
-      </div>
-    `;
-    outcomeCall.style.display = 'block';
-    outcomePut.style.display = 'none';
-  } else {
-    outcomePut.innerHTML = `
-      <div style="background:rgba(224,92,92,.08);border:1px solid rgba(224,92,92,.3);border-radius:8px;padding:1.2rem;">
-        <div style="font-size:.85rem;color:var(--red);font-weight:600;margin-bottom:.8rem;">✗ PUT — DECISIÓN INCORRECTA</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.77rem;color:var(--ink2);line-height:1.6;">
-          <div>
-            <strong style="color:var(--red);">En t<sub>c</sub>:</strong>
-            S = $248 > K = $230<br/>
-            Call vale: $18.50<br/>
-            Put vale: $2.10<br/>
-            <strong style="color:var(--red);">→ Eliges PUT (error)</strong>
-          </div>
-          <div>
-            <strong style="color:var(--red);">En T:</strong>
-            S<sub>T</sub> = $255 > K<br/>
-            Payoff Put = max($230 − $255, 0) = $0<br/>
-            Menos prima: $0 − $9.82 = <strong style="color:var(--red);font-size:.95rem;">−$9.82</strong><br/>
-            <strong style="color:var(--red);">ROI: −100%</strong>
-          </div>
-        </div>
-      </div>
-    `;
-    outcomePut.style.display = 'block';
-    outcomeCall.style.display = 'none';
-  }
+  // ── result header ──
+  document.getElementById('s14-result-header').innerHTML = isCall
+    ? `<div style="font-family:var(--mono);font-size:.82rem;color:var(--green);font-weight:700;letter-spacing:.04em;">✓ Elegiste CALL — decisión correcta</div>`
+    : `<div style="font-family:var(--mono);font-size:.82rem;color:var(--red);font-weight:700;letter-spacing:.04em;">✗ Elegiste PUT — decisión incorrecta en este escenario</div>`;
 
-  // Disable buttons after choice
-  document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
+  // ── metrics ──
+  const payoff = isCall ? 25 : 0;
+  const prima  = 9.82;
+  const net    = +(payoff - prima).toFixed(2);
+  const roi    = Math.round((net / prima) * 100);
+  const nc     = net >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('s14-result-metrics').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:.45rem;font-family:var(--mono);font-size:.71rem;">
+      <div style="color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-size:.56rem;margin-bottom:.1rem;">Resultado en T</div>
+      ${[
+        ['S<sub>T</sub>', '$255', 'var(--teal)'],
+        ['Strike K',     '$230', 'var(--amber)'],
+        ['Payoff', `$${payoff.toFixed(2)}`, isCall?'var(--green)':'var(--red)'],
+        ['− Prima', `−$${prima}`, 'var(--red)'],
+      ].map(([l,v,c])=>`<div style="background:rgba(255,255,255,.04);border-radius:5px;padding:.42rem .65rem;display:flex;justify-content:space-between;"><span style="color:var(--ink3);">${l}</span><span style="color:${c};">${v}</span></div>`).join('')}
+      <div style="background:${net>=0?'rgba(76,175,125,.12)':'rgba(224,92,92,.1)'};border:1px solid ${net>=0?'rgba(76,175,125,.3)':'rgba(224,92,92,.3)'};border-radius:5px;padding:.42rem .65rem;display:flex;justify-content:space-between;">
+        <span style="color:var(--ink2);font-weight:600;">Neto</span>
+        <span style="color:${nc};font-weight:700;">${net>=0?'+':''}$${net} (${roi}%)</span>
+      </div>
+    </div>`;
+
+  // ── flip card ──
+  document.getElementById('fc-card14').classList.add('flipped');
+  document.querySelectorAll('.choice-btn').forEach(btn => { btn.disabled = true; btn.style.animation = 'none'; });
+
+  // ── build chart after flip completes ──
+  setTimeout(() => {
+    if (s14Chart) { s14Chart.destroy(); s14Chart = null; }
+    const cv = document.getElementById('chart-s14');
+    if (!cv) return;
+
+    const labels   = ['t₀', '15d', 'tᶜ', '60d', 'T'];
+    const sPrice   = [230, 237, 248, 252, 255];
+    const kLine    = [230, 230, 230, 230, 230];
+    const optVal   = isCall ? [null, null, 18.5, 21.2, 25] : [null, null, 2.1, 0.9, 0];
+    const optColor = isCall ? 'rgba(76,175,125,' : 'rgba(224,92,92,';
+
+    s14Chart = new Chart(cv, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Precio S',
+            data: sPrice,
+            borderColor: 'rgba(45,180,180,.9)', backgroundColor: 'rgba(45,180,180,.07)',
+            borderWidth: 2.5, fill: false, tension: .4,
+            pointRadius: [4,0,6,0,6], pointHoverRadius: 6,
+          },
+          {
+            label: 'Strike K=230',
+            data: kLine,
+            borderColor: 'rgba(201,155,69,.55)', borderWidth: 1.5, borderDash: [6,4],
+            fill: false, pointRadius: 0,
+          },
+          {
+            label: isCall ? 'Valor Call' : 'Valor Put',
+            data: optVal,
+            borderColor: optColor+'.9)', backgroundColor: optColor+'.13)',
+            borderWidth: 2, fill: 'origin', tension: .4,
+            pointRadius: [0,0,4,0,5], pointHoverRadius: 5,
+            yAxisID: 'y2',
+          },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        animation: { duration: 750, easing: 'easeOutQuart' },
+        plugins: {
+          legend: { display: true, labels: { color:'rgba(241,250,238,.6)', font:{family:'JetBrains Mono',size:8}, usePointStyle:true, padding:8, boxWidth:7 } },
+          tooltip: { backgroundColor:'rgba(4,8,16,.92)', titleColor:'rgba(241,250,238,.9)', bodyColor:'rgba(241,250,238,.72)', borderColor:'rgba(255,255,255,.1)', borderWidth:1, titleFont:{family:'JetBrains Mono',size:8}, bodyFont:{family:'JetBrains Mono',size:8}, padding:6,
+            callbacks: { label: ctx => ctx.dataset.yAxisID === 'y2' ? `${ctx.dataset.label}: $${ctx.parsed.y}` : `S: $${ctx.parsed.y}` }
+          },
+          annotation: {}
+        },
+        scales: {
+          x: { grid:{color:'rgba(255,255,255,.05)'}, ticks:{color:'rgba(241,250,238,.5)',font:{family:'JetBrains Mono',size:8}} },
+          y:  { position:'left',  min:218, max:268, grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'rgba(241,250,238,.45)',font:{size:8},callback:v=>'$'+v} },
+          y2: { position:'right', min:0,   max:35,  grid:{display:false}, ticks:{color:optColor+'.65)',font:{size:8},callback:v=>'$'+v} }
+        }
+      }
+    });
+  }, 420);
+}
+
+function resetChoice14() {
+  const card = document.getElementById('fc-card14');
+  if (card) card.classList.remove('flipped');
+  document.querySelectorAll('.choice-btn').forEach(btn => { btn.disabled = false; btn.style.animation = ''; });
+  if (s14Chart) { s14Chart.destroy(); s14Chart = null; }
 }
 </script>
 
