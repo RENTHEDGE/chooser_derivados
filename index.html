@@ -114,14 +114,20 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
 /* ── HOURGLASS TIMER ────────────────────────────────────────────── */
 #timer-wrap {
-  position: fixed; bottom: 1.4rem; right: 1.4rem; z-index: 600;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 600;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
 }
-#timer-svg { width: 38px; height: 56px; transition: all .6s var(--ease); }
+#timer-svg { width: 54px; height: 80px; transition: filter .6s var(--ease); }
+#timer-canvas {
+  position: absolute; pointer-events: none;
+  width: 54px; height: 80px;
+}
+#timer-container { position: relative; width: 54px; height: 80px; }
 #timer-label {
-  font-family: var(--mono); font-size: .48rem;
-  color: var(--ink3); text-align: center; letter-spacing: .06em;
-  text-transform: uppercase; max-width: 60px; line-height: 1.3;
+  font-family: var(--mono); font-size: .46rem;
+  color: var(--ink3); text-align: center; letter-spacing: .08em;
+  text-transform: uppercase; max-width: 70px; line-height: 1.4;
+  white-space: pre-line;
 }
 
 /* ── NAV ARROWS ─────────────────────────────────────────────────── */
@@ -443,27 +449,47 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
      HOURGLASS TIMER  (symbolic — not a real clock)
      ══════════════════════════════════════════════════════════════ -->
 <div id="timer-wrap">
-  <svg id="timer-svg" viewBox="0 0 38 56" xmlns="http://www.w3.org/2000/svg">
-    <!-- outer frame -->
-    <path d="M6 2 h26 v6 l-13 16 13 16 v6 H6 v-6 l13-16 L6 8 Z"
-          fill="none" stroke="rgba(45,139,139,.4)" stroke-width="1.5" stroke-linejoin="round"/>
-    <!-- top caps -->
-    <line x1="4" y1="2"  x2="34" y2="2"  stroke="rgba(45,139,139,.6)" stroke-width="2" stroke-linecap="round"/>
-    <line x1="4" y1="54" x2="34" y2="54" stroke="rgba(45,139,139,.6)" stroke-width="2" stroke-linecap="round"/>
-    <!-- sand top (dynamic) -->
-    <clipPath id="clip-top">
-      <rect id="sand-top-clip" x="6" y="8" width="26" height="16"/>
-    </clipPath>
-    <path d="M6 8 l13 16 l13-16 Z" fill="rgba(45,139,139,.35)" clip-path="url(#clip-top)" id="sand-top"/>
-    <!-- sand bottom (dynamic) -->
-    <clipPath id="clip-bot">
-      <rect id="sand-bot-clip" x="6" y="32" width="26" height="16"/>
-    </clipPath>
-    <path d="M6 48 l13-16 l13 16 Z" fill="rgba(45,139,139,.55)" clip-path="url(#clip-bot)" id="sand-bot"/>
-    <!-- drip line -->
-    <line id="sand-drip" x1="19" y1="24" x2="19" y2="32" stroke="rgba(45,139,139,.5)" stroke-width="1" stroke-dasharray="2 2"/>
-  </svg>
-  <div id="timer-label">TIEMPO</div>
+  <div id="timer-container">
+    <svg id="timer-svg" viewBox="0 0 54 80" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="hg-glow">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <linearGradient id="sand-top-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(45,139,139,.7)"/>
+          <stop offset="100%" stop-color="rgba(45,139,139,.2)"/>
+        </linearGradient>
+        <linearGradient id="sand-bot-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(45,139,139,.3)"/>
+          <stop offset="100%" stop-color="rgba(45,139,139,.8)"/>
+        </linearGradient>
+        <clipPath id="clip-top">
+          <rect id="sand-top-clip" x="8" y="10" width="38" height="24"/>
+        </clipPath>
+        <clipPath id="clip-bot">
+          <rect id="sand-bot-clip" x="8" y="46" width="38" height="24"/>
+        </clipPath>
+      </defs>
+      <!-- glass body fill -->
+      <path d="M8 4 h38 v8 l-19 22 19 22 v8 H8 v-8 l19-22 L8 12 Z"
+            fill="rgba(45,139,139,.04)" stroke="none"/>
+      <!-- sand top -->
+      <path d="M8 10 l19 24 l19-24 Z" fill="url(#sand-top-grad)" clip-path="url(#clip-top)" id="sand-top"/>
+      <!-- sand bottom -->
+      <path d="M8 70 l19-24 l19 24 Z" fill="url(#sand-bot-grad)" clip-path="url(#clip-bot)" id="sand-bot"/>
+      <!-- outer frame — drawn on top of sand -->
+      <path d="M8 4 h38 v8 l-19 22 19 22 v8 H8 v-8 l19-22 L8 12 Z"
+            fill="none" stroke="rgba(45,139,139,.55)" stroke-width="1.8" stroke-linejoin="round" filter="url(#hg-glow)"/>
+      <!-- top / bottom caps -->
+      <line x1="5"  y1="4"  x2="49" y2="4"  stroke="rgba(45,139,139,.8)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="5"  y1="76" x2="49" y2="76" stroke="rgba(45,139,139,.8)" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- neck glow dot -->
+      <circle id="sand-neck" cx="27" cy="34" r="1.5" fill="rgba(45,139,139,.0)"/>
+    </svg>
+    <canvas id="timer-canvas" width="54" height="80"></canvas>
+  </div>
+  <div id="timer-label">EL TIEMPO&#10;ES NUESTRO</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -2645,43 +2671,140 @@ function updatePhases() {
   });
 }
 
+/* ── HOURGLASS SAND PARTICLES ───────────────────────────────────── */
+(function() {
+  const SCALE = 2; // HiDPI
+  let grains = [];
+  let currentFill = 0;
+  let raf;
+
+  // SVG viewBox is 54×80; canvas is also 54×80 CSS px → 108×160 device px
+  const NX = 27 * SCALE; // neck X center in device px
+  const NY = 34 * SCALE; // neck Y center in device px
+  const BOT_Y = 70 * SCALE; // bottom of lower triangle in device px
+  const W = 54 * SCALE;
+  const H = 80 * SCALE;
+
+  // Lower triangle boundary: apex at (NX, NY), base at y=BOT_Y, half-width grows as (y-NY)/(BOT_Y-NY)*19*SCALE
+  function inLowerTriangle(x, y) {
+    if (y < NY || y > BOT_Y) return false;
+    const t = (y - NY) / (BOT_Y - NY);
+    const halfW = t * 19 * SCALE;
+    return Math.abs(x - NX) < halfW;
+  }
+
+  function spawnGrain() {
+    const angle = (Math.random() - 0.5) * 0.6;
+    grains.push({
+      x: NX + (Math.random() - 0.5) * 2,
+      y: NY,
+      vx: Math.sin(angle) * (0.3 + Math.random() * 0.4) * SCALE,
+      vy: (0.8 + Math.random() * 0.6) * SCALE,
+      r: (0.7 + Math.random() * 0.7) * SCALE,
+      alpha: 0.7 + Math.random() * 0.3,
+      settled: false,
+      life: 0,
+    });
+  }
+
+  function tick() {
+    const canvas = document.getElementById('timer-canvas');
+    if (!canvas) { raf = requestAnimationFrame(tick); return; }
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+
+    // Spawn: rate proportional to how much sand is still flowing (fill < 1)
+    const flowing = currentFill > 0 && currentFill < 1;
+    if (flowing && Math.random() < 0.55) spawnGrain();
+    // Even at extremes, spawn a rare trickle for liveliness
+    if (!flowing && Math.random() < 0.04) spawnGrain();
+
+    grains = grains.filter(g => g.life < 220);
+
+    for (const g of grains) {
+      g.life++;
+      if (!g.settled) {
+        g.vy += 0.08 * SCALE; // gravity
+        g.x += g.vx;
+        g.y += g.vy;
+        // Settle when it hits the bottom triangle fill level or the base
+        const settleY = NY + (BOT_Y - NY) * Math.min(1, currentFill) - g.r;
+        if (g.y >= settleY || g.y >= BOT_Y - g.r) {
+          g.y = Math.min(settleY, BOT_Y - g.r);
+          g.settled = true;
+          g.vx = 0; g.vy = 0;
+        }
+        // Wall bounce inside lower triangle
+        if (inLowerTriangle(g.x, g.y)) {
+          const t = (g.y - NY) / (BOT_Y - NY);
+          const halfW = t * 19 * SCALE;
+          if (g.x - NX > halfW - g.r)  { g.x = NX + halfW - g.r;  g.vx *= -0.3; }
+          if (g.x - NX < -halfW + g.r) { g.x = NX - halfW + g.r; g.vx *= -0.3; }
+        }
+      }
+
+      // Fade out settled grains over time
+      const a = g.settled ? g.alpha * Math.max(0, 1 - (g.life - 80) / 140) : g.alpha;
+      if (a <= 0) continue;
+
+      const isDecision = currentFill >= 1;
+      const color = isDecision ? `255,190,80` : `45,180,180`;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${color},${a})`;
+      ctx.fill();
+    }
+
+    raf = requestAnimationFrame(tick);
+  }
+
+  window.initSandParticles = function() {
+    const canvas = document.getElementById('timer-canvas');
+    if (!canvas) return;
+    canvas.width  = W;
+    canvas.height = H;
+    cancelAnimationFrame(raf);
+    grains = [];
+    tick();
+  };
+
+  window.setSandFill = function(fill) { currentFill = fill; };
+})();
+
 /* ── HOURGLASS TIMER ────────────────────────────────────────────── */
 function updateTimer(idx) {
   const fill = SAND_LEVELS[idx] ?? 0;
   const isDecision = idx === 14;
 
-  // Top sand height: from 16px (full) to 0px
-  const topH  = Math.max(0, 16 * (1 - fill));
-  // Bottom sand height: from 0px to 16px
-  const botH  = Math.min(16, 16 * fill);
+  window.setSandFill && window.setSandFill(fill);
+
+  // SVG clip rects — viewBox 54×80
+  // Upper triangle: apex at y=34, base at y=10, height=24
+  const topH = Math.max(0, 24 * (1 - fill));
+  // Lower triangle: apex at y=34, base at y=70, height=24 (clip from bottom up)
+  const botH = Math.min(24, 24 * fill);
 
   const sandTop = document.getElementById('sand-top-clip');
   const sandBot = document.getElementById('sand-bot-clip');
   if (sandTop) sandTop.setAttribute('height', topH);
   if (sandBot) {
-    sandBot.setAttribute('y', 48 - botH);
+    sandBot.setAttribute('y', 70 - botH);
     sandBot.setAttribute('height', botH);
   }
 
-  // Drip line: only visible when sand is flowing
-  const drip = document.getElementById('sand-drip');
-  if (drip) drip.style.opacity = (fill > 0 && fill < 1) ? '1' : '0';
-
-  // Color at decision moment
+  // Color shift at decision
   const svg = document.getElementById('timer-svg');
   if (svg) {
-    if (isDecision) {
-      svg.style.filter = 'drop-shadow(0 0 8px rgba(201,155,69,.7))';
-    } else {
-      svg.style.filter = '';
-    }
+    svg.style.filter = isDecision
+      ? 'drop-shadow(0 0 10px rgba(255,190,80,.8))'
+      : 'drop-shadow(0 0 4px rgba(45,139,139,.25))';
   }
 
   // Label
   const lbl = document.getElementById('timer-label');
   if (lbl) lbl.textContent = TIMER_LABELS[idx] || 'TIEMPO';
 
-  // Pulse animation on decision slide
+  // Pulse on decision slide
   const wrap = document.getElementById('timer-wrap');
   if (wrap) {
     wrap.style.animation = isDecision ? 'timerPulse .8s ease-in-out infinite alternate' : '';
@@ -2795,6 +2918,7 @@ function initCaseChart() {
 buildPhases();
 updatePhases();
 updateTimer(0);
+window.addEventListener('load', () => { window.initSandParticles && window.initSandParticles(); });
 
 // KaTeX auto-render once loaded
 document.addEventListener('DOMContentLoaded', () => {
