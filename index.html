@@ -231,20 +231,20 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   .t-h   { font-size: clamp(1.3rem, 3.5vw, 1.9rem); }
 
   /* Collapse inline 2-col grids inside slides */
-  [data-i="4"] .inner > div,
   [data-i="5"] .inner > div,
-  [data-i="8"] .inner > div,
+  [data-i="6"] .inner > div,
   [data-i="9"] .inner > div,
   [data-i="10"] .inner > div,
-  [data-i="12"] .inner > div,
-  [data-i="13"] .inner > div {
+  [data-i="11"] .inner > div,
+  [data-i="13"] .inner > div,
+  [data-i="14"] .inner > div {
     grid-template-columns: 1fr !important;
   }
 
   /* Panel de gráficos en slides 04/05: altura reducida */
   #s4-panel, #s5-panel { min-height: 180px !important; }
-  [data-i="4"] [style*="height:175px"],
-  [data-i="5"] [style*="height:175px"] { height: 130px !important; }
+  [data-i="5"] [style*="height:175px"],
+  [data-i="6"] [style*="height:175px"] { height: 130px !important; }
 
   /* Choice buttons en slide 14 */
   .choice-row { flex-direction: column; align-items: center; gap: 1rem; }
@@ -259,11 +259,11 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 
 @media (max-width: 580px) {
   .slide { padding: 4rem 3.5vw 3rem; }
-  [data-i="6"] .inner > div,
   [data-i="7"] .inner > div,
-  [data-i="11"] .inner > div,
-  [data-i="15"] .inner > div,
-  [data-i="16"] .inner > div { grid-template-columns: 1fr !important; }
+  [data-i="8"] .inner > div,
+  [data-i="12"] .inner > div,
+  [data-i="16"] .inner > div,
+  [data-i="17"] .inner > div { grid-template-columns: 1fr !important; }
   .s15-card, .s11-card { transform: none !important; }
 }
 
@@ -466,6 +466,34 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 /* ── SLIDE BACKGROUND IMAGE ─────────────────────────────────────── */
 .slide-img { position:absolute; inset:0; z-index:0; overflow:hidden; }
 .slide-img img { width:100%; height:100%; object-fit:cover; opacity:.18; }
+
+/* ── PRESENTER SLIDE (s0p) ──────────────────────────────────────── */
+.s0p-grid { display:grid; grid-template-columns:1fr 1fr; gap:2.2rem; max-width:680px; margin:1.4rem auto 0; }
+.s0p-card {
+  background: rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08);
+  border-radius:20px; padding:1.6rem 1.2rem 1.4rem; text-align:center;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+.s0p-card:hover { transform:translateY(-5px); box-shadow:0 20px 50px rgba(45,139,139,.12); }
+.s0p-photo {
+  width:110px; height:110px; margin:0 auto .9rem;
+  border-radius:50%; overflow:hidden;
+  border:2.5px solid rgba(45,139,139,.4);
+  box-shadow:0 0 24px rgba(45,139,139,.2);
+}
+.s0p-photo img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+.s0p-photo-placeholder {
+  width:100%; height:100%; background:rgba(45,139,139,.15);
+  display:flex; align-items:center; justify-content:center;
+  font-size:2rem; color:rgba(45,139,139,.5);
+}
+.s0p-name { font-family:var(--serif); font-size:1.05rem; color:var(--ink); font-weight:600; margin-bottom:.3rem; }
+.s0p-major { font-family:var(--mono); font-size:.56rem; color:var(--ink3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:.7rem; }
+.s0p-goal {
+  display:inline-block; font-family:var(--mono); font-size:.58rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em;
+  padding:.28rem .75rem; border-radius:20px; border:1px solid currentColor;
+}
 </style>
 </head>
 <body>
@@ -554,7 +582,46 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   00  PORTADA
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark active" data-i="0" data-phase="Portada">
+<!-- ─────────────────────────────────────────────────────────────────
+  00  PRESENTADORES
+───────────────────────────────────────────────────────────────────── -->
+<section class="slide th-dark active" data-i="0" data-phase="Presentadores">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:500px;height:500px;top:-120px;left:-120px;background:rgba(45,139,139,.10);"></div>
+    <div class="blob" style="width:400px;height:400px;bottom:-80px;right:-80px;background:rgba(74,158,187,.08);"></div>
+    <div class="blob" style="width:280px;height:280px;top:40%;right:15%;background:rgba(201,155,69,.07);"></div>
+  </div>
+  <div class="inner" style="text-align:center;position:relative;z-index:2;">
+    <div class="lbl lbl-teal s0p-el" style="opacity:0;transform:translateY(-14px);">Pontificia Universidad Javeriana · Derivados Financieros</div>
+    <h2 class="t-h s0p-el" style="opacity:0;transform:translateY(16px);font-size:clamp(1.3rem,3vw,1.8rem);margin-top:.5rem;">Chooser Options</h2>
+    <div class="s0p-el" style="opacity:0;transform:translateY(12px);font-family:var(--mono);font-size:.6rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;margin-top:.2rem;">Administración de Empresas &amp; Finanzas</div>
+
+    <div class="s0p-grid s0p-el" style="opacity:0;transform:translateY(20px);">
+      <!-- Juan Felipe -->
+      <div class="s0p-card">
+        <div class="s0p-photo">
+          <img src="img/presentadores/juan-felipe.jpg" alt="Juan Felipe Barriga" onerror="this.style.display='none';this.parentNode.querySelector('.s0p-photo-placeholder').style.display='flex';">
+          <div class="s0p-photo-placeholder" style="display:none;">JB</div>
+        </div>
+        <div class="s0p-name">Juan Felipe Barriga</div>
+        <div class="s0p-major">Adm. Empresas &amp; Finanzas</div>
+        <span class="s0p-goal" style="color:var(--teal);border-color:rgba(45,139,139,.4);">Mesa de Dinero</span>
+      </div>
+      <!-- Ana Sofía -->
+      <div class="s0p-card">
+        <div class="s0p-photo">
+          <img src="img/presentadores/ana-sofia.jpg" alt="Ana Sofía Rojas" onerror="this.style.display='none';this.parentNode.querySelector('.s0p-photo-placeholder').style.display='flex';">
+          <div class="s0p-photo-placeholder" style="display:none;">AR</div>
+        </div>
+        <div class="s0p-name">Ana Sofía Rojas</div>
+        <div class="s0p-major">Adm. Empresas &amp; Finanzas</div>
+        <span class="s0p-goal" style="color:var(--amber);border-color:rgba(201,155,69,.4);">Por definir</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide th-dark" data-i="1" data-phase="Portada">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,16,.90) 0%,rgba(6,10,18,.80) 100%);"></div>
@@ -592,7 +659,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   01  INTRODUCCIÓN — ¿Qué es una Chooser Option?
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="1" data-phase="Introducción">
+<section class="slide th-alt" data-i="2" data-phase="Introducción">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,10,20,.90) 0%,rgba(8,14,26,.80) 100%);"></div>
@@ -853,7 +920,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   02  CÓMO FUNCIONA — mecanismo con timeline
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="2" data-phase="Mecanismo">
+<section class="slide th-dark" data-i="3" data-phase="Mecanismo">
   <div class="gradient-mesh">
     <div class="blob" style="width:400px;height:400px;top:-80px;right:-80px;background:rgba(74,158,187,.12);"></div>
     <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:rgba(45,139,139,.1);"></div>
@@ -1150,7 +1217,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   03  FÓRMULA — presentación general
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="3" data-phase="Fórmula">
+<section class="slide th-alt" data-i="4" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-amber reveal">Valoración</div>
     <h2 class="t-h reveal">La fórmula de Rubinstein (1991)</h2>
@@ -1348,7 +1415,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   04  FÓRMULA — Componente 1: Call BS
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="4" data-phase="Fórmula">
+<section class="slide th-dark" data-i="5" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-teal">Componente 1</div>
     <h2 class="t-h">La pierna larga: C<sub>BS</sub>(S, K, T)</h2>
@@ -1511,7 +1578,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   05  FÓRMULA — Componente 2: Put con K*
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="5" data-phase="Fórmula">
+<section class="slide th-alt" data-i="6" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-blue">Componente 2</div>
     <h2 class="t-h">La pierna corta: P<sub>BS</sub>(S, K*, t<sub>c</sub>)</h2>
@@ -1680,7 +1747,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ──────────────────────────────────────────────────────────────────
   06  K* — Intuición simplificada
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="6" data-phase="Fórmula">
+<section class="slide th-dark" data-i="7" data-phase="Fórmula">
   <div class="inner">
     <div class="lbl lbl-amber">Intuición</div>
     <h2 class="t-h">¿Por qué existe K*?</h2>
@@ -1751,7 +1818,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   const Kstar = 100*Math.exp(-(r-q)*(T-tc));
   const saving = 100 - Kstar;
 
-  document.querySelector('[data-i="6"]').addEventListener('slideenter', function(){
+  document.querySelector('[data-i="7"]').addEventListener('slideenter', function(){
     // Reset
     document.querySelectorAll('.s6-step,.s6-kstar,.s6-saving').forEach(el=>{
       el.style.opacity='0'; el.style.transform='translateX(30px)';
@@ -1796,7 +1863,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ──────────────────────────────────────────────────────────────────
   07  INTERPRETACIÓN — El valor de esperar (animación narrativa)
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="7" data-phase="Fórmula">
+<section class="slide th-alt" data-i="8" data-phase="Fórmula">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1642790551116-18e150f248e3?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,10,20,.90) 0%,rgba(8,14,26,.80) 100%);"></div>
@@ -1857,7 +1924,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 (function(){
   let s7chart = null;
 
-  document.querySelector('[data-i="7"]').addEventListener('slideenter', function(){
+  document.querySelector('[data-i="8"]').addEventListener('slideenter', function(){
     // Reset & animate cards
     const cards=[...document.querySelectorAll('.s7-card'), document.querySelector('.s7-equation')];
     cards.forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(20px)'; });
@@ -1949,7 +2016,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- 08 ─────────────────────────────────────────────────────────────
   PAYOFFS — Escenario 1: Call
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="8" data-phase="Payoffs">
+<section class="slide th-dark" data-i="9" data-phase="Payoffs">
   <div class="inner">
     <div class="lbl lbl-green reveal">Payoffs</div>
     <h2 class="t-h reveal">Escenario 1: eliges Call</h2>
@@ -2004,7 +2071,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- 09 ─────────────────────────────────────────────────────────────
   PAYOFFS — Escenario 2: Put
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="9" data-phase="Payoffs">
+<section class="slide th-alt" data-i="10" data-phase="Payoffs">
   <div class="inner">
     <div class="lbl lbl-blue">Payoffs</div>
     <h2 class="t-h">Escenario 2: eliges Put</h2>
@@ -2116,7 +2183,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   }
 
   // Slide 08 — Call
-  document.querySelector('[data-i="8"]').addEventListener('slideenter',function(){
+  document.querySelector('[data-i="9"]').addEventListener('slideenter',function(){
     document.querySelectorAll('.s8-step,.s8-result').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';});
     document.querySelectorAll('#s8-v1,#s8-v2,#s8-v3').forEach(el=>{el.textContent='$0';});
 
@@ -2141,7 +2208,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   // Slide 09 — Put
-  document.querySelector('[data-i="9"]').addEventListener('slideenter',function(){
+  document.querySelector('[data-i="10"]').addEventListener('slideenter',function(){
     document.querySelectorAll('.s9-step,.s9-result').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';});
     document.querySelectorAll('#s9-v1,#s9-v2,#s9-v3').forEach(el=>{el.textContent='$0';});
 
@@ -2182,12 +2249,21 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     });
   }
 
-  /* ── Slide 00 — Portada ── */
-  var s0 = document.querySelector('[data-i="0"]');
-  /* Run once on first render since it starts active */
+  /* ── Slide 00 — Presentadores ── */
+  var s0p = document.querySelector('[data-i="0"]');
   setTimeout(function() {
-    cascade(document.querySelectorAll('.s0-el'), 120, 200, 700);
-  }, 100);
+    cascade(document.querySelectorAll('.s0p-el'), 80, 180, 650);
+  }, 120);
+  s0p.addEventListener('slideenter', function() {
+    document.querySelectorAll('.s0p-el').forEach(function(el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+    });
+    setTimeout(function() { cascade(document.querySelectorAll('.s0p-el'), 0, 180, 650); }, 80);
+  });
+
+  /* ── Slide 01 — Portada ── */
+  var s0 = document.querySelector('[data-i="1"]');
   s0.addEventListener('slideenter', function() {
     document.querySelectorAll('.s0-el').forEach(function(el) {
       el.style.opacity = '0';
@@ -2200,9 +2276,9 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 01 — Introducción ── */
-  document.querySelector('[data-i="1"]').addEventListener('slideenter', function() {
+  document.querySelector('[data-i="2"]').addEventListener('slideenter', function() {
     /* Cards on left column */
-    var leftCards = document.querySelectorAll('[data-i="1"] .co');
+    var leftCards = document.querySelectorAll('[data-i="2"] .co');
     leftCards.forEach(function(el) { el.style.opacity = '0'; el.style.transform = 'translateX(-18px)'; });
     /* Right-column items */
     var rightItems = [
@@ -2229,7 +2305,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 02 — Mecanismo (timeline) ── */
-  document.querySelector('[data-i="2"]').addEventListener('slideenter', function() {
+  document.querySelector('[data-i="3"]').addEventListener('slideenter', function() {
     /* Reset panels */
     var ph = document.getElementById('s2-panel-placeholder');
     if (ph) { ph.style.display = 'flex'; ph.style.opacity = '0'; }
@@ -2239,7 +2315,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
     });
 
     /* Animate timeline container */
-    var timelineBox = document.querySelector('[data-i="2"] .inner > div:first-of-type');
+    var timelineBox = document.querySelector('[data-i="3"] .inner > div:first-of-type');
     if (timelineBox) {
       timelineBox.style.opacity = '0';
       timelineBox.style.transform = 'translateY(20px)';
@@ -2259,10 +2335,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 03 — Fórmula ── */
-  document.querySelector('[data-i="3"]').addEventListener('slideenter', function() {
+  document.querySelector('[data-i="4"]').addEventListener('slideenter', function() {
     /* Animate formula box */
-    var formulaBox = document.querySelector('[data-i="3"] .inner > div:nth-child(3)');
-    var paramsCol  = document.querySelector('[data-i="3"] .inner > div:nth-child(4)');
+    var formulaBox = document.querySelector('[data-i="4"] .inner > div:nth-child(3)');
+    var paramsCol  = document.querySelector('[data-i="4"] .inner > div:nth-child(4)');
 
     if (formulaBox) {
       formulaBox.style.opacity = '0';
@@ -2289,8 +2365,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 04 — Pierna larga ── */
-  document.querySelector('[data-i="4"]').addEventListener('slideenter', function() {
-    var def = document.querySelector('[data-i="4"] .co');
+  document.querySelector('[data-i="5"]').addEventListener('slideenter', function() {
+    var def = document.querySelector('[data-i="5"] .co');
     var btns = [
       document.getElementById('s4-btn-payoff'),
       document.getElementById('s4-btn-precio'),
@@ -2319,8 +2395,8 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   });
 
   /* ── Slide 05 — Pierna corta ── */
-  document.querySelector('[data-i="5"]').addEventListener('slideenter', function() {
-    var def = document.querySelector('[data-i="5"] .co');
+  document.querySelector('[data-i="6"]').addEventListener('slideenter', function() {
+    var def = document.querySelector('[data-i="6"] .co');
     var btns = [
       document.getElementById('s5-btn-payoff'),
       document.getElementById('s5-btn-precio'),
@@ -2358,7 +2434,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   10  PRECIO Y VALORACIÓN — vs vanilla
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="10" data-phase="Valoración">
+<section class="slide th-dark" data-i="11" data-phase="Valoración">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1640340434855-6084b1f4901c?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,16,.90) 0%,rgba(6,10,18,.80) 100%);"></div>
@@ -2404,7 +2480,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   11  USOS, VENTAJAS Y RIESGOS
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="11" data-phase="Usos">
+<section class="slide th-alt" data-i="12" data-phase="Usos">
   <div class="inner">
     <div class="lbl lbl-blue reveal">Aplicaciones</div>
     <h2 class="t-h reveal">Usos, ventajas y riesgos</h2>
@@ -2444,7 +2520,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   12  CASO PRÁCTICO — Contexto
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="12" data-phase="Caso">
+<section class="slide th-dark" data-i="13" data-phase="Caso">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,16,.90) 0%,rgba(6,10,18,.80) 100%);"></div>
@@ -2497,7 +2573,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   13  CASO PRÁCTICO — Gráfica del movimiento
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="13" data-phase="Caso">
+<section class="slide th-alt" data-i="14" data-phase="Caso">
   <div class="inner">
     <div class="lbl lbl-amber">Caso práctico</div>
     <h2 class="t-h">El movimiento del precio</h2>
@@ -2530,7 +2606,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   14  DECISIÓN — Call o Put (clímax narrativo)
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="14" data-phase="Decisión" id="s14-decision">
+<section class="slide th-dark" data-i="15" data-phase="Decisión" id="s14-decision">
   <div class="slide-img">
     <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1920&q=50" alt="" loading="lazy" onerror="this.parentNode.style.display='none'">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(4,8,16,.88) 0%,rgba(6,10,18,.78) 100%);"></div>
@@ -2594,7 +2670,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   15  CONCLUSIONES
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-alt" data-i="15" data-phase="Conclusión">
+<section class="slide th-alt" data-i="16" data-phase="Conclusión">
   <div class="gradient-mesh">
     <div class="blob" style="width:480px;height:480px;bottom:-120px;right:-80px;background:rgba(45,139,139,.15);"></div>
     <div class="blob" style="width:260px;height:260px;top:-40px;left:-40px;background:rgba(74,158,187,.1);"></div>
@@ -2640,7 +2716,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <!-- ────────────────────────────────────────────────────────────────
   16  REFERENCIAS
 ────────────────────────────────────────────────────────────────── -->
-<section class="slide th-dark" data-i="16" data-phase="Referencias">
+<section class="slide th-dark" data-i="17" data-phase="Referencias">
   <div class="gradient-mesh">
     <div class="blob" style="width:460px;height:460px;top:-100px;right:-80px;background:rgba(45,139,139,.1);"></div>
     <div class="blob" style="width:300px;height:300px;bottom:-60px;left:-50px;background:rgba(74,158,187,.08);"></div>
@@ -2705,8 +2781,9 @@ const PHASES = [...new Set([...SLIDES].map(s => s.dataset.phase))];
 
 /* Sand fill levels per slide (0 = full top, 1 = full bottom) */
 const SAND_LEVELS = [
-  0.02,  // 00 portada     — casi lleno arriba
-  0.10,  // 01 intro
+  0.00,  // 00 presentadores — reloj oculto
+  0.02,  // 01 portada     — casi lleno arriba
+  0.10,  // 02 intro
   0.20,  // 02 mecanismo
   0.30,  // 03 fórmula general
   0.38,  // 04 componente 1
@@ -2725,6 +2802,7 @@ const SAND_LEVELS = [
 ];
 
 const TIMER_LABELS = [
+  'PRESENTACIÓN',
   'EL TIEMPO\nES NUESTRO',
   'CONTEXTO',
   'MECANISMO',
@@ -2855,7 +2933,7 @@ function updatePhases() {
 function updateTimer(idx) {
   const fill = SAND_LEVELS[idx] ?? 0;
   const prev = SAND_LEVELS[Math.max(0, idx - 1)] ?? 0;
-  const isDecision = idx === 14;
+  const isDecision = idx === 15;
 
   window.setSandFill && window.setSandFill(fill);
   const burst = Math.round(12 + (fill - prev) * 100);
@@ -2868,7 +2946,7 @@ function updateTimer(idx) {
   // Glow + pulse en slide de decisión; ocultar en últimas diapositivas
   const wrap = document.getElementById('timer-wrap');
   if (wrap) {
-    wrap.style.display   = idx >= 15 ? 'none' : '';
+    wrap.style.display   = idx === 0 || idx >= 16 ? 'none' : '';
     wrap.style.filter    = isDecision ? 'drop-shadow(0 0 10px rgba(255,190,80,.7))' : '';
     wrap.style.animation = isDecision ? 'timerPulse .8s ease-in-out infinite alternate' : '';
   }
@@ -2899,7 +2977,7 @@ function goTo(n) {
   updatePhases();
 
   // Lazy chart init
-  if (cur === 13 && !window._caseChartInited) { window._caseChartInited = true; initCaseChart(); }
+  if (cur === 14 && !window._caseChartInited) { window._caseChartInited = true; initCaseChart(); }
 }
 
 document.getElementById('nav-prev').addEventListener('click', () => goTo(cur - 1));
@@ -3067,7 +3145,7 @@ function s1Toggle(el) {
 /* ── SLIDES 10–15 — Animated Entrances ─────────────────────────────── */
 
 // Slide 10 — Valoración (bar chart + cascading insight cards)
-document.querySelector('[data-i="10"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="11"]').addEventListener('slideenter', function() {
   document.querySelector('.s10-chart').style.opacity = '0';
   document.querySelector('.s10-chart').style.transform = 'translateX(-22px)';
   document.querySelectorAll('.s10-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateX(22px)'; });
@@ -3134,7 +3212,7 @@ document.querySelector('[data-i="10"]').addEventListener('slideenter', function(
 });
 
 // Slide 11 — Usos (cards cascade from different directions)
-document.querySelector('[data-i="11"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="12"]').addEventListener('slideenter', function() {
   document.querySelectorAll('.s11-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; });
 
   document.querySelectorAll('.s11-card').forEach((el, i) => {
@@ -3147,7 +3225,7 @@ document.querySelector('[data-i="11"]').addEventListener('slideenter', function(
 });
 
 // Slide 12 — Caso Práctico (left/right stagger + price pop)
-document.querySelector('[data-i="12"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="13"]').addEventListener('slideenter', function() {
   const left = document.querySelector('.s12-left');
   const right = document.querySelector('.s12-right');
   const quote = document.querySelector('.s12-quote');
@@ -3193,7 +3271,7 @@ document.querySelector('[data-i="12"]').addEventListener('slideenter', function(
 });
 
 // Slide 13 — Caso Gráfica (chart + cards pop in)
-document.querySelector('[data-i="13"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="14"]').addEventListener('slideenter', function() {
   const chart = document.querySelector('.s13-chart');
   chart.style.opacity = '0';
   chart.style.transform = 'translateY(18px)';
@@ -3224,7 +3302,7 @@ document.querySelector('[data-i="13"]').addEventListener('slideenter', function(
 });
 
 // Slide 14 — Decisión (flashcard reset on enter)
-document.querySelector('[data-i="14"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="15"]').addEventListener('slideenter', function() {
   resetChoice14();
   const hdr = document.querySelector('.s14-header');
   hdr.style.transition = 'none';
@@ -3245,7 +3323,7 @@ document.querySelector('[data-i="14"]').addEventListener('slideenter', function(
 });
 
 // Slide 15 — Conclusión (4 cards cascade, then summary)
-document.querySelector('[data-i="15"]').addEventListener('slideenter', function() {
+document.querySelector('[data-i="16"]').addEventListener('slideenter', function() {
   document.querySelectorAll('.s15-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateX(-20px) translateY(12px)'; });
   document.querySelector('.s15-summary').style.opacity = '0';
   document.querySelector('.s15-summary').style.transform = 'translateY(18px)';
@@ -3268,12 +3346,12 @@ document.querySelector('[data-i="15"]').addEventListener('slideenter', function(
 });
 
 // Slide 16 — Referencias (cascade left/right)
-document.querySelector('[data-i="16"]').addEventListener('slideenter', function() {
-  document.querySelectorAll('[data-i="16"] .ref-el').forEach(el => {
+document.querySelector('[data-i="17"]').addEventListener('slideenter', function() {
+  document.querySelectorAll('[data-i="17"] .ref-el').forEach(el => {
     el.style.transition = 'none';
     el.style.opacity = '0';
   });
-  document.querySelectorAll('[data-i="16"] .ref-el').forEach((el, i) => {
+  document.querySelectorAll('[data-i="17"] .ref-el').forEach((el, i) => {
     setTimeout(() => {
       el.style.transition = 'opacity .45s ease, transform .45s ease';
       el.style.opacity = '1';
