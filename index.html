@@ -8,7 +8,7 @@
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 
 <!-- KaTeX for math -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"/>
@@ -23,29 +23,29 @@
    DESIGN TOKENS  (aligned with ashanti-goldfields palette)
    ════════════════════════════════════════════════════════════════ */
 :root {
-  --serif  : "DM Serif Display", Georgia, serif;
-  --sans   : "DM Sans", system-ui, sans-serif;
+  --serif  : "Cormorant Garamond", Georgia, serif;
+  --sans   : "Manrope", system-ui, sans-serif;
   --mono   : "JetBrains Mono", monospace;
 
   /* Glow RGB for spotlight & effects */
-  --glow-rgb: 45,139,139;
+  --glow-rgb: 0,210,210;
 
-  /* Brand colors */
-  --teal   : #2d8b8b;  --teal-s : rgba(45,139,139,.13);  --teal-d : rgba(45,139,139,.07);
-  --blue   : #4a9ebb;  --blue-s : rgba(74,158,187,.13);  --blue-d : rgba(74,158,187,.07);
-  --amber  : #c99b45;  --amber-s: rgba(201,155,69,.13);  --amber-d: rgba(201,155,69,.07);
-  --green  : #4caf7d;
-  --red    : #e05c5c;
-  --violet : #7c6fcd;
+  /* Brand colors — intensified */
+  --teal   : #00d2d2;  --teal-s : rgba(0,210,210,.14);  --teal-d : rgba(0,210,210,.07);
+  --blue   : #4ab8e8;  --blue-s : rgba(74,184,232,.13);  --blue-d : rgba(74,184,232,.07);
+  --amber  : #d4a843;  --amber-s: rgba(212,168,67,.14);  --amber-d: rgba(212,168,67,.07);
+  --green  : #3dd68c;
+  --red    : #f06060;
+  --violet : #9b8ee0;
 
   /* Ink & surface */
-  --ink    : rgba(241,250,238,.92);
-  --ink2   : rgba(241,250,238,.62);
-  --ink3   : rgba(241,250,238,.32);
-  --bg     : #0a0f1a;
+  --ink    : rgba(240,252,252,.95);
+  --ink2   : rgba(240,252,252,.60);
+  --ink3   : rgba(240,252,252,.30);
+  --bg     : #040810;
   --sur    : rgba(255,255,255,.04);
   --sur2   : rgba(255,255,255,.07);
-  --brd    : rgba(255,255,255,.08);
+  --brd    : rgba(0,210,210,.12);
   --div    : rgba(255,255,255,.05);
 
   /* Motion */
@@ -81,7 +81,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   background: linear-gradient(90deg, var(--teal), var(--blue), var(--amber));
   transition: width .55s var(--ease);
   border-radius: 0 2px 2px 0;
-  box-shadow: 0 0 8px rgba(45,139,139,.5);
+  box-shadow: 0 0 12px rgba(0,210,210,.6);
 }
 .tb-brand {
   font-family: var(--serif); font-size: .85rem; color: var(--ink3);
@@ -99,7 +99,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   transition: color .3s, background .3s, border-color .3s;
   white-space: nowrap; cursor: pointer;
 }
-.tb-phase.act { color: var(--teal); background: var(--teal-d); border-color: rgba(45,139,139,.3); }
+.tb-phase.act { color: var(--teal); background: var(--teal-d); border-color: rgba(0,210,210,.3); }
 .tb-counter { font-family: var(--mono); font-size: .68rem; color: var(--ink3); flex-shrink: 0; }
 
 /* ── LOGO PUJ (bottom-left corner) ────────────────────────────────── */
@@ -172,19 +172,20 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   padding: 5.5rem 6vw 4.5rem;
   overflow-y: auto;
   opacity: 0; pointer-events: none; z-index: 1;
-  transition: opacity .45s var(--ease), filter .45s var(--ease);
-  filter: blur(6px) brightness(.8);
+  transform: translateY(10px) scale(.98);
+  transition: opacity .55s var(--ease), filter .55s var(--ease), transform .55s var(--ease);
+  filter: blur(8px) brightness(.7);
 }
-.slide.active { opacity: 1; pointer-events: all; z-index: 10; filter: none; }
+.slide.active { opacity: 1; pointer-events: all; z-index: 10; filter: none; transform: none; }
 
-/* Slide themes */
-.th-dark { background: linear-gradient(135deg, #0a0f1a 0%, #111827 100%); }
-.th-alt  { background: linear-gradient(135deg, #0d1520 0%, #162030 100%); }
-.th-warm { background: linear-gradient(135deg, #0f1210 0%, #1a1f10 100%); }
+/* Slide themes — deeper, richer */
+.th-dark { background: radial-gradient(ellipse at 15% 40%, rgba(0,30,50,.9) 0%, #040810 70%); }
+.th-alt  { background: radial-gradient(ellipse at 80% 60%, rgba(0,20,40,.8) 0%, #050a14 70%); }
+.th-warm { background: radial-gradient(ellipse at 50% 20%, rgba(20,14,5,.9) 0%, #080608 70%); }
 
-/* Noise texture overlay */
+/* Noise + grain texture */
 .th-dark::before, .th-alt::before, .th-warm::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .018;
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .028;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px;
 }
@@ -192,11 +193,13 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 /* ── SLIDE INNER ─────────────────────────────────────────────────── */
 .inner { position: relative; z-index: 1; max-width: 1080px; width: 100%; margin: 0 auto; }
 
-/* Typography scale */
-.t-xl  { font-size: clamp(2.6rem, 5.5vw, 4.8rem); color: var(--ink); font-family: var(--serif); }
-.t-h   { font-size: clamp(1.6rem, 2.8vw, 2.4rem); color: var(--ink); font-family: var(--serif); }
-.t-sub { font-size: clamp(.9rem, 1.2vw, 1.1rem); color: var(--ink2); line-height: 1.65; }
-.t-body{ font-size: clamp(.85rem, 1.05vw, .98rem); color: var(--ink2); line-height: 1.6; }
+/* Typography scale — Cormorant Garamond needs larger sizes */
+.t-xl  { font-size: clamp(3rem, 6.5vw, 5.8rem); color: var(--ink); font-family: var(--serif); font-weight: 600; letter-spacing: -.02em; line-height: 1.05; }
+.t-h   { font-size: clamp(1.9rem, 3.2vw, 2.9rem); color: var(--ink); font-family: var(--serif); font-weight: 600; letter-spacing: -.015em; }
+.t-sub { font-size: clamp(.9rem, 1.2vw, 1.1rem); color: var(--ink2); line-height: 1.7; font-weight: 400; }
+.t-body{ font-size: clamp(.85rem, 1.05vw, .98rem); color: var(--ink2); line-height: 1.65; font-weight: 400; }
+/* Gradient title — hero effect */
+.t-grad { background: linear-gradient(135deg, var(--ink) 20%, var(--teal) 60%, var(--amber) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
 /* Labels */
 .lbl {
@@ -269,13 +272,15 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   background: var(--sur); border: 1px solid var(--brd);
   margin-bottom: .6rem; position: relative; overflow: hidden;
   display: flex; gap: .75rem;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s;
 }
+.co:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(var(--glow-rgb),.1); }
 .co::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
-.co-teal  { border-color: rgba(45,139,139,.25);  } .co-teal::before  { background: var(--teal);  }
-.co-blue  { border-color: rgba(74,158,187,.25);  } .co-blue::before  { background: var(--blue);  }
-.co-amber { border-color: rgba(201,155,69,.25);  } .co-amber::before { background: var(--amber); }
-.co-red   { border-color: rgba(224,92,92,.25);   } .co-red::before   { background: var(--red);   }
-.co-green { border-color: rgba(76,175,125,.25);  } .co-green::before { background: var(--green); }
+.co-teal  { border-color: rgba(0,210,210,.22);  } .co-teal::before  { background: var(--teal);  } .co-teal:hover  { border-color: rgba(0,210,210,.45);  }
+.co-blue  { border-color: rgba(74,184,232,.22);  } .co-blue::before  { background: var(--blue);  } .co-blue:hover  { border-color: rgba(74,184,232,.45);  }
+.co-amber { border-color: rgba(212,168,67,.22);  } .co-amber::before { background: var(--amber); } .co-amber:hover { border-color: rgba(212,168,67,.45);  }
+.co-red   { border-color: rgba(240,96,96,.22);   } .co-red::before   { background: var(--red);   } .co-red:hover   { border-color: rgba(240,96,96,.45);   }
+.co-green { border-color: rgba(61,214,140,.22);  } .co-green::before { background: var(--green); } .co-green:hover { border-color: rgba(61,214,140,.45);  }
 .co-mark { font-family: var(--mono); font-size: .55rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; flex-shrink: 0; padding-top: .15rem; }
 .cm-teal  { color: var(--teal);  }
 .cm-blue  { color: var(--blue);  }
@@ -367,7 +372,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 .payoff-canvas-wrap { padding: 1rem; }
 
 /* Cover decoration */
-.cover-ghost { position: absolute; right: 4vw; bottom: 3rem; font-family: var(--serif); font-size: clamp(7rem, 16vw, 14rem); color: rgba(255,255,255,.012); line-height: 1; pointer-events: none; user-select: none; }
+.cover-ghost { position: absolute; right: 4vw; bottom: 3rem; font-family: var(--serif); font-size: clamp(7rem, 16vw, 14rem); color: rgba(0,210,210,.025); line-height: 1; pointer-events: none; user-select: none; }
 .cover-meta { display: flex; gap: 1.8rem; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.07); padding-top: 1.2rem; margin-top: 1.6rem; }
 .cover-meta-item .ml { font-size: .56rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink3); margin-bottom: .2rem; }
 .cover-meta-item .mv { font-family: var(--mono); font-size: .8rem; color: var(--ink2); }
@@ -393,11 +398,12 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 @keyframes blob-drift  { 0%,100%{transform:translate(0,0) scale(1) rotate(0deg)} 33%{transform:translate(-50px,-60px) scale(1.15) rotate(3deg)} 66%{transform:translate(40px,30px) scale(.88) rotate(-2deg)} }
 .gradient-mesh { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
 .blob {
-  position:absolute; border-radius:50%; filter:blur(80px);
+  position:absolute; border-radius:50%; filter:blur(90px);
   animation: blob-float 12s ease-in-out infinite;
 }
 .blob:nth-child(2) { animation: blob-drift 16s ease-in-out infinite; }
 .blob:nth-child(3) { animation: blob-float 20s ease-in-out infinite reverse; }
+.blob:nth-child(4) { animation: blob-drift 24s ease-in-out infinite reverse; }
 
 /* ── VIGNETTE — cinematic depth ────────────────────────────────── */
 .slide::after {
@@ -533,9 +539,10 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
 <section class="slide th-dark active" data-i="0" data-phase="Portada">
   <!-- Gradient mesh blobs -->
   <div class="gradient-mesh">
-    <div class="blob" style="width:520px;height:520px;top:-80px;left:-120px;background:rgba(45,139,139,.18);"></div>
-    <div class="blob" style="width:380px;height:380px;bottom:-60px;right:-80px;background:rgba(74,158,187,.14);"></div>
-    <div class="blob" style="width:280px;height:280px;top:40%;left:55%;background:rgba(201,155,69,.1);"></div>
+    <div class="blob" style="width:680px;height:680px;top:-120px;left:-160px;background:rgba(0,200,200,.22);"></div>
+    <div class="blob" style="width:480px;height:480px;bottom:-80px;right:-100px;background:rgba(74,184,232,.18);"></div>
+    <div class="blob" style="width:340px;height:340px;top:35%;left:52%;background:rgba(212,168,67,.13);"></div>
+    <div class="blob" style="width:200px;height:200px;top:10%;right:20%;background:rgba(155,142,224,.1);"></div>
   </div>
   <!-- Particle canvas -->
   <canvas class="particle-canvas" id="particles-s0"></canvas>
@@ -543,7 +550,7 @@ button { cursor: pointer; font: inherit; border: 0; background: none; color: inh
   <svg class="deco-shape" data-speed="0.035" style="width:340px;right:3vw;bottom:8vh;" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="98" stroke="rgba(45,139,139,1)" stroke-width="1"/><circle cx="100" cy="100" r="72" stroke="rgba(45,139,139,1)" stroke-width=".5" stroke-dasharray="4 6"/></svg>
   <div class="inner">
     <div class="lbl lbl-teal s0-el" style="opacity:0;transform:translateY(-16px);">Derivados Exóticos · Finanzas Cuantitativas</div>
-    <h1 class="t-xl s0-el" style="opacity:0;transform:translateY(20px);">La opción que<br/><em>compra tiempo</em></h1>
+    <h1 class="t-xl t-grad s0-el" style="opacity:0;transform:translateY(20px);">La opción que<br/><em>compra tiempo</em></h1>
     <p class="t-sub s0-el" style="margin-top:.8rem;max-width:50ch;opacity:0;transform:translateY(16px);">
       Chooser Option — el derecho de esperar, observar y decidir.
     </p>
@@ -2702,7 +2709,7 @@ function updatePhases() {
     if(!cv){raf=requestAnimationFrame(frame);return;}
     const ctx=cv.getContext('2d');
     const d=window.devicePixelRatio||1;
-    if(cv.width!==W*d){cv.width=W*d;cv.height=H*d;ctx.scale(d,d);}
+    if(cv.width!==W*d){cv.width=W*d;cv.height=H*d;cv.style.width=W+'px';cv.style.height=H+'px';ctx.scale(d,d);}
     ctx.clearRect(0,0,W,H);
 
     const dec=fill>=1;
@@ -2765,6 +2772,7 @@ function updatePhases() {
     const cv=document.getElementById('timer-canvas');if(!cv)return;
     const d=window.devicePixelRatio||1;
     cv.width=W*d;cv.height=H*d;
+    cv.style.width=W+'px';cv.style.height=H+'px';
     cv.getContext('2d').scale(d,d);
     cancelAnimationFrame(raf);grains=[];frame();
   };
